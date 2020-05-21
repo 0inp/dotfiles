@@ -1,0 +1,39 @@
+[core]
+  editor = vi
+  autocrlf = input
+  ignorecase = false
+
+[color]
+  ui = true
+
+[diff]
+  mnemonicPrefix = true
+  renames = true
+
+[pull]
+  rebase = preserve
+
+[push]
+  default = current
+
+[fetch]
+  prune = true
+
+[commit]
+  gpgsign = true
+
+[rebase]
+  autosquash = true
+
+[log]
+  abbrevCommit = true
+
+[alias]
+  co = checkout
+  s = status -sb
+  d = diff -w
+  lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
+  unshallow = "! git remote set-branches origin '*' && git pull --unshallow"
+
+[credential]
+  helper = cache --timeout=28800

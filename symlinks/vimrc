@@ -1,0 +1,98 @@
+" Turnoff vi backward compatibility
+set nocompatible
+
+" Show status line
+set laststatus=2
+
+set statusline=
+set statusline+=%* " Highlight current window
+set statusline+=\%f " Filename
+set statusline+=\%m " Modified
+set statusline+=\%R " Read-Only indicator
+set statusline+=%=
+set statusline+=\%y " Type of file
+set statusline+=\ %{&fileencoding?&fileencoding:&encoding}
+set statusline+=\[%{&fileformat}\]
+set statusline+=\ %p%% " Percentage of the file
+set statusline+=\ %l:%c " Line Number and Total Line
+set statusline+=\  " Empty space at end
+
+" Line highlight
+set cursorline
+
+" Show line numbers
+set number
+
+" Default file encoding
+set encoding=utf-8
+
+" Show current command combination on bottom right
+set showcmd
+
+" Confirm change save
+set confirm
+
+" Wrap lines
+set wrap
+
+" Spaces tab's width and indent size
+set tabstop=4 shiftwidth=4
+set softtabstop=4
+set smartindent
+if exists(':filetype')
+  filetype indent on
+endif
+
+" Show matching parenthesis
+set showmatch
+
+" Insert spaces instead of tabs
+set expandtab
+
+" Backspace behavior for corresponding to most common apps
+set backspace=indent,eol,start
+
+" Hightlight search
+set hlsearch
+
+" Clear highlight when pressing escape
+nnoremap <esc> :noh<return><esc>
+nnoremap <esc>^[ <esc>^[
+
+" Search as you type character
+set incsearch
+
+" Ignore case in search
+set ignorecase
+
+" Search with smart case (if uppercase provided, search is case sensitive)
+set smartcase
+
+" Omni completion
+set completeopt=longest,menuone
+set omnifunc=syntaxcomplete#Complete
+
+" Auto reload file
+set autoread
+
+" Disable backup files
+set nobackup
+set noswapfile
+
+" Enable syntax color if exist
+if exists(":syntax")
+  syntax on
+endif
+
+" Disabling viminfo
+set viminfo=""
+
+" Turn on the Wild menu, better suggestion
+set wildmenu
+
+" Be lazy when redrawing screen
+set lazyredraw
+
+" Search using ctrl-p and fzf
+set rtp+=~/opt/fzf
+noremap <C-p> :FZF<return>
