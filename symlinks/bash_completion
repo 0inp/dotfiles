@@ -1,0 +1,6 @@
+_altpass() {
+  # trailing / is required for the password-store dir.
+  PASSWORD_STORE_DIR=~/my_password_store/ _pass
+}
+
+complete -o filenames -o nospace -F _altpass altpass
