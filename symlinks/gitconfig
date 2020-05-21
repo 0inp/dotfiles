@@ -20,7 +20,7 @@
   prune = true
 
 [commit]
-  gpgsign = true
+	gpgsign = true
 
 [rebase]
   autosquash = true
@@ -37,3 +37,7 @@
 
 [credential]
   helper = cache --timeout=28800
+[user]
+	signingkey = 71EB7F5901C39E99B25CD4002AF762FE32AB906F
+	name = Stephane Point
+	email = point.steph@gmail.com
