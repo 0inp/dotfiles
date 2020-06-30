@@ -2,6 +2,7 @@
   editor = vi
   autocrlf = input
   ignorecase = false
+	excludesfile = /Users/stephanepoint/.gitignore
 
 [color]
   ui = true
@@ -38,6 +39,8 @@
 [credential]
   helper = cache --timeout=28800
 [user]
-	signingkey = 71EB7F5901C39E99B25CD4002AF762FE32AB906F
+	signingkey = D250A25C7450ECA053AC08AF708806CE3CF25CDE
 	name = Stephane Point
 	email = point.steph@gmail.com
+[include]
+	path = ~/.gitconfig-ma

@@ -50,3 +50,4 @@ unset -f set_locale
 unset -f source_all
 
 alias altpass='PASSWORD_STORE_DIR=~/my_password_store pass'
+export PATH="/usr/local/sbin:$PATH"
