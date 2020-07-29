@@ -181,7 +181,6 @@ else
   let &t_SI = "\<Esc>]50;CursorShape=1\x7"
   let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 endif
-" add pdb breakpoints
-nnoremap <C-b> oimport pdb; pdb.set_trace()<Esc>
-nnoremap <C-B> Oimport pdb; pdb.set_trace()<Esc>
 
+" add pdb breakpoints
+nnoremap <leader>m oimport pdb; pdb.set_trace()<Esc>
