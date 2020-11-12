@@ -22,6 +22,7 @@ _workon() {
 complete -F _workon workon
 
 export MA_REPOSITORY="${HOME}/meilleursagents"
+export MA_REPOSITORY_INFRA="${HOME}/MA-Infra"
 
 if [[ -e "${MA_REPOSITORY}/tools/.bashrc" ]]; then
   source "${MA_REPOSITORY}/tools/.bashrc"

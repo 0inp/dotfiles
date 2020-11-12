@@ -2,7 +2,7 @@
   editor = vi
   autocrlf = input
   ignorecase = false
-	excludesfile = /Users/stephanepoint/.gitignore
+  excludesfile = /Users/stephanepoint/.gitignore
 
 [color]
   ui = true
@@ -21,7 +21,9 @@
   prune = true
 
 [commit]
-	gpgsign = true
+    gpgsign = true
+[gpg]
+    program = gpg
 
 [rebase]
   autosquash = true
@@ -31,16 +33,53 @@
 
 [alias]
   co = checkout
+  commend = commit --amend --no-edit
   s = status -sb
   d = diff -w
   lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
   unshallow = "! git remote set-branches origin '*' && git pull --unshallow"
+  edit-changes = "!vi $(git diff --name-only --diff-filter=M) -O"
+  fco = "!git checkout $(git branch -a | fzf)"
+  grog = log --graph --abbrev-commit --decorate --all --format=format:"%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(dim white) - %an%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n %C(white)%s%C(reset)"
+  it = "!git init && git commit -m 'Initial commit' --allow-empty"
+  lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+  purr = pull --rebase
+  ready = rebase -i @{u}
+  shorty = status -sb
+  sweep = "!f() { \
+      git remote update -p;\
+      git purr;\
+      git branch --merged | grep -v '*' | grep -v master | xargs -I{} git branch -d {};\
+  }; f"
+  upush = "!git push -u origin `git rev-parse --abbrev-ref HEAD`"
+  wync = "!git stash && git purr && git stash pop && git push"
 
 [credential]
   helper = cache --timeout=28800
+
 [user]
-	signingkey = D250A25C7450ECA053AC08AF708806CE3CF25CDE
-	name = Stephane Point
-	email = point.steph@gmail.com
+    signingkey = D250A25C7450ECA053AC08AF708806CE3CF25CDE
+    name = Stephane Point
+    email = point.steph@gmail.com
+
 [include]
-	path = ~/.gitconfig-ma
+    path = ~/.gitconfig-ma
+
+[merge]
+    tool = vimdiff
+
+[http]
+    sslVerify = false
+    [color "diff-highlight"]
+    oldNormal = red bold
+    oldHighlight = red bold 52
+    newNormal = green bold
+    newHighlight = green bold 22
+
+[color "diff"]
+    meta = yellow
+    frag = magenta bold
+    commit = yellow bold
+    old = red bold
+    new = green bold
+    whitespace = red reverse

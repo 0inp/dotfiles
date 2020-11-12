@@ -1,0 +1,144 @@
+export DISABLE_AUTO_TITLE='true'
+
+export GPG_TTY=$(tty)
+export PGHOST=www-db-master.dev-internal.meilleursagents
+export PGPORT=6543
+export PGDATABASE=meilleursagents_dev
+export PGUSER=meilleursagents
+export MA_ENV=dev
+export MA_INSTANCE=stephanep
+export MA_REPOSITORY=${HOME}/meilleursagents
+export ENVIRONMENT=dev-server
+
+export SSL_DISABLED=True
+export SSL_ACTIVE=False
+
+export N_PREFIX="${HOME}/opt"
+
+export PATH="${HOME}/opt/bin:${HOME}/.local/bin:${PATH}"
+
+export PIPENV_VENV_IN_PROJECT=1
+
+export TLDR_HEADER='magenta bold underline'
+export TLDR_QUOTE='italic'
+export TLDR_DESCRIPTION='green'
+export TLDR_CODE='red'
+export TLDR_PARAM='blue'
+
+function switch_repo {
+    rm ~/meilleursagents
+    ln -s ~/$1  ~/meilleursagents && sudo service nginx restart
+}
+
+if ! [ -d "$HOME/apps" ] ; then
+    mkdir $HOME/apps
+fi
+
+export MA_FOLDER="${HOME}"
+source ${MA_FOLDER}/MA-Infra/tools/gssh/gssh_aliases.sh
+
+restart() {
+    set -o shwordsplit
+    local apps=(${@:-'www mediaapi marketapi geoapi mailapi indiceapi mypro myproapi tools partners profileapi pdfapi barometre'})
+
+    for i in ${apps[@]}; do
+        echo "Restarting ${i}..."
+        sudo systemctl restart "${i}"
+    done
+}
+
+rebuild() {
+    set -o shwordsplit
+    local apps=(${@:-'www MediaAPI MarketAPI GeoAPI MailAPI IndiceAPI MyPro MyProAPI Tools Partners ProfileAPI PdfAPI'})
+
+    for i in ${apps[@]}; do
+        local appName=$(ls "/home/${USER}/apps/" | grep -i "${i}" | head -1)
+        echo "Rebuilding ${appName}..."
+
+        pushd "/home/${USER}/apps/${appName}/${appName}"
+
+        make init-dev
+        if [[ $(make -qp | grep build-assets | wc -l) -ge 1 ]]; then
+            make build-assets
+        fi
+
+        popd
+
+        restart "${appName:l}"
+    done
+}
+
+logs() {
+    local logs_path=""
+    local apps=${@-}
+
+    if [[ -n "${apps}" ]]; then
+        for app in ${apps[@]}; do
+            local app_logs_path="/var/log/ma/${app,,}.log"
+            if [[ -e "${app_logs_path}" ]]; then
+                logs_path="${logs_path} ${app_logs_path}"
+            else
+                echo "No log file for ${app}"
+                return 1
+            fi
+        done
+    else
+        logs_path=/var/log/ma/*.log
+    fi
+    sudo tail -f ${logs_path}
+}
+
+logs_nginx() {
+    local logs_path=""
+    local apps=${@-}
+
+    if [[ "${apps}" != "" ]]; then
+        for app in ${apps[@]}; do
+            local app_access_logs_path="/var/log/nginx/${app,,}.access.log"
+            local app_error_logs_path="/var/log/nginx/${app,,}.error.log"
+            if [[ -e "${app_access_logs_path}" ]] && [[ -e "${app_error_logs_path}" ]]; then
+                logs_path="${logs_path} ${app_access_logs_path} ${app_error_logs_path}"
+            fi
+        done
+    fi
+
+    if [[ "${logs_path}" = "" ]]; then
+        logs_path=/var/log/nginx/*.log
+    fi
+
+    sudo tail -f ${logs_path}
+}
+
+function addPass() {
+    local RED='\033[0;31m'
+    local GREEN='\033[0;32m'
+    local RESET='\033[0m'
+
+    if ! command -v pass 1>/dev/null 2>&1; then
+        echo -e "${RED}pass not found, aborting${RESET}"
+        return 1
+    fi
+
+    if [[ "${#}" -eq 0 ]]; then
+        echo -e "${RED}Usage addPass [folder]/[name] (e.g. addPass commons/wifi)${RESET}"
+        return 1
+    fi
+
+    echo -e "${GREEN}Updating password store${RESET}"
+    echo
+    pass git pull
+
+    echo -e "${GREEN}Importing public keys of team${RESET}"
+    echo
+    ls ~/.password-store/.public_keys/*.gpg | xargs gpg --import
+
+    echo -e "${GREEN}Adding password, don't forget to run command 'pass git push' when ended${RESET}"
+    echo
+    pass insert -m "${@}"
+}
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '~/google-cloud-sdk/path.zsh.inc' ]; then . '~/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '~/google-cloud-sdk/completion.zsh.inc' ]; then . '~/google-cloud-sdk/completion.zsh.inc'; fi

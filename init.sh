@@ -11,28 +11,10 @@ print_title() {
 }
 
 create_symlinks() {
-  for file in "${SCRIPT_DIR}/symlinks"/*; do
+  local SYMLINK_PATH="${HOME}"
+  for file in ~/dotfiles/symlinks/*; do
     basenameFile="$(basename "${file}")"
     [[ -r ${file} ]] && [[ -e ${file} ]] && rm -f "${SYMLINK_PATH}/.${basenameFile}" && ln -s "${file}" "${SYMLINK_PATH}/.${basenameFile}"
-  done
-}
-
-install_tools() {
-  local LANG="C"
-
-  for file in "${SCRIPT_DIR}/install"/*; do
-    local BASENAME_FILE
-    BASENAME_FILE="$(basename ${file%.*})"
-    local UPPERCASE_FILENAME
-    UPPERCASE_FILENAME="$(echo "${BASENAME_FILE}" | tr "[:lower:]" "[:upper:]")"
-    local DISABLE_VARIABLENAME="DOTFILES_NO_${UPPERCASE_FILENAME}"
-
-    if [[ ${!DISABLE_VARIABLENAME:-} == "true" ]]; then
-      continue
-    fi
-
-    print_title "install - ${BASENAME_FILE}"
-    [[ -r ${file} ]] && [[ -x ${file} ]] && "${file}"
   done
 }
 
@@ -45,34 +27,100 @@ clean_packages() {
   fi
 }
 
+install_submodules() {
+  cd ~/dotfiles
+  git config -f .gitmodules --get-regexp '^submodule\..*\.path$' | while read path_key path ; do
+    url_key=$(echo $path_key | sed 's/\.path/.url/')
+    url=$(git config -f .gitmodules --get "$url_key")
+    git submodule add -f $url $path
+  done
+  cd ~
+}
+
 main() {
-  local SCRIPT_DIR
-  SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-  local ARGS="${*}"
-  local SYMLINK_PATH="${HOME}"
+  local sys=$OSTYPE; shift
+  for item in zsh vim httpie hub; do
+    print_title "Installing $item"
+    if [[ "$sys" == "linux"* ]]; then
+      sudo apt -y install $item
+    elif [[ "$sys" == "darwin"* ]]; then
+      brew install $item
+    fi
+  done
 
-  if [[ -z "${ARGS}" ]] || [[ "${ARGS}" =~ symlinks ]]; then
-    print_title "symlinks"
-    create_symlinks
+  # Switch to zsh
+  print_title "Switch to ZSH"
+  echo "Which user ?"
+  read user
+  sudo chsh -s $(which zsh) $user
+
+  print_title "Updating submodules"
+  install_submodules
+  cd ~/dotfiles/ && git submodule update --init
+
+  # pyenv
+  print_title "Installing Pyenv Section"
+  if [[ "$sys" == "linux"* ]]; then
+    curl https://pyenv.run | bash
+  elif [[ "$sys" == "darwin"* ]]; then
+    brew install pyenv
+  fi
+  export PYENV_ROOT=${HOME}/.pyenv
+  [[ ! -d "${PYENV_ROOT}/plugins/pyenv-virtualenv" ]] && git clone https://github.com/pyenv/pyenv-virtualenv.git ${PYENV_ROOT}/plugins/pyenv-virtualenv
+
+  # Tmux Plugin Manager
+  print_title "Installing Tmux Section"
+  [[ ! -d "${HOME}/.tmux/plugins/tpm" ]] && git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+  # Tmux Session Manager
+  pip3 install --user tmuxp
+
+  # install fzf
+  print_title "Installing FZF"
+  ~/dotfiles/fzf/install
+
+  # Powerline-Status
+  print_title "Installing powerline-status"
+  pip3 install --user powerline-status
+
+  # Ripgrep
+  print_title "Installing ripgrep"
+  if [[ "$sys" == "linux"* ]]; then
+    curl -LO https://github.com/BurntSushi/ripgrep/releases/download/11.0.2/ripgrep_11.0.2_amd64.deb
+    sudo dpkg -i ripgrep_11.0.2_amd64.deb
+    rm ripgrep_11.0.2_amd64.deb
+  elif [[ "$sys" == "darwin"* ]]; then
+    brew install ripgrep
   fi
 
-  set +u
-  set +e
-  mkdir -p "${HOME}/opt/bin"
-  PS1="$" source "${SYMLINK_PATH}/.bashrc"
-  set -e
-  set -u
+  # MA Repos
+  print_title "Cloning Repos MeilleursAgents"
+  [[ ! -d "${HOME}/meilleursagents" ]] && git clone git@github.com:MeilleursAgents/MeilleursAgents.git ~/ma1
+  [[ ! -d "${HOME}/MA-Infra" ]] && git clone git@github.com:MeilleursAgents/MA-Infra.git ~/MA-Infra
+  [[ ! -d "${HOME}/GeoAPI" ]] && git clone git@github.com:MeilleursAgents/GeoAPI.git ~/GeoAPI
+  [[ ! -d "${HOME}/IndiceAPI" ]] && git clone git@github.com:MeilleursAgents/IndiceAPI.git ~/IndiceAPI
+  [[ ! -d "${HOME}/MarketAPI" ]] && git clone git@github.com:MeilleursAgents/MarketAPI.git ~/MarketAPI
 
-  if [[ -z ${ARGS} ]] || [[ ${ARGS} =~ install ]]; then
-    print_title "install"
-    install_tools
-  fi
+  # Symlinks
+  print_title "Symlinks"
+  create_symlinks
+  [[ ! -L "${HOME}/bin" ]] && ln -s ~/dotfiles/bin ~/bin
 
-  if [[ -z ${ARGS} ]] || [[ ${ARGS} =~ clean ]]; then
-    print_title "clean"
-    clean_packages
-  fi
+  # Node
+  print_title "Node"
+  NODE_VERSION="12"
+  rm -rf "${HOME}/n-install"
+  git clone --depth 1 https://github.com/tj/n.git "${HOME}/n-install"
+  pushd "${HOME}/n-install"
+  PREFIX="${HOME}/opt" make install
+  popd
+  rm -rf "${HOME}/n-install"
+  n "${NODE_VERSION}"
+  npm install --ignore-scripts -g npm node-gyp
+
+  # Cleaning
+  print_title "Clean"
+  clean_packages
 }
 
 main "${@:-}"
