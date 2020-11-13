@@ -1,17 +1,16 @@
 export DISABLE_AUTO_TITLE='true'
 
 export GPG_TTY=$(tty)
-export PGHOST=www-db-master.dev-internal.meilleursagents
-export PGPORT=6543
-export PGDATABASE=meilleursagents_dev
-export PGUSER=meilleursagents
-export MA_ENV=dev
-export MA_INSTANCE=stephanep
-export MA_REPOSITORY=${HOME}/meilleursagents
-export ENVIRONMENT=dev-server
-
-export SSL_DISABLED=True
-export SSL_ACTIVE=False
+# export PGHOST=www-db-master.dev-internal.meilleursagents
+# export PGPORT=6543
+# export PGDATABASE=meilleursagents_dev
+# export PGUSER=meilleursagents
+# export MA_ENV=dev
+# export MA_INSTANCE=stephanep
+# export MA_REPOSITORY=${HOME}/meilleursagents
+# export ENVIRONMENT=dev-server
+# export SSL_DISABLED=True
+# export SSL_ACTIVE=False
 
 export N_PREFIX="${HOME}/opt"
 

@@ -40,7 +40,7 @@ install_submodules() {
 main() {
 
   local sys=$OSTYPE; shift
-  for item in zsh vim httpie hub; do
+  for item in zsh vim httpie hub ack; do
     print_title "Installing $item"
     if [[ "$sys" == "linux"* ]]; then
       sudo apt -y install $item
@@ -48,6 +48,13 @@ main() {
       brew install $item
     fi
   done
+  # The Silver Searcher Specificity
+  print_title "Installing the_silver_searcher"
+  if [[ "$sys" == "linux"* ]]; then
+    sudo apt -y install silversearcher-ag
+  elif [[ "$sys" == "darwin"* ]]; then
+    brew install the_silver_searcher
+  fi
 
   # Switch to zsh
   print_title "Switch to ZSH"
@@ -82,6 +89,15 @@ main() {
   # Powerline-Status
   print_title "Installing powerline-status"
   pip3 install --user powerline-status
+  if [[ "$sys" == "linux"* ]]; then
+    sudo apt-get install fonts-powerline
+  elif [[ "$sys" == "darwin"* ]]; then
+    git clone https://github.com/powerline/fonts.git --depth=1
+    cd fonts
+    ./install.sh
+    cd ..
+    rm -rf fonts install --user powerline-status
+  fi
 
   # Ripgrep
   print_title "Installing ripgrep"
