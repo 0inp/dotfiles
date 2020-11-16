@@ -6,7 +6,7 @@ ANTIGEN_PATH=$HOME/dotfiles
 source $ANTIGEN_PATH/antigen/antigen.zsh
 antigen init ${HOME}/.antigenrc
 # Spaceships Prompt theme customization
-export SPACESHIP_HOST_SHOW=false
+export SPACESHIP_GCLOUD_SHOW=false
 
 export LANG=en
 export TERM='xterm-256color'
