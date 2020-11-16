@@ -53,7 +53,7 @@ export PYTHONSTARTUP
 
 # export PYENV_VERSION=system
 # export PYENV_VIRTUALENV_DISABLE_PROMPT=1
-export PATH="$HOME/bin:$PATH"
+export PATH="$HOME/.pyenv/bin:$PATH"
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 
@@ -83,7 +83,6 @@ start_ssh_agent() {
   if [[ -d ${HOME}/.ssh/ ]]; then
     local AGENT_INITIALIZED="false"
 
-    shopt -s nullglob
     for key in "${HOME}/.ssh/"*.pub; do
       if [[ ${AGENT_INITIALIZED} == "false" ]]; then
         AGENT_INITIALIZED="true"
@@ -92,7 +91,6 @@ start_ssh_agent() {
 
       ssh-add -k "${key%.pub}"
     done
-    shopt -u nullglob
   fi
 }
 
