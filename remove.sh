@@ -10,4 +10,4 @@ rm ~/.vim
 rm ~/.vimrc
 rm ~/.zshrc
 rm ~/.psqlrc
-rm -R ~/.pyenv
+rm -Rf ~/.pyenv
