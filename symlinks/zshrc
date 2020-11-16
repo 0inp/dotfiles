@@ -5,6 +5,8 @@ ZSH_DISABLE_COMPFIX=true
 ANTIGEN_PATH=$HOME/dotfiles
 source $ANTIGEN_PATH/antigen/antigen.zsh
 antigen init ${HOME}/.antigenrc
+# Spaceships Prompt theme customization
+export SPACESHIP_HOST_SHOW=false
 
 export LANG=en
 export TERM='xterm-256color'
@@ -56,6 +58,49 @@ eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 
 alias fixssh='eval $(tmux showenv -s SSH_AUTH_SOCK)'
+SSH_ENV="${HOME}/.ssh/environment"
+
+stop_ssh_agent() {
+  if [[ -n ${SSH_AGENT_PID:-} ]]; then
+    ssh-agent -k
+    rm -rf "${SSH_ENV}"
+  fi
+}
+
+init_ssh_agent() {
+  printf "Initializing new SSH agent...\n"
+
+  touch "${SSH_ENV}"
+  chmod 600 "${SSH_ENV}"
+
+  ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
+  source "${SSH_ENV}" > /dev/null
+}
+
+start_ssh_agent() {
+  stop_ssh_agent
+
+  if [[ -d ${HOME}/.ssh/ ]]; then
+    local AGENT_INITIALIZED="false"
+
+    shopt -s nullglob
+    for key in "${HOME}/.ssh/"*.pub; do
+      if [[ ${AGENT_INITIALIZED} == "false" ]]; then
+        AGENT_INITIALIZED="true"
+        init_ssh_agent
+      fi
+
+      ssh-add -k "${key%.pub}"
+    done
+    shopt -u nullglob
+  fi
+}
+
+if [[ -f ${SSH_ENV} ]]; then
+  source "${SSH_ENV}" > /dev/null
+else
+  start_ssh_agent
+fi
 
 compdef _pass altpass
 zstyle ':completion::complete:altpass::' prefix "$HOME/my_password_store"
@@ -66,7 +111,26 @@ altpass() {
 export PATH="/usr/local/sbin:$PATH"
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/stephanepoint/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/stephanepoint/google-cloud-sdk/path.zsh.inc'; fi
+if [ -f "$HOME/opt/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/opt/google-cloud-sdk/path.zsh.inc"; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f '/Users/stephanepoint/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/stephanepoint/google-cloud-sdk/completion.zsh.inc'; fi
+if [ -f "$HOME/opt/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/opt/google-cloud-sdk/completion.zsh.inc"; fi
+
+if ! command -v gcloud > /dev/null 2>&1; then
+  return
+fi
+
+export BOTO_CONFIG=/dev/null
+export CLOUDSDK_PYTHON=/usr/bin/python
+
+gcloud_auth() {
+  rm -rf "/tmp/${USER}*"
+  gcloud auth login --no-launch-browser
+
+  gcloud config unset compute/region
+  gcloud config set project "$(gcloud projects list | grep dev | awk '{print $1}')"
+
+  if command -v docker > /dev/null 2>&1; then
+    gcloud --quiet auth configure-docker "eu.gcr.io"
+  fi
+}

@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-alias grep="grep --color=auto"
-
-export EDITOR=vim
-export TERM=xterm-256color

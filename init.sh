@@ -145,6 +145,9 @@ main() {
   git clone --depth 1 https://github.com/tj/n.git "${HOME}/n-install"
   (cd "${HOME}/n-install" && PREFIX="${HOME}/opt" make install)
   rm -rf "${HOME}/n-install"
+  export PATH="${HOME}/opt/node/bin:${PATH}"
+  export PATH="${HOME}/opt/bin:${PATH}"
+  export N_PREFIX="${HOME}/opt"
   n "${NODE_VERSION}"
   npm install --ignore-scripts -g npm node-gyp
 
