@@ -32,6 +32,8 @@ install_submodules() {
   git config -f .gitmodules --get-regexp '^submodule\..*\.path$' | while read path_key path ; do
     url_key=$(echo $path_key | sed 's/\.path/.url/')
     url=$(git config -f .gitmodules --get "$url_key")
+    rm -rf $path
+    git rm -r $path
     git submodule add -f $url $path
   done
   cd ~
@@ -85,7 +87,11 @@ main() {
   print_title "Installing Tmux Section"
   [[ ! -d "${HOME}/.tmux/plugins/tpm" ]] && git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
   # Tmux Session Manager
-  pip3 install --user tmuxp
+  if command -v pip3 > /dev/null 2>&1; then
+    pip3 install --user tmuxp
+  elif command -v pip > /dev/null 2>&1; then
+    pip install --user tmuxp
+  fi
 
   # install fzf
   print_title "Installing FZF"
