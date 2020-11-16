@@ -89,8 +89,6 @@ main() {
   # Tmux Session Manager
   if command -v pip3 > /dev/null 2>&1; then
     pip3 install --user tmuxp
-  elif command -v pip > /dev/null 2>&1; then
-    pip install --user tmuxp
   fi
 
   # install fzf
