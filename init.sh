@@ -143,9 +143,7 @@ main() {
   NODE_VERSION="12"
   rm -rf "${HOME}/n-install"
   git clone --depth 1 https://github.com/tj/n.git "${HOME}/n-install"
-  pushd "${HOME}/n-install"
-  PREFIX="${HOME}/opt" make install
-  popd
+  (cd "${HOME}/n-install" && PREFIX="${HOME}/opt" make install)
   rm -rf "${HOME}/n-install"
   n "${NODE_VERSION}"
   npm install --ignore-scripts -g npm node-gyp
