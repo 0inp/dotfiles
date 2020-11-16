@@ -89,6 +89,8 @@ main() {
   # Tmux Session Manager
   if command -v pip3 > /dev/null 2>&1; then
     pip3 install --user tmuxp
+  elif command -v pip > /dev/null 2>&1; then
+    pip install --user tmuxp
   fi
 
   # install fzf
@@ -97,7 +99,12 @@ main() {
 
   # Powerline-Status
   print_title "Installing powerline-status"
-  pip3 install --user powerline-status
+  if command -v pip > /dev/null 2>&1; then
+    pip install --user powerline-status
+  elif command -v pip3 > /dev/null 2>&1; then
+    pip3 install --user powerline-status
+  fi
+
   if [[ "$sys" == "linux"* ]]; then
     sudo apt-get install fonts-powerline
   elif [[ "$sys" == "darwin"* ]]; then
