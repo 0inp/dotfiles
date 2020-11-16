@@ -40,7 +40,7 @@ install_submodules() {
 main() {
 
   local sys=$OSTYPE; shift
-  for item in zsh vim httpie hub ack; do
+  for item in zsh vim httpie ack; do
     print_title "Installing $item"
     if [[ "$sys" == "linux"* ]]; then
       sudo apt -y install $item
@@ -48,6 +48,11 @@ main() {
       brew install $item
     fi
   done
+  # Install hub
+  print_title "Installing hub"
+  if [[ "$sys" == "darwin"* ]]; then
+    brew install $item
+  fi
   # The Silver Searcher Specificity
   print_title "Installing the_silver_searcher"
   if [[ "$sys" == "linux"* ]]; then
