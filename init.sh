@@ -42,7 +42,7 @@ install_submodules() {
 main() {
 
   local sys=$OSTYPE; shift
-  for item in zsh vim httpie ack; do
+  for item in zsh httpie ack; do
     print_title "Installing $item"
     if [[ "$sys" == "linux"* ]]; then
       sudo apt -y install $item
@@ -50,6 +50,17 @@ main() {
       brew install $item
     fi
   done
+  # Install vim with python3 support
+  print_title "Installing Vim with python3 support"
+  if [[ "$sys" == "linux"* ]]; then
+    sudo apt -y install vim-gtk
+    sudo update-alternatives --install /usr/bin/editor editor /usr/bin/vim.gtk 1
+    sudo update-alternatives --set editor /usr/bin/vim.gtk
+    sudo update-alternatives --install /usr/bin/vi vi /usr/bin/vim.gtk 1
+    sudo update-alternatives --set vi /usr/bin/vim.gtk
+  elif [[ "$sys" == "darwin"* ]]; then
+    brew install vim
+  fi
   # Install hub
   print_title "Installing hub"
   if [[ "$sys" == "darwin"* ]]; then
