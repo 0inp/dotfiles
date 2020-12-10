@@ -54,6 +54,7 @@ export PYTHONSTARTUP
 # export PYENV_VERSION=system
 # export PYENV_VIRTUALENV_DISABLE_PROMPT=1
 export PATH="$HOME/.pyenv/bin:$PATH"
+export PATH="$HOME/opt/pyenv/bin:$PATH"
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 
