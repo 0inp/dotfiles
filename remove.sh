@@ -11,3 +11,4 @@ rm ~/.vimrc
 rm ~/.zshrc
 rm ~/.psqlrc
 rm -Rf ~/.pyenv
+rm -Rf ~/opt/pyenv
