@@ -104,6 +104,13 @@ main() {
     pip install --user tmuxp
   fi
 
+  # fswatch
+  print_title "Installing fswatch"
+  # Tmux Session Manager
+  if [[ "$sys" == "darwin"* ]]; then
+    brew install fswatch
+  fi
+
   # install fzf
   print_title "Installing FZF"
   ~/dotfiles/fzf/install
