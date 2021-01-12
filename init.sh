@@ -133,6 +133,12 @@ main() {
     rm -rf fonts install --user powerline-status
   fi
 
+  # diff-so-fancy
+  print_title "Installing diff-so-fancy"
+  git clone https://github.com/so-fancy/diff-so-fancy.git ~/diff-so-fancy
+  export PATH="${HOME}/diff-so-fancy/diff-so-fancy:${PATH}"
+
+
   # Ripgrep
   print_title "Installing ripgrep"
   if [[ "$sys" == "linux"* ]]; then

@@ -88,7 +88,7 @@ set confirm
 set wrap
 " show trailing whitespace
 set list
-set listchars=tab:▸\ ,trail:▫
+set listchars=trail:▫
 " Spaces tab's width and indent size
 set ai
 set tabstop=4 shiftwidth=4

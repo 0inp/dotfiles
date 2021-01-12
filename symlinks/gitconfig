@@ -3,6 +3,7 @@
   autocrlf = input
   ignorecase = false
   excludesfile = /Users/stephanepoint/.gitignore
+  pager = diff-so-fancy
 
 [color]
   ui = true
@@ -77,7 +78,7 @@
     newHighlight = green bold 22
 
 [color "diff"]
-    meta = yellow
+    meta = 11
     frag = magenta bold
     commit = yellow bold
     old = red bold
