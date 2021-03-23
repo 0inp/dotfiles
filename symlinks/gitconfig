@@ -24,7 +24,7 @@
 [commit]
     gpgsign = true
 [gpg]
-    program = gpg
+	program = gpg
 
 [rebase]
   autosquash = true
@@ -37,13 +37,12 @@
   commend = commit --amend --no-edit
   s = status -sb
   d = diff -w
-  lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
   unshallow = "! git remote set-branches origin '*' && git pull --unshallow"
   edit-changes = "!vi $(git diff --name-only --diff-filter=M) -O"
   fco = "!git checkout $(git branch -a | fzf)"
   grog = log --graph --abbrev-commit --decorate --all --format=format:"%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(dim white) - %an%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n %C(white)%s%C(reset)"
   it = "!git init && git commit -m 'Initial commit' --allow-empty"
-  lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+  lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit -10
   purr = pull --rebase
   ready = rebase -i @{u}
   shorty = status -sb
@@ -59,7 +58,7 @@
   helper = cache --timeout=28800
 
 [user]
-    signingkey = D250A25C7450ECA053AC08AF708806CE3CF25CDE
+	signingkey = 708806CE3CF25CDE
     name = Stephane Point
     email = point.steph@gmail.com
 
