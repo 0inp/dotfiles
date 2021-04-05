@@ -113,7 +113,8 @@ main() {
 
   # install fzf
   print_title "Installing FZF"
-  ~/dotfiles/fzf/install
+  git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+  ~/.fzf/install
 
   # Powerline-Status
   print_title "Installing powerline-status"

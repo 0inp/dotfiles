@@ -2,11 +2,13 @@
 
 rm ~/bin
 rm ~/.gitconfig
-rm ~/.oh-my-zsh
+rm -Rf ~/.antigen
+rm -Rf ~/.oh-my-zsh
+rm -Rf ~/.fzf
 rm ~/.pythonrc.py
-rm ~/.tmux
+rm -Rf ~/.tmux
 rm ~/.tmux.conf
-rm ~/.vim
+rm -Rf ~/.vim
 rm ~/.vimrc
 rm ~/.zshrc
 rm ~/.psqlrc

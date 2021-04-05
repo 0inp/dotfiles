@@ -1,13 +1,23 @@
 antigen use oh-my-zsh
 
-antigen bundle Czocher/gpg-crypt
+antigen bundle alias-finder
+antigen bundle brew
+antigen bundle colored-man-pages
+antigen bundle common-aliases
+antigen bundle docker
+antigen bundle docker-compose
+antigen bundle fzf
 antigen bundle git
-antigen bundle macports
+antigen bundle pass
 antigen bundle pip
 antigen bundle python
+antigen bundle tmux
+antigen bundle zsh-interactive-cd
+
+antigen bundle Czocher/gpg-crypt
+antigen bundle mfaerevaag/wd
 antigen bundle raylee/tldr
 antigen bundle supercrabtree/k
-antigen bundle vagrant
 antigen bundle wfxr/forgit
 antigen bundle zsh-users/zsh-syntax-highlighting
 
