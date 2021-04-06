@@ -50,6 +50,12 @@ main() {
       brew install $item
     fi
   done
+  # Install browserpass on macos
+  print_title "Installing Browserpass"
+  if [[ "$sys" == "darwin"* ]]; then
+    brew install browserpass
+    PREFIX='/usr/local/opt/browserpass' make hosts-chrome-user -f /usr/local/opt/browserpass/lib/browserpass/Makefile
+  fi
   # Install vim with python3 support
   print_title "Installing Vim with python3 support"
   if [[ "$sys" == "linux"* ]]; then
