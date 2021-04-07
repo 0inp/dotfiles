@@ -25,8 +25,7 @@ export GPG_TTY=`tty`
 alias less='less -r'
 alias vi='vim'
 alias tmux='tmux -2'
-alias python=/usr/local/bin/python3
-alias pip=/usr/local/bin/pip3
+alias python=/usr/bin/python3
 
 # set PATH so it includes user's private bin if it exists
 if [ -d "$HOME/bin" ] ; then
@@ -44,14 +43,6 @@ export FZF_DEFAULT_OPTS='
 if command -v ag > /dev/null 2>&1; then
   export FZF_DEFAULT_COMMAND="ag -l 2> /dev/null"
   export FZF_CTRL_T_COMMAND="${FZF_DEFAULT_COMMAND}"
-fi
-
-# Load virtualenvwrapper
-export WORKON_HOME=$HOME/.virtualenvs
-if [ -f /usr/local/bin/virtualenvwrapper.sh ]
-then
-    source /usr/local/bin/virtualenvwrapper.sh
-    workon
 fi
 
 if [ -f ~/.localrc ]
