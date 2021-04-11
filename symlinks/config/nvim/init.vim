@@ -2,14 +2,8 @@
 set nocompatible
 filetype off
 
-if empty(glob('~/.vim/autoload/plug.vim'))
-  !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-endif
-
 "PLUGINS
-call plug#begin('~/.vim/bundle')
+call plug#begin('~/.vim/plugged')
 " INTERFACE
 " Theme
 Plug 'dracula/vim'

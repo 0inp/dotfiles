@@ -12,8 +12,8 @@ print_title() {
 
 create_symlinks() {
   local SYMLINK_PATH="${HOME}"
-  for file in ~/dotfiles/symlinks/*; do
-    basenameFile="$(basename "${file}")"
+  for file in $(find ~/dotfiles/symlinks -type f); do
+    basenameFile="$(echo "${file}" | sed 's/.*\(symlinks\)//g' | cut -c2-)"
     [[ -r ${file} ]] && [[ -e ${file} ]] && rm -f "${SYMLINK_PATH}/.${basenameFile}" && ln -s "${file}" "${SYMLINK_PATH}/.${basenameFile}"
   done
 }
@@ -27,22 +27,19 @@ clean_packages() {
   fi
 }
 
-install_submodules() {
-  cd ~/dotfiles
-  git config -f .gitmodules --get-regexp '^submodule\..*\.path$' | while read path_key path ; do
-    url_key=$(echo $path_key | sed 's/\.path/.url/')
-    url=$(git config -f .gitmodules --get "$url_key")
-    rm -rf $path
-    git rm -r $path
-    git submodule add -f $url $path
-  done
-  cd ~
-}
-
 main() {
 
+  # Some files and folders need to be deleted prior the installation
+  [[ -d "${HOME}/.tmux" ]] && rm -Rf ~/.tmux
+  [[ -f "${HOME}/.tmux.conf" ]] && rm ~/.tmux.conf
+  [[ -f "${HOME}/bin" ]] && rm ~/bin
+  [[ -f "${HOME}/.gitconfig" ]] && rm ~/.gitconfig
+  [[ -f "${HOME}/.pythonrc.py" ]] && rm ~/.pythonrc.py
+  [[ -f "${HOME}/.zshrc" ]] && rm ~/.zshrc
+  [[ -f "${HOME}/.psqlrc" ]] && rm ~/.psqlrc
+
   local sys=$OSTYPE; shift
-  for item in zsh httpie ack tmux; do
+  for item in zsh httpie tmux; do
     print_title "Installing $item"
     if [[ "$sys" == "linux"* ]]; then
       sudo apt -y install $item
@@ -50,48 +47,58 @@ main() {
       brew install $item
     fi
   done
+
+  # Install Oh-My-Zsh
+  print_title "Installing Oh My Zsh"
+  [[ -d "${HOME}/.oh-my-zsh" ]] && rm -Rf ~/.oh-my-zsh
+  curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+
   # Install browserpass on macos
   print_title "Installing Browserpass"
   if [[ "$sys" == "darwin"* ]]; then
     brew install browserpass
     PREFIX='/usr/local/opt/browserpass' make hosts-chrome-user -f /usr/local/opt/browserpass/lib/browserpass/Makefile
   fi
-  # Install vim with python3 support
-  print_title "Installing Vim with python3 support"
+
+  # Install antigen
+  print_title "Installing Antigen"
+  [[ -d "${HOME}/.antigen" ]] && rm -Rf ~/.antigen
+  curl -L git.io/antigen > ${HOME}/dotfiles/antigen/antigen.zsh
+
+  # install fzf
+  print_title "Installing FZF"
+  [[ -d "${HOME}/.fzf" ]] && rm -Rf ~/.fzf
+  git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+  ~/.fzf/install --all
+
+  # Install neovim
+  print_title "Installing Neovim"
   if [[ "$sys" == "linux"* ]]; then
-    sudo apt -y install vim-gtk
-    sudo update-alternatives --install /usr/bin/editor editor /usr/bin/vim.gtk 1
-    sudo update-alternatives --set editor /usr/bin/vim.gtk
-    sudo update-alternatives --install /usr/bin/vi vi /usr/bin/vim.gtk 1
-    sudo update-alternatives --set vi /usr/bin/vim.gtk
+    sudo apt-get install neovim
   elif [[ "$sys" == "darwin"* ]]; then
-    brew install vim
+    brew install neovim
   fi
-  # Install hub
-  print_title "Installing hub"
-  if [[ "$sys" == "darwin"* ]]; then
-    brew install $item
-  fi
-  # The Silver Searcher Specificity
-  print_title "Installing the_silver_searcher"
+  [[ ! -d "${HOME}/.config/nvim/" ]] && mkdir "${HOME}/.config/nvim"
+  curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+  # Ripgrep
+  print_title "Installing ripgrep"
   if [[ "$sys" == "linux"* ]]; then
-    sudo apt -y install silversearcher-ag
+    curl -LO https://github.com/BurntSushi/ripgrep/releases/download/11.0.2/ripgrep_11.0.2_amd64.deb
+    sudo dpkg -i ripgrep_11.0.2_amd64.deb
+    rm ripgrep_11.0.2_amd64.deb
   elif [[ "$sys" == "darwin"* ]]; then
-    brew install the_silver_searcher
+    brew install ripgrep
   fi
 
   # Switch to zsh
   print_title "Switch to ZSH"
-  echo "Which user ?"
-  read user
-  sudo chsh -s $(which zsh) $user
-
-  print_title "Updating submodules"
-  install_submodules
-  cd ~/dotfiles/ && git submodule update --init
+  sudo chsh -s $(which zsh) ${USER}
 
   # pyenv
   print_title "Installing Pyenv Section"
+  [[ -d "${HOME}/.pyenv" ]] && rm -Rf ~/.pyenv
+  [[ -d "${HOME}/opt/pyenv" ]] && rm -Rf ~/opt/pyenv
   if [[ "$sys" == "linux"* ]]; then
     curl https://pyenv.run | bash
   elif [[ "$sys" == "darwin"* ]]; then
@@ -110,51 +117,11 @@ main() {
     pip install --user tmuxp
   fi
 
-  # fswatch
-  print_title "Installing fswatch"
-  # Tmux Session Manager
-  if [[ "$sys" == "darwin"* ]]; then
-    brew install fswatch
-  fi
-
-  # install fzf
-  print_title "Installing FZF"
-  git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-  ~/.fzf/install
-
-  # Powerline-Status
-  print_title "Installing powerline-status"
-  if command -v pip > /dev/null 2>&1; then
-    pip install --user powerline-status
-  elif command -v pip3 > /dev/null 2>&1; then
-    pip3 install --user powerline-status
-  fi
-
-  if [[ "$sys" == "linux"* ]]; then
-    sudo apt-get install fonts-powerline
-  elif [[ "$sys" == "darwin"* ]]; then
-    git clone https://github.com/powerline/fonts.git --depth=1
-    cd fonts
-    ./install.sh
-    cd ..
-    rm -rf fonts install --user powerline-status
-  fi
-
   # diff-so-fancy
   print_title "Installing diff-so-fancy"
+  [[ -d "${HOME}/diff-so-fancy" ]] && rm -Rf ~/diff-so-fancy
   git clone https://github.com/so-fancy/diff-so-fancy.git ~/diff-so-fancy
   export PATH="${HOME}/diff-so-fancy/diff-so-fancy:${PATH}"
-
-
-  # Ripgrep
-  print_title "Installing ripgrep"
-  if [[ "$sys" == "linux"* ]]; then
-    curl -LO https://github.com/BurntSushi/ripgrep/releases/download/11.0.2/ripgrep_11.0.2_amd64.deb
-    sudo dpkg -i ripgrep_11.0.2_amd64.deb
-    rm ripgrep_11.0.2_amd64.deb
-  elif [[ "$sys" == "darwin"* ]]; then
-    brew install ripgrep
-  fi
 
   # MA Repos
   print_title "Cloning Repos MeilleursAgents"
@@ -186,8 +153,6 @@ main() {
     systemctl --user enable syncthing
     systemctl --user start syncthing
   fi
-
-
 
   # Node
   print_title "Node"
