@@ -1,27 +1,20 @@
 " Turnoff vi backward compatibility
-set nocompatible
 filetype off
 
 "PLUGINS
 call plug#begin('~/.vim/plugged')
 " INTERFACE
 " Theme
-Plug 'dracula/vim'
-" Visually displaying indent levels
-Plug 'Yggdroot/indentLine'
+Plug 'joshdick/onedark.vim'
 " StatusLine
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 " Jinja
 Plug 'lepture/vim-jinja'
-
-" GIT
-" Manipulate hunk directly in vim
-Plug 'tpope/vim-fugitive'
+" Code folding
+Plug 'tmhedberg/SimpylFold'
 
 " EDITING
-" Manipulate indented blocks of text
-Plug 'austintaylor/vim-indentobject'
 " syntax checking
 Plug 'scrooloose/syntastic'
 " Commenting
@@ -31,7 +24,12 @@ Plug 'tpope/vim-surround'
 " Align text on specific char
 Plug 'vim-scripts/Align'
 " AutoCompletion
-Plug 'davidhalter/jedi-vim'
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'zchee/deoplete-jedi'
+" Automatic quote and bracket completion
+Plug 'jiangmiao/auto-pairs'
+" MultiCursor
+Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 
 " NAVIGATING
 " Config for displaying file information in the tagbar
@@ -39,22 +37,35 @@ Plug 'majutsushi/tagbar'
 " File fuzzy finder
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-" Search tool ack
-" Plug 'rking/ag.vim'
-Plug 'mileszs/ack.vim'
+" Search tool ripgrep
+Plug 'jremmen/vim-ripgrep'
 " File system explorer
 Plug 'scrooloose/nerdtree'
 " Search tools
 Plug 'vim-scripts/greplace.vim'
 Plug 'vim-scripts/matchit.zip'
+" Code jumping to definition
+Plug 'davidhalter/jedi-vim'
 
 call plug#end()            " required
 filetype plugin indent on    " required
+
+" Deoplete
+let g:deoplete#enable_at_startup = 1
 
 " Status line
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#formatter = 'default'
 
+"Syntastic
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
 
 " MISCELLANEOUS
 " Line highlight
@@ -170,22 +181,18 @@ nnoremap <leader>] :TagbarToggle<CR>
 noremap <leader>l :Align
 " fzf+Vim
 nmap <C-P> :FZF<CR>
-" ack
-nnoremap <leader>a :Ack<CR>
-" Use The Silver Searcher https://github.com/ggreer/the_silver_searcher
-if executable('ag')
-  " Use Ag over Grep
-  let g:ackprg = 'ag --vimgrep'
-endif
+" Ripgrep
+nnoremap <leader>r :Rg<CR>
+
 "NerdTree
 nnoremap <leader>d :NERDTreeToggle<CR>
 nnoremap <leader>f :NERDTreeFind<CR>
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 let g:NERDSpaceDelims=1
-" AutoCompletion
-let g:jedi#use_tabs_not_buffers = 1
-let g:jedi#use_splits_not_buffers = "winwidth"
+" Jedi GoTo Definition
+let g:jedi#completions_enabled = 0
+let g:jedi#use_splits_not_buffers = "right"
 
 " Mouvement between vim windows
 noremap <C-h> <C-w>h
@@ -202,7 +209,6 @@ imap <left> <nop>
 imap <right> <nop>
 
 " Other shortcuts
-noremap <silent> <leader>V :source ~/.vimrc<CR>:filetype detect<CR>:exe ":echo 'vimrc reloaded'"<CR>
 nnoremap Y y$
 " add pdb breakpoints
 nnoremap <leader>m oimport pdb; pdb.set_trace()<Esc>
