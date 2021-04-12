@@ -78,7 +78,7 @@ main() {
   elif [[ "$sys" == "darwin"* ]]; then
     brew install neovim
   fi
-  pip3 install --user pynvim
+  pip3 install pynvim
   pip install jedi
   [[ ! -d "${HOME}/.config/nvim/" ]] && mkdir "${HOME}/.config/nvim"
   curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
