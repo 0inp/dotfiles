@@ -93,6 +93,14 @@ main() {
     brew install ripgrep
   fi
 
+  # Install yamllint
+  print_title "Installing yamllint"
+  if [[ "$sys" == "linux"* ]]; then
+    sudo apt-get install yamllint
+  elif [[ "$sys" == "darwin"* ]]; then
+    brew install yamllint
+  fi
+
   # Switch to zsh
   print_title "Switch to ZSH"
   sudo chsh -s $(which zsh) ${USER}

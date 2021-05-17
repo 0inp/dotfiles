@@ -1,5 +1,5 @@
 [core]
-  editor = vi
+	editor = nvim
   autocrlf = input
   ignorecase = false
   excludesfile = /Users/stephanepoint/.gitignore
@@ -11,6 +11,7 @@
 [diff]
   mnemonicPrefix = true
   renames = true
+	ignoreSubmodules = dirty
 
 [pull]
   rebase = preserve

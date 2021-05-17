@@ -35,7 +35,7 @@ Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 " Config for displaying file information in the tagbar
 Plug 'majutsushi/tagbar'
 " File fuzzy finder
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
 " Search tool ripgrep
 Plug 'jremmen/vim-ripgrep'
