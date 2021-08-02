@@ -39,7 +39,7 @@ main() {
   [[ -f "${HOME}/.psqlrc" ]] && rm ~/.psqlrc
 
   local sys=$OSTYPE; shift
-  for item in zsh httpie tmux; do
+  for item in zsh httpie tmux gitlint; do
     print_title "Installing $item"
     if [[ "$sys" == "linux"* ]]; then
       sudo apt -y install $item
