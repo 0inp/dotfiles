@@ -13,6 +13,10 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'lepture/vim-jinja'
 " Code folding
 Plug 'tmhedberg/SimpylFold'
+" Syntax Highlighting
+Plug 'sheerun/vim-polyglot'
+" Use of :Make in vim
+Plug 'tpope/vim-dispatch'
 
 " EDITING
 " syntax checking
