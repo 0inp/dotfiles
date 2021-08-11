@@ -146,6 +146,12 @@ main() {
   create_symlinks
   [[ ! -L "${HOME}/bin" ]] && ln -s ~/dotfiles/bin ~/bin
 
+  # Install gcloud
+  print_title "Installing google-cloud-sdk"
+  if [[ "$sys" == "darwin"* ]]; then
+    brew install --cask google-cloud-sdk
+  fi
+
   # Syncthing VM dev
   print_title "Syncthing"
   if [[ "$sys" == "linux"* ]]; then
