@@ -8,7 +8,6 @@ export PGUSER=meilleursagents
 export MA_ENV=dev
 export MA_INSTANCE=stephanep
 export MA_REPOSITORY=${HOME}/meilleursagents
-export ENVIRONMENT=dev-server
 export SSL_DISABLED=True
 export SSL_ACTIVE=False
 
