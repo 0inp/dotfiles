@@ -13,9 +13,6 @@ export LC_ALL=en_US.utf-8
 export LC_CTYPE=en_US.utf-8
 export EDITOR=nvim
 export VISUAL=nvim
-export PGHOST=localhost
-export PACKAGECLOUD_TOKEN=5a437f5ec3db1d55e243644691ed21170b8befe2d1ed94a8
-export PACKAGECLOUD_NPM_TOKEN=da74db59526ca18ce45521a27ecac7fb2ec2d98d95b1c0b7
 export GPG_TTY=`tty`
 
 # Customize to your needs...
