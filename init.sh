@@ -51,7 +51,7 @@ main() {
   # Install Oh-My-Zsh
   print_title "Installing Oh My Zsh"
   [[ -d "${HOME}/.oh-my-zsh" ]] && rm -Rf ~/.oh-my-zsh
-  curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+  curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh > ohmyzsh.sh
 
   # Install browserpass on macos
   print_title "Installing Browserpass"
@@ -79,7 +79,7 @@ main() {
     brew install neovim
   fi
   pip3 install pynvim
-  pip install jedi
+  pip3 install jedi
   [[ ! -d "${HOME}/.config/nvim/" ]] && mkdir "${HOME}/.config/nvim"
   curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
@@ -186,6 +186,11 @@ main() {
   # Cleaning
   print_title "Clean"
   clean_packages
+
+  # Install OhMyZsh
+  # keep this at the end of the script
+  print_title "Install OhMyZsh"
+  source ohmyzsh.sh --keep-zshrc
 }
 
 main "${@:-}"

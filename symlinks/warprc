@@ -1,0 +1,14 @@
+dotfiles:~/dotfiles
+eam:~/ExternalAdManagerAPI
+feedback:~/FeedbackAPI
+infra:~/MA-Infra
+integration:~/MA-Integration
+lead:~/LeadAPI
+media:~/MeilleursAgents/apps/MediaAPI
+midi:~/MidiDrumsConverter
+mypro:~/MeilleursAgents/apps/MyProAPI
+presto:~/MAPresto
+prospection:~/ProspectionMapAPI
+tools:~/MeilleursAgents/apps/Tools
+user:~/UserAPI
+www:~/MeilleursAgents/apps/www
