@@ -21,6 +21,7 @@ Plug 'tpope/vim-dispatch'
 " EDITING
 " syntax checking
 Plug 'scrooloose/syntastic'
+Plug 'dense-analysis/ale'
 " Commenting
 Plug 'tpope/vim-commentary'
 " editing around a letter, word or block in vim
@@ -236,3 +237,27 @@ endif
 
 let g:pymode_options_max_line_length = 180
 let g:pymode_lint_options_pep8 = {'max_line_length': 180}
+
+" Ale
+nmap <silent> <C-e> <Plug>(ale_next_wrap)
+function! LinterStatus() abort
+    let l:counts = ale#statusline#Count(bufnr(''))    let l:all_errors = l:counts.error + l:counts.style_error
+    let l:all_non_errors = l:counts.total - l:all_errors    return l:counts.total == 0 ? 'OK' : printf(
+        \   '%d⨉ %d⚠ ',
+        \   all_non_errors,
+        \   all_errors
+        \)
+endfunction
+set statusline+=%=
+set statusline+=\ %{LinterStatus()}
+let g:ale_python_auto_pipenv = 0
+let g:ale_lint_on_enter = 0
+let g:ale_lint_on_save = 1
+let g:ale_fix_on_save = 1
+let g:ale_sign_error = '●'
+let g:ale_sign_warning = '.'
+let g:airline#extensions#ale#enabled = 1
+" let g:ale_linters = {'python': ['mypy', 'flake8', 'black'],}
+let g:ale_linters = {'python': [],}
+let g:ale_fixers = {'python': ['black', 'isort'],}
+let g:ale_floating_window_border = ['│', '─', '╭', '╮', '╯', '╰']
