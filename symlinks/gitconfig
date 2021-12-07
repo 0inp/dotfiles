@@ -14,7 +14,7 @@
 	ignoreSubmodules = dirty
 
 [pull]
-  rebase = preserve
+	rebase = merges
 
 [push]
   default = current
