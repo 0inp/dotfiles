@@ -48,11 +48,6 @@ main() {
     fi
   done
 
-  # Install Oh-My-Zsh
-  print_title "Installing Oh My Zsh"
-  [[ -d "${HOME}/.oh-my-zsh" ]] && rm -Rf ~/.oh-my-zsh
-  curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh > ohmyzsh.sh
-
   # Install browserpass on macos
   print_title "Installing Browserpass"
   if [[ "$sys" == "darwin"* ]]; then
@@ -152,24 +147,6 @@ main() {
     brew install --cask google-cloud-sdk
   fi
 
-  # Syncthing VM dev
-  print_title "Syncthing"
-  if [[ "$sys" == "linux"* ]]; then
-    # Add the release PGP keys:
-    sudo curl -s -o /usr/share/keyrings/syncthing-archive-keyring.gpg https://syncthing.net/release-key.gpg
-    # Add the "stable" channel to your APT sources:
-    echo "deb [signed-by=/usr/share/keyrings/syncthing-archive-keyring.gpg] https://apt.syncthing.net/ syncthing stable" | sudo tee /etc/apt/sources.list.d/syncthing.list
-    # Increase preference of Syncthing's packages ("pinning")
-    printf "Package: *\nPin: origin apt.syncthing.net\nPin-Priority: 990\n" | sudo tee /etc/apt/preferences.d/syncthing
-    # Update and install syncthing:
-    sudo apt-get update
-    sudo apt-get install syncthing
-    sudo cp "./syncthing.service" "/etc/systemd/system/"
-    systemctl --user daemon-reload
-    systemctl --user enable syncthing
-    systemctl --user start syncthing
-  fi
-
   # Node
   print_title "Node"
   NODE_VERSION="12"
@@ -189,7 +166,9 @@ main() {
 
   # Install OhMyZsh
   # keep this at the end of the script
-  print_title "Install OhMyZsh"
+  print_title "OhMyZsh"
+  [[ -d "${HOME}/.oh-my-zsh" ]] && rm -Rf ~/.oh-my-zsh
+  curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh > ohmyzsh.sh
   source ohmyzsh.sh --keep-zshrc
 }
 
