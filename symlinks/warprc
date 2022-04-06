@@ -9,6 +9,8 @@ midi:~/MidiDrumsConverter
 mypro:~/MeilleursAgents/apps/MyProAPI
 presto:~/MAPresto
 prospection:~/ProspectionMapAPI
+pubsub:~/MA-PubSub
+sfapi:~/MeilleursAgents/apps/SalesforceAPI
 tools:~/MeilleursAgents/apps/Tools
 user:~/UserAPI
 www:~/MeilleursAgents/apps/www
