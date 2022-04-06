@@ -146,6 +146,8 @@ main() {
   if [[ "$sys" == "darwin"* ]]; then
     brew install --cask google-cloud-sdk
   fi
+  gcloud components update
+  export CLOUDSDK_PYTHON=/usr/bin/python3
 
   # Node
   print_title "Node"
@@ -170,6 +172,7 @@ main() {
   [[ -d "${HOME}/.oh-my-zsh" ]] && rm -Rf ~/.oh-my-zsh
   curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh > ohmyzsh.sh
   source ohmyzsh.sh --keep-zshrc
+  source ~/.tmux.conf
 }
 
 main "${@:-}"
