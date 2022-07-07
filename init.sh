@@ -14,7 +14,7 @@ create_symlinks() {
   local SYMLINK_PATH="${HOME}"
   for file in $(find ~/dotfiles/symlinks -type f); do
     basenameFile="$(echo "${file}" | sed 's/.*\(symlinks\)//g' | cut -c2-)"
-    [[ -r ${file} ]] && [[ -e ${file} ]] && rm -f "${SYMLINK_PATH}/.${basenameFile}" && ln -s "${file}" "${SYMLINK_PATH}/.${basenameFile}"
+    [[ -r ${file} ]] && [[ -e ${file} ]] && rm -f "${SYMLINK_PATH}/.${basenameFile}" && ln -vfs "${file}" "${SYMLINK_PATH}/.${basenameFile}"
   done
 }
 
@@ -94,6 +94,15 @@ main() {
     sudo apt-get install yamllint
   elif [[ "$sys" == "darwin"* ]]; then
     brew install yamllint
+  fi
+
+  # Install pgcli
+  print_title "Installing pgcli"
+  if [[ "$sys" == "linux"* ]]; then
+    sudo apt-get install libpq-dev python-dev
+    sudo pip install pgcli
+  elif [[ "$sys" == "darwin"* ]]; then
+    brew install pgcli
   fi
 
   # Switch to zsh
