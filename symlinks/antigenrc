@@ -16,10 +16,11 @@ antigen bundle zsh-interactive-cd
 
 antigen bundle Czocher/gpg-crypt
 antigen bundle mfaerevaag/wd
-antigen bundle raylee/tldr
 antigen bundle supercrabtree/k
 antigen bundle wfxr/forgit
+antigen bundle raylee/tldr
 antigen bundle zsh-users/zsh-syntax-highlighting
+antigen bundle chitoku-k/fzf-zsh-completions
 
 antigen theme denysdovhan/spaceship-prompt
 
