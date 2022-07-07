@@ -14,6 +14,8 @@ export LC_CTYPE=en_US.utf-8
 export EDITOR=nvim
 export VISUAL=nvim
 export GPG_TTY=`tty`
+export XDG_CONFIG_HOME="$HOME/.config"
+export PGPASS_PATH="$HOME/.pgpass"
 
 # Customize to your needs...
 alias less='less -r'
@@ -40,6 +42,7 @@ if command -v ag > /dev/null 2>&1; then
   export FZF_DEFAULT_COMMAND="ag -l 2> /dev/null"
   export FZF_CTRL_T_COMMAND="${FZF_DEFAULT_COMMAND}"
 fi
+source $HOME/dotfiles/fzf/pgcli.zsh
 
 if [ -f ~/.localrc ]
 then
@@ -111,7 +114,8 @@ if ! command -v gcloud > /dev/null 2>&1; then
 fi
 
 export BOTO_CONFIG=/dev/null
-export CLOUDSDK_PYTHON=/usr/bin/python
+export CLOUDSDK_PYTHON=/usr/bin/python3
+gcloud_auth()
 
 gcloud_auth() {
   rm -rf "/tmp/${USER}*"

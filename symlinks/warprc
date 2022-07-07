@@ -6,7 +6,8 @@ integration:~/MA-Integration
 lead:~/LeadAPI
 media:~/MeilleursAgents/apps/MediaAPI
 midi:~/MidiDrumsConverter
-mypro:~/MeilleursAgents/apps/MyProAPI
+mypro:~/MyProAPI
+pmapi:~/ProspectionMapAPI
 presto:~/MAPresto
 prospection:~/ProspectionMapAPI
 pubsub:~/MA-PubSub
