@@ -145,18 +145,24 @@ main() {
   [[ ! -d "${HOME}/IndiceAPI" ]] && git clone git@github.com:MeilleursAgents/IndiceAPI.git ~/IndiceAPI
   [[ ! -d "${HOME}/MarketAPI" ]] && git clone git@github.com:MeilleursAgents/MarketAPI.git ~/MarketAPI
 
-  # Symlinks
-  print_title "Symlinks"
-  create_symlinks
-  [[ ! -L "${HOME}/bin" ]] && ln -s ~/dotfiles/bin ~/bin
-
   # Install gcloud
   print_title "Installing google-cloud-sdk"
+  export CLOUDSDK_PYTHON=/usr/bin/python3
   if [[ "$sys" == "darwin"* ]]; then
     brew install --cask google-cloud-sdk
   fi
   gcloud components update
-  export CLOUDSDK_PYTHON=/usr/bin/python3
+
+  # install k9s
+  if [[ "$sys" == "darwin"* ]]; then
+    brew install derailed/k9s/k9s
+  fi
+  export XDG_CONFIG_HOME=${HOME}
+
+  # Symlinks
+  print_title "Symlinks"
+  create_symlinks
+  [[ ! -L "${HOME}/bin" ]] && ln -s ~/dotfiles/bin ~/bin
 
   # Node
   print_title "Node"
