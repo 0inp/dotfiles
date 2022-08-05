@@ -135,7 +135,7 @@ main() {
   print_title "Installing diff-so-fancy"
   [[ -d "${HOME}/diff-so-fancy" ]] && rm -Rf ~/diff-so-fancy
   git clone https://github.com/so-fancy/diff-so-fancy.git ~/diff-so-fancy
-  export PATH="${HOME}/diff-so-fancy/diff-so-fancy:${PATH}"
+  export PATH="${HOME}/development/diff-so-fancy/diff-so-fancy:${PATH}"
 
   # MA Repos
   print_title "Cloning Repos MeilleursAgents"
@@ -171,11 +171,19 @@ main() {
   git clone --depth 1 https://github.com/tj/n.git "${HOME}/n-install"
   (cd "${HOME}/n-install" && PREFIX="${HOME}/opt" make install)
   rm -rf "${HOME}/n-install"
-  export PATH="${HOME}/opt/node/bin:${PATH}"
-  export PATH="${HOME}/opt/bin:${PATH}"
+  export PATH="${HOME}/development/opt/node/bin:${PATH}"
+  export PATH="${HOME}/development/opt/bin:${PATH}"
   export N_PREFIX="${HOME}/opt"
   n "${NODE_VERSION}"
   npm install --ignore-scripts -g npm node-gyp
+
+  # Rust
+  print_title "Rust"
+  if [[ ! -f "${HOME}/.cargo/bin/rustup" ]]; then
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+  else
+    rustup update
+  fi
 
   # Cleaning
   print_title "Clean"

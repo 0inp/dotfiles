@@ -1,6 +1,7 @@
 dotfiles:~/dotfiles
 eam:~/ExternalAdManagerAPI
 feedback:~/FeedbackAPI
+flowy:~/AppFlowy
 infra:~/MA-Infra
 integration:~/MA-Integration
 lead:~/LeadAPI

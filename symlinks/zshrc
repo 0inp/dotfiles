@@ -52,7 +52,7 @@ fi
 PYTHONSTARTUP=~/.pythonrc.py
 export PYTHONSTARTUP
 
-export PATH="$HOME/opt/pyenv/bin:$PATH"
+export PATH="$HOME/development/opt/pyenv/bin:$PATH"
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init --path)"
@@ -131,3 +131,10 @@ gcloud_auth() {
 
 # New MA env dev kubctl
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+
+# Add flutter bin to PATH
+export PATH="$PATH:$HOME/development/flutter/bin"
+export PATH="$PATH":"$HOME/.pub-cache/bin"
+
+# Add Rust binary to PATH
+export PATH="$PATH:$HOME/.cargo/bin"
