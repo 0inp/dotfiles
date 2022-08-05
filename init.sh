@@ -75,6 +75,9 @@ main() {
   fi
   pip3 install pynvim
   pip3 install jedi
+  pip3 install flake8
+  pip3 install black
+  pip3 install isort
   [[ ! -d "${HOME}/.config/nvim/" ]] && mkdir "${HOME}/.config/nvim"
   curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
@@ -192,10 +195,12 @@ main() {
   # Install OhMyZsh
   # keep this at the end of the script
   print_title "OhMyZsh"
-  [[ -d "${HOME}/.oh-my-zsh" ]] && rm -Rf ~/.oh-my-zsh
-  curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh > ohmyzsh.sh
-  source ohmyzsh.sh --keep-zshrc
-  source ~/.tmux.conf
+  if [[ ! -d "${HOME}/.oh-my-zsh" ]]; then
+    curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh > ohmyzsh.sh
+    source ohmyzsh.sh --keep-zshrc
+    source ~/.tmux.conf
+    rm -f ohmyzsh.sh
+  fi
 }
 
 main "${@:-}"
