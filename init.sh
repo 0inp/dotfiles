@@ -169,7 +169,7 @@ main() {
 
   # Node
   print_title "Node"
-  NODE_VERSION="12"
+  NODE_VERSION="16"
   rm -rf "${HOME}/n-install"
   git clone --depth 1 https://github.com/tj/n.git "${HOME}/n-install"
   (cd "${HOME}/n-install" && PREFIX="${HOME}/opt" make install)
