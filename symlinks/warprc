@@ -1,3 +1,4 @@
+b2clrapi:~/B2CLeadRankingAPI
 dotfiles:~/dotfiles
 eam:~/ExternalAdManagerAPI
 feedback:~/FeedbackAPI
@@ -5,7 +6,8 @@ flowy:~/AppFlowy
 infra:~/MA-Infra
 integration:~/MA-Integration
 lead:~/LeadAPI
-media:~/MeilleursAgents/apps/MediaAPI
+malegacy:~/MeilleursAgents/MALegacy
+media:~/MediaAPI
 midi:~/MidiDrumsConverter
 mypro:~/MyProAPI
 pmapi:~/ProspectionMapAPI

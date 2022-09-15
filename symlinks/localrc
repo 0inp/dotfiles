@@ -15,5 +15,3 @@ export TLDR_QUOTE='italic'
 export TLDR_DESCRIPTION='green'
 export TLDR_CODE='red'
 export TLDR_PARAM='blue'
-
-export PACKAGECLOUD_NPM_TOKEN='70b055ad75ff4778332ff3076c38837d37df0751e5e82ae0'
