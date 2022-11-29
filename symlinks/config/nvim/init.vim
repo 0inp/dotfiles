@@ -23,6 +23,8 @@ Plug 'tpope/vim-dispatch'
 Plug 'dense-analysis/ale'
 " AutoCompletion
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
+Plug 'jamestthompson3/nvim-remote-containers'
 " Commenting
 Plug 'tpope/vim-commentary'
 " editing around a letter, word or block in vim
@@ -218,6 +220,10 @@ nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 let g:coc_global_extensions = ['coc-pyright', 'coc-json', 'coc-git']
 let g:coc#preferences#extensionUpdateCheck = 'daily'
+" devcontainer options
+hi Container guifg=#BADA55 guibg=Black
+set statusline+=%#Container#%{g:currentContainer}
+
 
 " Status line
 let g:airline#extensions#tabline#enabled = 1
