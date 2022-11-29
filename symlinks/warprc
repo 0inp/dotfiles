@@ -1,8 +1,8 @@
+
 b2clrapi:~/B2CLeadRankingAPI
 dotfiles:~/dotfiles
 eam:~/ExternalAdManagerAPI
 feedback:~/FeedbackAPI
-flowy:~/AppFlowy
 infra:~/MA-Infra
 integration:~/MA-Integration
 lead:~/LeadAPI
@@ -10,11 +10,10 @@ malegacy:~/MeilleursAgents/MALegacy
 media:~/MediaAPI
 midi:~/MidiDrumsConverter
 mypro:~/MyProAPI
+obsidian:~/Documents/Obsidian Vault
+pdfapi:~/PdfAPI
 pmapi:~/ProspectionMapAPI
-presto:~/MAPresto
 prospection:~/ProspectionMapAPI
 pubsub:~/MA-PubSub
 sfapi:~/MeilleursAgents/apps/SalesforceAPI
-tools:~/MeilleursAgents/apps/Tools
 user:~/UserAPI
-www:~/MeilleursAgents/apps/www
