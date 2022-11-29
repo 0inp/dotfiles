@@ -26,7 +26,7 @@
     gpgsign = true
 
 [gpg]
-	program = gpg
+	program = /usr/local/bin/gpg
 
 [rebase]
   autosquash = true
@@ -81,3 +81,5 @@
     old = red bold
     new = green bold
     whitespace = red reverse
+[init]
+	templateDir = /Users/stephanepoint/.git-templates
