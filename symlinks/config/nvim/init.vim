@@ -1,6 +1,7 @@
 " Turnoff vi backward compatibility filetype off
+set nocompatible
 
-"PLUGINS
+" PLUGINS
 call plug#begin('~/.vim/plugged')
 " INTERFACE
 " Theme
@@ -19,12 +20,9 @@ Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-dispatch'
 
 " EDITING
-" syntax checking
-Plug 'dense-analysis/ale'
-" AutoCompletion
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
-Plug 'jamestthompson3/nvim-remote-containers'
+" " AutoCompletion
+Plug 'ms-jpq/coq_nvim', {'branch': 'coq'}
+Plug 'ms-jpq/coq.artifacts', {'branch': 'artifacts'}
 " Commenting
 Plug 'tpope/vim-commentary'
 " editing around a letter, word or block in vim
@@ -41,191 +39,28 @@ Plug 'junegunn/fzf.vim'
 " Search tool ripgrep
 Plug 'jremmen/vim-ripgrep'
 " File system explorer
-Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
-" Snippets.
-Plug 'SirVer/ultisnips'
-Plug 'honza/vim-snippets'
-" Search tools
-Plug 'vim-scripts/matchit.zip'
+Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': 'python3 -m chadtree deps'}
+
+" try Ale in contaner
+Plug 'dense-analysis/ale'
 
 call plug#end()            " required
 filetype plugin indent on    " required
 
-" PLUGINS CONFIGURATION
-" Vim-Plug updates status
-" Do not show any message if all plugins are up to date. 0 by default
-let g:outdated_plugins_silent_mode = 1
-
-" SimpylFold
-let g:SimpylFold_docstring_preview = 1
-"
-" Ale
-nmap <silent> <C-e> <Plug>(ale_next_wrap)
-function! LinterStatus() abort
-    let l:counts = ale#statusline#Count(bufnr(''))    let l:all_errors = l:counts.error + l:counts.style_error
-    let l:all_non_errors = l:counts.total - l:all_errors    return l:counts.total == 0 ? 'OK' : printf(
-        \   '%d⨉ %d⚠ ',
-        \   all_non_errors,
-        \   all_errors
-        \)
-endfunction
-set statusline+=%=
-set statusline+=\ %{LinterStatus()}
-let g:ale_python_auto_pipenv = 0
-let g:ale_lint_on_enter = 0
-let g:ale_lint_on_save = 1
-let g:ale_fix_on_save = 0
-let g:ale_sign_error = '●'
-let g:ale_sign_warning = '.'
-let g:airline#extensions#ale#enabled = 1
-let g:ale_linters = {'python': ['flake8', 'mypy', 'black', 'isort'],}
-let g:ale_fixers = {'python': ['autoflake', 'black', 'isort'],}
-let g:ale_floating_window_border = ['│', '─', '╭', '╮', '╯', '╰']
-
-" vim-snippets
-" If you want :UltiSnipsEdit to split your window.
-let g:UltiSnipsEditSplit="vertical"
-
-" fzf+Vim
-nmap <C-P> :FZF<CR>
-" Ripgrep
-nnoremap <leader>r :Rg<CR>
-
-"NerdTree
-nnoremap <leader>d :NERDTreeToggle<CR>
-nnoremap <leader>f :NERDTreeFind<CR>
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-let g:NERDSpaceDelims=1
-
-" Coc.nvim
-" Some servers have issues with backup files, see #649.
-set nobackup
-set nowritebackup
-" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
-" delays and poor user experience.
-set updatetime=300
-" Always show the signcolumn, otherwise it would shift the text each time
-" diagnostics appear/become resolved.
-set signcolumn=yes
-" Use tab for trigger completion with characters ahead and navigate.
-" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-" other plugin before putting this into your config.
-inoremap <silent><expr> <TAB>
-      \ coc#pum#visible() ? coc#pum#next(1):
-      \ CheckBackspace() ? "\<Tab>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
-" Make <CR> to accept selected completion item or notify coc.nvim to format
-" <C-g>u breaks current undo, please make your own choice.
-inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
-                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
-function! CheckBackspace() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-" Use <c-space> to trigger completion.
-if has('nvim')
-  inoremap <silent><expr> <c-space> coc#refresh()
-else
-  inoremap <silent><expr> <c-@> coc#refresh()
+" THEME onedark
+" Remove the ~ at the end of file
+let g:onedark_hide_endofbuffer = 1
+" 256-color terminals
+let g:onedark_termcolors = 256
+" Terminal emulator supports italics
+let g:onedark_terminal_italics = 1
+" Enable syntax color if exist
+if exists(":syntax")
+  syntax on
 endif
-" GoTo code navigation.
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-" Use K to show documentation in preview window.
-nnoremap <silent> K :call ShowDocumentation()<CR>
-function! ShowDocumentation()
-  if CocAction('hasProvider', 'hover')
-    call CocActionAsync('doHover')
-  else
-    call feedkeys('K', 'in')
-  endif
-endfunction
-" Highlight the symbol and its references when holding the cursor.
-autocmd CursorHold * silent call CocActionAsync('highlight')
-" Symbol renaming.
-nmap <leader>rn <Plug>(coc-rename)
-" Formatting selected code.
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
-augroup mygroup
-  autocmd!
-  " Setup formatexpr specified filetype(s).
-  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-  " Update signature help on jump placeholder.
-  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-augroup end
-" Applying codeAction to the selected region.
-" Example: `<leader>aap` for current paragraph
-xmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>a  <Plug>(coc-codeaction-selected)
-" Remap keys for applying codeAction to the current buffer.
-nmap <leader>ac  <Plug>(coc-codeaction)
-" Apply AutoFix to problem on the current line.
-nmap <leader>qf  <Plug>(coc-fix-current)
-" Run the Code Lens action on the current line.
-nmap <leader>cl  <Plug>(coc-codelens-action)
-" Map function and class text objects
-" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
-xmap if <Plug>(coc-funcobj-i)
-omap if <Plug>(coc-funcobj-i)
-xmap af <Plug>(coc-funcobj-a)
-omap af <Plug>(coc-funcobj-a)
-xmap ic <Plug>(coc-classobj-i)
-omap ic <Plug>(coc-classobj-i)
-xmap ac <Plug>(coc-classobj-a)
-omap ac <Plug>(coc-classobj-a)
-" Remap <C-f> and <C-b> for scroll float windows/popups.
-if has('nvim-0.4.0') || has('patch-8.2.0750')
-  nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
-  nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
-  inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
-  inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
-  vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
-  vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
-endif
-" Use CTRL-S for selections ranges.
-" Requires 'textDocument/selectionRange' support of language server.
-nmap <silent> <C-s> <Plug>(coc-range-select)
-xmap <silent> <C-s> <Plug>(coc-range-select)
-" Add `:Format` command to format current buffer.
-command! -nargs=0 Format :call CocActionAsync('format')
-" Add `:Fold` command to fold current buffer.
-command! -nargs=? Fold :call     CocAction('fold', <f-args>)
-" Add `:OR` command for organize imports of the current buffer.
-command! -nargs=0 OR   :call     CocActionAsync('runCommand', 'editor.action.organizeImport')
-" Add (Neo)Vim's native statusline support.
-" NOTE: Please see `:h coc-status` for integrations with external plugins that
-" provide custom statusline: lightline.vim, vim-airline.
-set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
-" Mappings for CoCList
-" Show all diagnostics.
-nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
-" Manage extensions.
-nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
-" Show commands.
-nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
-" Find symbol of current document.
-nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
-" Search workspace symbols.
-nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
-" Do default action for next item.
-nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
-" Do default action for previous item.
-nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
-" Resume latest coc list.
-nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
-let g:coc_global_extensions = ['coc-pyright', 'coc-json', 'coc-git']
-let g:coc#preferences#extensionUpdateCheck = 'daily'
-" devcontainer options
-hi Container guifg=#BADA55 guibg=Black
-set statusline+=%#Container#%{g:currentContainer}
+colorscheme onedark
 
-
-" Status line
+" Airline Status line
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
 let g:airline_theme='onedark'
@@ -244,7 +79,14 @@ augroup END
 " Default file encoding
 set encoding=utf-8
 " Auto reload file
-set autoread
+if ! exists("g:CheckUpdateStarted")
+    let g:CheckUpdateStarted=1
+    call timer_start(1,'CheckUpdate')
+endif
+function! CheckUpdate(timer)
+    silent! checktime
+    call timer_start(1000,'CheckUpdate')
+endfunction
 " Disable backup files
 set nobackup
 set noswapfile
@@ -283,14 +125,9 @@ set incsearch
 set ignorecase
 " Search with smart case (if uppercase provided, search is case sensitive)
 set smartcase
-" Omni completion
+"" Omni completion
 set completeopt=longest,menuone
-set omnifunc=syntaxcomplete#Complete
-" Enable syntax color if exist
-if exists(":syntax")
-  syntax on
-endif
-colorscheme onedark
+"set omnifunc=syntaxcomplete#Complete
 " Disabling viminfo
 set viminfo=""
 " Turn on the Wild menu, better suggestion
@@ -357,7 +194,7 @@ cnoremap w!! %!sudo tee > /dev/null %
 
 " md is markdown
 autocmd BufRead,BufNewFile *.md set filetype=markdown
-autocmd BufRead,BufNewFile *.md set spell
+autocmd BufRead,BufNewFile *.md set spell spelllang=en_us
 
 " Fix Cursor in TMUX
 if exists('$TMUX')
@@ -370,5 +207,54 @@ endif
 
 let g:pymode_options_max_line_length = 180
 let g:pymode_lint_options_pep8 = {'max_line_length': 180}
+"
+" PLUGINS CONFIGURATION
+" Vim-Plug updates status
+" Do not show any message if all plugins are up to date. 0 by default
+let g:outdated_plugins_silent_mode = 0
 
-set encoding=UTF-8
+" SimpylFold
+let g:SimpylFold_docstring_preview = 1
+
+" Vim-Polyglot
+let g:python_highlight_all = 1
+
+" fzf+Vim
+nmap <C-P> :FZF<CR>
+" Ripgrep
+nmap <leader>r :Rg<CR>
+
+" CHADTree
+nnoremap <leader>v <cmd>CHADopen<cr>
+let g:chadtree_settings = {'theme.icon_glyph_set': 'ascii_hollow', 'theme.text_colour_set': 'nord'}
+
+" COQ
+let g:coq_settings = {'display.icons.mode': 'none', 'auto_start': 'shut-up', 'keymap.jump_to_mark': 'null'}
+
+" Ale
+nmap <silent> <C-k> <Plug>(ale_previous_wrap)
+nmap <silent> <C-j> <Plug>(ale_next_wrap)
+function! LinterStatus() abort
+    let l:counts = ale#statusline#Count(bufnr(''))    let l:all_errors = l:counts.error + l:counts.style_error
+    let l:all_non_errors = l:counts.total - l:all_errors    return l:counts.total == 0 ? 'OK' : printf(
+        \   '%d⨉ %d⚠ ',
+        \   all_non_errors,
+        \   all_errors
+        \)
+endfunction
+set statusline+=%=
+set statusline+=\ %{LinterStatus()}
+let g:ale_python_auto_pipenv = 0
+let g:ale_lint_on_enter = 0
+let g:ale_lint_on_save = 1
+let g:ale_fix_on_save = 0
+let g:ale_sign_error = '●'
+let g:ale_sign_warning = '.'
+let g:airline#extensions#ale#enabled = 1
+let g:ale_linters = {'python': ['flake8', 'mypy', 'black', 'isort'],}
+let g:ale_fixers = {'python': ['autoflake', 'black', 'isort'],}
+let g:ale_floating_window_border = ['│', '─', '╭', '╮', '╯', '╰']
+" let g:ale_python_flake8_executable = '/Users/stephanepoint/flake8_script.sh'
+" let g:ale_python_mypy_executable = '/Users/stephanepoint/mypy_script.sh'
+" let g:ale_python_black_executable = '/Users/stephanepoint/black_script.sh'
+" let g:ale_python_isort_executable = '/Users/stephanepoint/isort_script.sh'
