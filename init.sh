@@ -38,6 +38,15 @@ main() {
   [[ -f "${HOME}/.zshrc" ]] && rm ~/.zshrc
   [[ -f "${HOME}/.psqlrc" ]] && rm ~/.psqlrc
 
+
+  # Upgrade pip
+  print_title "Upgrading pip"
+  python3.10 -m pip install --upgrade pip
+
+  # Upgrade brew
+  print_title "Upgrading brew"
+  brew upgrade
+
   local sys=$OSTYPE; shift
   for item in zsh httpie tmux gitlint coreutils; do
     print_title "Installing $item"
@@ -47,6 +56,15 @@ main() {
       brew install $item
     fi
   done
+
+  # Install lazydocker
+  print_title "Installing Lazydocker"
+  if [[ "$sys" == "linux"* ]]; then
+      curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
+  elif [[ "$sys" == "darwin"* ]]; then
+    brew install lazydocker
+  fi
+  echo "alias lzd='lazydocker'" >> ~/.zshrc
 
   # Install browserpass on macos
   print_title "Installing Browserpass"
@@ -169,7 +187,7 @@ main() {
 
   # Node
   print_title "Node"
-  NODE_VERSION="16"
+  NODE_VERSION="latest"
   rm -rf "${HOME}/n-install"
   git clone --depth 1 https://github.com/tj/n.git "${HOME}/n-install"
   (cd "${HOME}/n-install" && PREFIX="${HOME}/opt" make install)
@@ -179,14 +197,6 @@ main() {
   export N_PREFIX="${HOME}/opt"
   n "${NODE_VERSION}"
   npm install --ignore-scripts -g npm node-gyp
-
-  # Rust
-  print_title "Rust"
-  if [[ ! -f "${HOME}/.cargo/bin/rustup" ]]; then
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-  else
-    rustup update
-  fi
 
   # Cleaning
   print_title "Clean"
