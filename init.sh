@@ -45,10 +45,11 @@ main() {
 
   # Upgrade brew
   print_title "Upgrading brew"
+  brew cleanup
   brew upgrade
 
   local sys=$OSTYPE; shift
-  for item in zsh httpie tmux gitlint coreutils; do
+  for item in zsh httpie tmux gitlint coreutils node; do
     print_title "Installing $item"
     if [[ "$sys" == "linux"* ]]; then
       sudo apt -y install $item
@@ -56,15 +57,9 @@ main() {
       brew install $item
     fi
   done
-
-  # Install lazydocker
-  print_title "Installing Lazydocker"
-  if [[ "$sys" == "linux"* ]]; then
-      curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
-  elif [[ "$sys" == "darwin"* ]]; then
-    brew install lazydocker
-  fi
-  echo "alias lzd='lazydocker'" >> ~/.zshrc
+  # NerdFonts
+  print_title "Installing Hack Nerd Font"
+  brew tap homebrew/cask-fonts && brew install --cask font-hack-nerd-font
 
   # Install browserpass on macos
   print_title "Installing Browserpass"
@@ -91,11 +86,6 @@ main() {
   elif [[ "$sys" == "darwin"* ]]; then
     brew install neovim
   fi
-  pip3 install pynvim
-  pip3 install jedi
-  pip3 install flake8
-  pip3 install black
-  pip3 install isort
   [[ ! -d "${HOME}/.config/nvim/" ]] && mkdir "${HOME}/.config/nvim"
   curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
@@ -107,14 +97,6 @@ main() {
     rm ripgrep_11.0.2_amd64.deb
   elif [[ "$sys" == "darwin"* ]]; then
     brew install ripgrep
-  fi
-
-  # Install yamllint
-  print_title "Installing yamllint"
-  if [[ "$sys" == "linux"* ]]; then
-    sudo apt-get install yamllint
-  elif [[ "$sys" == "darwin"* ]]; then
-    brew install yamllint
   fi
 
   # Install pgcli
@@ -184,19 +166,6 @@ main() {
   print_title "Symlinks"
   create_symlinks
   [[ ! -L "${HOME}/bin" ]] && ln -s ~/dotfiles/bin ~/bin
-
-  # Node
-  print_title "Node"
-  NODE_VERSION="latest"
-  rm -rf "${HOME}/n-install"
-  git clone --depth 1 https://github.com/tj/n.git "${HOME}/n-install"
-  (cd "${HOME}/n-install" && PREFIX="${HOME}/opt" make install)
-  rm -rf "${HOME}/n-install"
-  export PATH="${HOME}/development/opt/node/bin:${PATH}"
-  export PATH="${HOME}/development/opt/bin:${PATH}"
-  export N_PREFIX="${HOME}/opt"
-  n "${NODE_VERSION}"
-  npm install --ignore-scripts -g npm node-gyp
 
   # Cleaning
   print_title "Clean"
