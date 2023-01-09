@@ -49,21 +49,27 @@ end
 --  Add any additional override configuration in the following tables. They will be passed to
 --  the `settings` field of the server config. You must look up that documentation yourself.
 local servers = {
-  -- clangd = {},
-  -- gopls = {},
-  -- pyright = {},
-  -- rust_analyzer = {},
-  -- tsserver = {},
-
   sumneko_lua = {
     Lua = {
       workspace = { checkThirdParty = false },
       telemetry = { enable = false },
       diagnostics = {
-          globals = { 'vim' }
+        globals = { 'vim' }
       }
     },
   },
+  -- pylsp = {
+  --   pylsp = {
+  --     configurationSources = ["flake8"],
+  --     plugins = {
+  --       flake8 = {
+  --         config = "./.editorconfig",
+  --         enabled = true,
+  --         maxLineLength = 88
+  --       }
+  --    }
+  --   }
+  -- }
 }
 
 -- Setup neovim lua configuration
