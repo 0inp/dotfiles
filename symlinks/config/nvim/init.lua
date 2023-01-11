@@ -1,8 +1,19 @@
--- PACKER & PLUGINS
-require("core.plugins")
-
--- KEYMAPS
-require("core.keymaps")
-
--- PLUGINS configs
-require("core.plugin_config")
+-- require("user.toggleterm")
+require("user.autocommands")
+require("user.autopairs")
+require("user.cmp")
+require("user.colorscheme")
+require("user.comment")
+require("user.gitsigns")
+require("user.indentline")
+require("user.keymaps")
+require("user.lsp")
+require("user.lualine")
+require("user.numbertoggle")
+require("user.nvim-tree")
+require("user.options")
+require("user.plugins")
+require("user.telescope")
+require("user.treesitter")
+require("user.vim-visual-multi")
+require("user.whichkey")
