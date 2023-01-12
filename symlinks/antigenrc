@@ -1,5 +1,3 @@
-antigen use oh-my-zsh
-
 antigen bundle alias-finder
 antigen bundle brew
 antigen bundle colored-man-pages
@@ -20,7 +18,5 @@ antigen bundle supercrabtree/k
 antigen bundle wfxr/forgit
 antigen bundle zsh-users/zsh-syntax-highlighting
 antigen bundle zsh-users/zsh-autosuggestions
-
-antigen theme denysdovhan/spaceship-prompt
 
 antigen apply

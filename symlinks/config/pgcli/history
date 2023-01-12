@@ -1,0 +1,28 @@
+
+# 2023-01-11 16:43:48.173112
++\d core_comm
+
+# 2023-01-11 16:47:13.347407
++\d core_link
+
+# 2023-01-11 16:47:47.191238
++select * from core_link where entity_id2 = 2018401744
++;
+
+# 2023-01-11 16:48:04.294913
++select * from core_user where user_id = 1818810;
+
+# 2023-01-11 16:49:03.722020
++select * from core_user where user_id = 2126640;
+
+# 2023-01-11 16:50:38.895380
++\d biz_event
+
+# 2023-01-11 16:51:23.279024
++select * from biz_event where customer_id = 2126640;
+
+# 2023-01-11 16:51:33.656382
++select * from biz_event where customer_id = 1818810;
+
+# 2023-01-11 17:48:35.376822
++\q

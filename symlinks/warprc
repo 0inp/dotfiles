@@ -1,19 +1,2 @@
-
-b2clrapi:~/B2CLeadRankingAPI
 dotfiles:~/dotfiles
-eam:~/ExternalAdManagerAPI
-feedback:~/FeedbackAPI
-infra:~/MA-Infra
-integration:~/MA-Integration
-lead:~/LeadAPI
-malegacy:~/MeilleursAgents/MALegacy
-media:~/MediaAPI
 midi:~/MidiDrumsConverter
-mypro:~/MyProAPI
-obsidian:~/Documents/Obsidian Vault
-pdfapi:~/PdfAPI
-pmapi:~/ProspectionMapAPI
-prospection:~/ProspectionMapAPI
-pubsub:~/MA-PubSub
-sfapi:~/MeilleursAgents/apps/SalesforceAPI
-user:~/UserAPI

@@ -47,7 +47,6 @@
   lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit -10
   purr = pull --rebase
   ready = rebase -i @{u}
-  shorty = status -sb
   upush = "!git push -u origin `git rev-parse --abbrev-ref HEAD`"
   sweep = "!git remote update -p && git purr && git branch --merged | grep -v '*' | grep -v master | xargs -I{} git branch -d {}"
   wync = "!git stash && git purr && git stash pop && git push"
@@ -57,29 +56,27 @@
 
 [user]
 	signingkey = 708806CE3CF25CDE
-    name = Stephane Point
-    email = point.steph@gmail.com
+  name = Stephane Point
+  email = point.steph@gmail.com
 
 [include]
-    path = ~/.gitconfig-ma
+  path = ~/.gitconfig-ma
 
 [merge]
-    tool = vimdiff
+  tool = vimdiff
 
 [http]
-    sslVerify = false
-    [color "diff-highlight"]
-    oldNormal = red bold
-    oldHighlight = red bold 52
-    newNormal = green bold
-    newHighlight = green bold 22
+  sslVerify = false
+  [color "diff-highlight"]
+  oldNormal = red bold
+  oldHighlight = red bold 52
+  newNormal = green bold
+  newHighlight = green bold 22
 
 [color "diff"]
-    meta = 11
-    frag = magenta bold
-    commit = yellow bold
-    old = red bold
-    new = green bold
-    whitespace = red reverse
-[init]
-	templateDir = /Users/stephanepoint/.git-templates
+  meta = 11
+  frag = magenta bold
+  commit = yellow bold
+  old = red bold
+  new = green bold
+  whitespace = red reverse
