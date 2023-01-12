@@ -1,0 +1,60 @@
+- defaults:
+    link:
+      relink: true
+
+- clean: ['~']
+
+- link:
+    # ~/.bashrc: bashrc
+    ~/.config: symlinks/config
+    ~/.gitconfig: symlinks/gitconfig
+    ~/.gitignore: symlinks/gitignore
+    ~/.warprc: symlinks/warprc
+    ~/.zshrc: symlinks/zshrc
+
+- shell:
+  - [python3.10 -m pip install --upgrade pip, Upgrade Pip]
+  - 
+    command: brew cleanup && brew upgrade
+    description: Upgrade brew
+    stdout: true
+    stdin: true
+    stderr: true
+
+  - [git submodule update --init --recursive, Install submodules]
+  - [PREFIX='/usr/local/opt/browserpass' make hosts-chrome-user -f /usr/local/opt/browserpass/lib/browserpass/Makefile, Configure Browserpass]
+  - [pip install --user tmuxp, Install tmux session manager]
+  - 
+    command: sudo chsh -s $(which zsh) ${USER}
+    description: Switch to ZSH
+    stdout: true
+    stdin: true
+    stderr: true
+
+- git:
+  '~/.pyenv/plugins/pyenv-virtualenv':
+    url: 'https://github.com/pyenv/pyenv-virtualenv.git'
+    description: 'pyenv-virtualenv'
+  '~/.tmux/plugins/tpm':
+    url: 'https://github.com/tmux-plugins/tpm.git'
+    description: 'tmux plugins manager'
+  '~/diff-so-fancy/':
+    url: 'https://github.com/so-fancy/diff-so-fancy.git'
+    description: 'diff-so-fancy'
+
+- brew:
+  - browserpass
+  - coreutils
+  - fzf
+  - gitlint
+  - neovim
+  - pgcli
+  - pyenv
+  - ripgrep
+  - starship
+  - tmux
+  - zsh
+- tap:
+  - homebrew/cask-fonts
+- cask:
+  - font-hack-nerd-font
