@@ -1,9 +1,16 @@
 [[ -f ~/.zsh/aliases.zsh ]] && source ~/.zsh/aliases.zsh
 [[ -f ~/.zsh/functions.zsh ]] && source ~/.zsh/functions.zsh
 [[ -f ~/.zsh/starship.zsh ]] && source ~/.zsh/starship.zsh
-[[ -f ~/.zsh/zshrc  ]] && source ~/.zsh/zshrc
+[[ -f ~/.zsh/env_var.zsh ]] && source ~/.zsh/env_var.zsh
+[[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
+# [[ -f ~/.zsh/zshrc  ]] && source ~/.zsh/zshrc
 
 # Load Starship
 eval "$(starship init zsh)"
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+# Load pyenv-virtualenv
+eval "$(pyenv virtualenv-init -)"
+
+
+gpgconf --launch gpg-agent
+ssh-add -K ~/.ssh/id\_rsa 2>/dev/null
