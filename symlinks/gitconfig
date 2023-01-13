@@ -55,7 +55,7 @@
   helper = cache --timeout=28800
 
 [user]
-	signingkey = 708806CE3CF25CDE
+	signingkey = 0D974584A399517C
   name = Stephane Point
   email = point.steph@gmail.com
 
