@@ -1,4 +1,8 @@
 - defaults:
+    shell:
+      stdin: true
+      stdout: true
+      stderr: true
     link:
       relink: true
 
@@ -9,52 +13,58 @@
     ~/.config: symlinks/config
     ~/.gitconfig: symlinks/gitconfig
     ~/.gitignore: symlinks/gitignore
+    ~/.gnupg/gpg.conf: symlinks/gnupg/gpg.conf
+    ~/.gnupg/gpg-agent.conf: symlinks/gnupg/gpg-agent.conf
+    ~/.tmux.conf: symlinks/tmux.conf
     ~/.warprc: symlinks/warprc
+    ~/.zsh: symlinks/zsh
     ~/.zshrc: symlinks/zshrc
 
 - shell:
-  - [python3.10 -m pip install --upgrade pip, Upgrade Pip]
-  - 
-    command: brew cleanup && brew upgrade
-    description: Upgrade brew
-    stdout: true
-    stdin: true
-    stderr: true
+  - [brew cleanup && brew upgrade, Upgrade brew]
 
+- tap:
+  - homebrew/cask-fonts
+  - amar1729/formulae
+- cask:
+  - font-hack-nerd-font
+- brew:
+  - browserpass
+  - coreutils
+  - fzf
+  - gitlint
+  - gpg
+  - neovim
+  - node
+  - openssl
+  - pgcli
+  - pinentry-mac
+  - pyenv
+  - pyenv-virtualenv
+  - readline
+  - ripgrep
+  - sqlite3
+  - starship
+  - stats
+  - tmux
+  - xz
+  - zlib
+  - zsh
+
+- shell:
+  - [pyenv install -s 3.11.0 3.10.9 3.9.16 3.8.16 3.7.16 3.6.15 && pyenv global 3.11.0, Install python versions]
+  - [python -m pip install --upgrade pip, Upgrade Pip]
   - [git submodule update --init --recursive, Install submodules]
   - [PREFIX='/usr/local/opt/browserpass' make hosts-chrome-user -f /usr/local/opt/browserpass/lib/browserpass/Makefile, Configure Browserpass]
   - [pip install --user tmuxp, Install tmux session manager]
   - 
     command: sudo chsh -s $(which zsh) ${USER}
     description: Switch to ZSH
-    stdout: true
-    stdin: true
-    stderr: true
 
-- git:
-  '~/.pyenv/plugins/pyenv-virtualenv':
-    url: 'https://github.com/pyenv/pyenv-virtualenv.git'
-    description: 'pyenv-virtualenv'
-  '~/.tmux/plugins/tpm':
-    url: 'https://github.com/tmux-plugins/tpm.git'
-    description: 'tmux plugins manager'
-  '~/diff-so-fancy/':
-    url: 'https://github.com/so-fancy/diff-so-fancy.git'
-    description: 'diff-so-fancy'
-
-- brew:
-  - browserpass
-  - coreutils
-  - fzf
-  - gitlint
-  - neovim
-  - pgcli
-  - pyenv
-  - ripgrep
-  - starship
-  - tmux
-  - zsh
-- tap:
-  - homebrew/cask-fonts
-- cask:
-  - font-hack-nerd-font
+  git:
+    '~/.tmux/plugins/tpm':
+      url: 'https://github.com/tmux-plugins/tpm.git'
+      description: 'tmux plugins manager'
+    '~/diff-so-fancy/':
+      url: 'https://github.com/so-fancy/diff-so-fancy.git'
+      description: 'diff-so-fancy'

@@ -12,5 +12,4 @@ cd "${BASEDIR}"
 git -C "${DOTBOT_DIR}" submodule sync --quiet --recursive
 git submodule update --init --recursive "${DOTBOT_DIR}"
 
-"${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" --plugin-dir "./dotbot-plugins/" -c "${CONFIG}" "${@}"
-# "${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" -p "./dotbot-plugins/dotbot-git/git.py" -p "./dotbot-plugins/dotbot-brew/brew.py" -c "${CONFIG}" "${@}"
+"${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" -p "./dotbot-plugins/dotbot-git/git.py" -p "./dotbot-plugins/dotbot-brew/brew.py" -c "${CONFIG}" "${@}"
