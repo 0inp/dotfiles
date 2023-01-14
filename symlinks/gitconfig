@@ -2,16 +2,31 @@
 	editor = nvim
   autocrlf = input
   ignorecase = false
-  excludesfile = /Users/stephanepoint/.gitignore
+  excludesfile = /Users/oinp/.gitignore
   pager = diff-so-fancy
+
+[interactive]
+  diffFilter = "diff-so-fancy --patch"
 
 [color]
   ui = true
+[diff-highlight]
+  oldNormal = "red bold"
+  oldHighlight = "red bold 52"
+  newNormal = "green bold"
+  newHighlight = "green bold 22"
 
 [diff]
   mnemonicPrefix = true
   renames = true
 	ignoreSubmodules = dirty
+  meta = "11"
+  frag = "magenta bold"
+  func = "146 bold"
+  commit = "yellow bold"
+  old = "red bold"
+  new = "green bold"
+  whitespace = "red reverse"
 
 [pull]
 	rebase = merges
