@@ -1,7 +1,8 @@
 [[ -f ~/.zsh/aliases.zsh ]] && source ~/.zsh/aliases.zsh
-[[ -f ~/.zsh/functions.zsh ]] && source ~/.zsh/functions.zsh
+[[ -f ~/.zsh/function.zsh ]] && source ~/.zsh/function.zsh
 [[ -f ~/.zsh/starship.zsh ]] && source ~/.zsh/starship.zsh
 [[ -f ~/.zsh/env_var.zsh ]] && source ~/.zsh/env_var.zsh
+[[ -f ~/.zsh/zinit.zsh ]] && source ~/.zsh/zinit.zsh
 [[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
 # [[ -f ~/.zsh/zshrc  ]] && source ~/.zsh/zshrc
 
@@ -14,3 +15,7 @@ eval "$(pyenv virtualenv-init -)"
 
 gpgconf --launch gpg-agent
 ssh-add -K ~/.ssh/id\_rsa 2>/dev/null
+
+
+# Turn off beeps
+unsetopt BEEP
