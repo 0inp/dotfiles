@@ -32,6 +32,7 @@
   - browserpass
   - coreutils
   - diff-so-fancy
+  - exa
   - fzf
   - gitlint
   - gpg
@@ -42,7 +43,9 @@
   - pinentry-mac
   - pyenv
   - pyenv-virtualenv
+  - raycast
   - readline
+  - rectangle
   - ripgrep
   - sqlite3
   - starship
@@ -53,6 +56,7 @@
   - zsh
 
 - shell:
+  - [$(brew --prefix)/opt/fzf/install, Fzf install part 2]
   - [pyenv install -s 3.11.0 3.10.9 3.9.16 3.8.16 3.7.16 3.6.15 && pyenv global 3.11.0, Install python versions]
   - [python -m pip install --upgrade pip, Upgrade Pip]
   - [git submodule update --init --recursive, Install submodules]
