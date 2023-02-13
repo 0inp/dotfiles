@@ -59,6 +59,7 @@ return packer.startup(function(use)
 
 	-- Colorschemes
 	use("navarasu/onedark.nvim") -- Theme inspired by Atom
+	use("rebelot/kanagawa.nvim")
 
 	-- Cmp
 	use("hrsh7th/nvim-cmp") -- The completion plugin
@@ -77,7 +78,7 @@ return packer.startup(function(use)
 	use("williamboman/mason.nvim") -- simple to use language server installer
 	use("williamboman/mason-lspconfig.nvim")
 	use("jose-elias-alvarez/null-ls.nvim") -- for formatters and linters
-	use("RRethy/vim-illuminate")
+	use("RRethy/vim-illuminate") -- highlighting
 
 	-- Telescope
 	use("nvim-telescope/telescope.nvim")
