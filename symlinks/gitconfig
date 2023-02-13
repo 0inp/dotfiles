@@ -5,6 +5,9 @@
   excludesfile = /Users/oinp/.gitignore
   pager = diff-so-fancy
 
+[add "interactive"]
+	useBuiltin = false
+
 [interactive]
   diffFilter = "diff-so-fancy --patch"
 
