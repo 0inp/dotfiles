@@ -46,3 +46,9 @@ if [ "${?}" -eq "0" ]; then
   alias vim=nvim
   alias nv=nvim
 fi
+
+# git
+command_exists "git"
+if [ "${?}" -eq "0" ]; then
+  alias gs='git status'
+fi
