@@ -19,6 +19,7 @@
     ~/.warprc: symlinks/warprc
     ~/.zsh: symlinks/zsh
     ~/.zshrc: symlinks/zshrc
+    ~/.zfunc: symlinks/zfunc
 
 - shell:
   - [brew cleanup && brew upgrade, Upgrade brew]
@@ -33,6 +34,7 @@
   - coreutils
   - diff-so-fancy
   - exa
+  - fd
   - fzf
   - gitlint
   - gpg
@@ -52,6 +54,7 @@
   - stats
   - tmux
   - xz
+  - wget
   - zlib
   - zsh
 

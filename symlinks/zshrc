@@ -19,3 +19,7 @@ ssh-add -K ~/.ssh/id\_rsa 2>/dev/null
 
 # Turn off beeps
 unsetopt BEEP
+
+#autocompletions
+fpath+=~/.zfunc
+autoload -Uz compinit && compinit
