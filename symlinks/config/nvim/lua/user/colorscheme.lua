@@ -9,4 +9,4 @@ end
 --     style = 'cool'
 -- }
 -- require('onedark').load()
-require("kanagawa").load()
+-- require("kanagawa").load()

@@ -60,6 +60,14 @@ return packer.startup(function(use)
 	-- Colorschemes
 	use("navarasu/onedark.nvim") -- Theme inspired by Atom
 	use("rebelot/kanagawa.nvim")
+	use({
+		"rose-pine/neovim",
+		as = "rose-pine",
+		config = function()
+			require("rose-pine").setup()
+			vim.cmd("colorscheme rose-pine")
+		end,
+	})
 
 	-- Cmp
 	use("hrsh7th/nvim-cmp") -- The completion plugin
