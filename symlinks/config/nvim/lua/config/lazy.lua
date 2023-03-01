@@ -27,9 +27,9 @@ require("lazy").setup("plugins")
 
 -- Install your plugins here
 local plugins = {
-	"nvim-lua/plenary.nvim", -- Useful lua functions used by lots of plugins
+	-- "nvim-lua/plenary.nvim", -- Useful lua functions used by lots of plugins
 
-	"jiangmiao/auto-pairs", -- Autopairs, integrates with both cmp and treesitter
+	-- "jiangmiao/auto-pairs", -- Autopairs, integrates with both cmp and treesitter
 	-- {
 	-- 	"numToStr/Comment.nvim", -- "gc" to comment visual regions/lines
 	-- 	config = function()
@@ -37,8 +37,8 @@ local plugins = {
 	-- 	end,
 	-- },
 
-	"kyazdani42/nvim-web-devicons",
-	"nvim-lualine/lualine.nvim",
+	-- "kyazdani42/nvim-web-devicons",
+	-- "nvim-lualine/lualine.nvim",
 	"lukas-reineke/indent-blankline.nvim",
 	"folke/which-key.nvim",
 
@@ -85,10 +85,10 @@ local plugins = {
 	"kyazdani42/nvim-tree.lua",
 
 	-- Git
-	"lewis6991/gitsigns.nvim",
+	-- "lewis6991/gitsigns.nvim",
 
   -- Toggle between relative and absolute number according to focus
-  "sitiom/nvim-numbertoggle",
+  -- "sitiom/nvim-numbertoggle",
   "mg979/vim-visual-multi",
 }
 
