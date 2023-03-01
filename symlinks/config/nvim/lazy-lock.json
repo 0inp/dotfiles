@@ -1,0 +1,9 @@
+{
+  "feline.nvim": { "branch": "master", "commit": "c6eea890c4f81725f4c51eba48d9733a248513a2" },
+  "gitsigns.nvim": { "branch": "main", "commit": "f965e3bad0be96898dec97dc15bdfe226a176e3a" },
+  "lazy.nvim": { "branch": "main", "commit": "26d121ea13bee96b079403cee6598f04969d4983" },
+  "mini.nvim": { "branch": "main", "commit": "0c2210fe2e9e08e4dbf33af6984e48a6cc3e0b57" },
+  "nvim-web-devicons": { "branch": "master", "commit": "c2c2317f356c8b7da0252f5da758f71bb60bb6b2" },
+  "onedark.nvim": { "branch": "master", "commit": "1fe908fb4acdcee26573e9ccde0de94ec77e5e84" },
+  "plenary.nvim": { "branch": "master", "commit": "253d34830709d690f013daf2853a9d21ad7accab" }
+}

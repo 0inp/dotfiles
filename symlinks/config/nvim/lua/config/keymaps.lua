@@ -11,11 +11,6 @@ local function keymap(mode, keys, func, opts, desc)
 	vim.api.nvim_set_keymap(mode, keys, func, local_opts)
 end
 
---Remap space as leader key
-keymap("", "<Space>", "<Nop>", opts)
-vim.g.mapleader = " "
-vim.g.maplocalleader = " "
-
 -- Modes
 --   normal_mode = "n",
 --   insert_mode = "i",
