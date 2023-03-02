@@ -15,7 +15,7 @@ local M = {
   lazy = false,
   priority = 1000,
   opts = function()
-		local colors = require("utils").git_colors
+		local colors = require("user.utils").git_colors
 		return {
 			style = "cool",
 			-- hide_inactive_statusline = true,
