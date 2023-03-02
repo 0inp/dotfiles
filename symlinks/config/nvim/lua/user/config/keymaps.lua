@@ -119,6 +119,3 @@ keymap("n", "<leader>sh", "<cmd>lua require'telescope.builtin'.help_tags()<cr>",
 keymap("n", "<leader>sw", "<cmd>lua require'telescope.builtin'.grep_string()<cr>", opts, "LSP: [S]earch current [W]ord")
 keymap("n", "<leader>sg", "<cmd>lua require'telescope.builtin'.live_grep()<cr>", opts, "LSP: [S]earch by [G]rep")
 keymap("n", "<leader>sd", "<cmd>lua require'telescope.builtin'.diagnostics()<cr>", opts, "LSP: [S]earch [D]iagnostics")
-
--- -- Nvim-Tree
--- keymap("n", "<leader>e", ":NvimTreeToggle<cr>", opts, "Nvim-Tree: Toggle")
