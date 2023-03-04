@@ -4,12 +4,8 @@
 -------------------------------------------------
 local M = {
 	"nvim-tree/nvim-tree.lua",
-	dependencies = {
-		"nvim-tree/nvim-web-devicons",
-	},
-	keys = {
-		{ "<leader>e", ":NvimTreeToggle<CR>", desc = "Toggle tree" },
-	},
+	dependencies = {"nvim-tree/nvim-web-devicons"},
+  cmd = "NvimTreeToggle",
   config = true,
 }
 

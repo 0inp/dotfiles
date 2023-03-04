@@ -1,15 +1,7 @@
---local colorscheme = "kanagawa"
---
---local status_ok, _ = pcall(vim.cmd, "colorscheme " .. colorscheme)
---if not status_ok then
---	return
---end
-
--- require('onedark').setup {
---     style = 'cool'
--- }
--- require('onedark').load()
--- require("kanagawa").load()
+-------------------------------------------------
+-- name : nvim-tree
+-- url  : https://github.com/navarasu/onedark.nvim
+-------------------------------------------------
 local M = {
   "navarasu/onedark.nvim",
   lazy = false,

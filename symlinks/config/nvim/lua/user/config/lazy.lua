@@ -12,14 +12,29 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 -- load lazy
--- require("lazy").setup("plugins", {
 require("lazy").setup("user.plugins", {
 	-- defaults = { lazy = true },
 	ui = {
 		border = "rounded",
 	},
 	checker = { enabled = true },
-  debug = true
+  change_detection = { notify = false },
+  install = { colorscheme = { "onedark" } },
+  debug = true,
+  performance = {
+    rtp = {
+      disabled_plugins = {
+        "gzip",
+        "matchit",
+        "matchparen",
+          "netrwPlugin",
+          "tarPlugin",
+          "tohtml",
+          "tutor",
+          "zipPlugin",
+        },
+    },
+  },
 })
 
 
@@ -38,8 +53,8 @@ local plugins = {
 
 	-- "kyazdani42/nvim-web-devicons",
 	-- "nvim-lualine/lualine.nvim",
-	"lukas-reineke/indent-blankline.nvim",
-	"folke/which-key.nvim",
+	-- "lukas-reineke/indent-blankline.nvim",
+	-- "folke/which-key.nvim",
 
 	-- Colorschemes
 	--"navarasu/onedark.nvim", -- Theme inspired by Atom
@@ -54,16 +69,16 @@ local plugins = {
 	-- },
 
 	-- Cmp
-	"hrsh7th/nvim-cmp", -- The completion plugin
-	"hrsh7th/cmp-buffer", -- buffer completions
-	"hrsh7th/cmp-path", -- path completions
-	"saadparwaiz1/cmp_luasnip", -- snippet completions
-	"hrsh7th/cmp-nvim-lua", -- lua completions
-	"hrsh7th/cmp-nvim-lsp", -- lsp completions
+	-- "hrsh7th/nvim-cmp", -- The completion plugin
+	-- "hrsh7th/cmp-buffer", -- buffer completions
+	-- "hrsh7th/cmp-path", -- path completions
+	-- "saadparwaiz1/cmp_luasnip", -- snippet completions
+	-- "hrsh7th/cmp-nvim-lua", -- lua completions
+	-- "hrsh7th/cmp-nvim-lsp", -- lsp completions
 
 	-- Snippets
-	"L3MON4D3/LuaSnip", --snippet engine
-	"rafamadriz/friendly-snippets", -- a bunch of snippets to use
+	-- "L3MON4D3/LuaSnip", --snippet engine
+	-- "rafamadriz/friendly-snippets", -- a bunch of snippets to use
 
 	-- LSP
 	"neovim/nvim-lspconfig", -- enable LSP
@@ -72,23 +87,23 @@ local plugins = {
 	"jose-elias-alvarez/null-ls.nvim", -- for formatters and linters
 	"RRethy/vim-illuminate", -- highlighting
 
-  -- Telescope
-  "nvim-telescope/telescope.nvim",
-  -- Fuzzy Finder Algorithm which requires local dependencies to be built. Only load if `make` is available
-  { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+  -- -- Telescope
+  -- "nvim-telescope/telescope.nvim",
+  -- -- Fuzzy Finder Algorithm which requires local dependencies to be built. Only load if `make` is available
+  -- { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
 
-	-- Treesitter
-	{ "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
-
-	-- Nvim-Tree
-	"kyazdani42/nvim-tree.lua",
+	-- -- Treesitter
+	-- { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
+	--
+	-- -- Nvim-Tree
+	-- "kyazdani42/nvim-tree.lua",
 
 	-- Git
 	-- "lewis6991/gitsigns.nvim",
 
   -- Toggle between relative and absolute number according to focus
   -- "sitiom/nvim-numbertoggle",
-  "mg979/vim-visual-multi",
+  -- "mg979/vim-visual-multi",
 }
 
 local opts = {}
