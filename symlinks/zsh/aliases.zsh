@@ -52,3 +52,9 @@ command_exists "git"
 if [ "${?}" -eq "0" ]; then
   alias gs='git status'
 fi
+
+# tmux
+alias ta='tmux attach'
+alias tls='tmux ls'
+alias tat='tmux attach -t'
+alias tns='tmux new-session -s'

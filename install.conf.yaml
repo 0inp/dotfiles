@@ -5,9 +5,7 @@
       stderr: true
     link:
       relink: true
-
 - clean: ['~']
-
 - link:
     # ~/.bashrc: bashrc
     ~/.config: symlinks/config
@@ -20,57 +18,65 @@
     ~/.zsh: symlinks/zsh
     ~/.zshrc: symlinks/zshrc
     ~/.zfunc: symlinks/zfunc
-
 - shell:
-  - [brew cleanup && brew upgrade, Upgrade brew]
-
+    - [brew cleanup && brew upgrade, Upgrade brew]
 - tap:
-  - homebrew/cask-fonts
-  - amar1729/formulae
+    - homebrew/bundle
+    - homebrew/core
+    - homebrew/cask
+    - homebrew/cask-fonts
+    - amar1729/formulae
 - cask:
-  - font-hack-nerd-font
+    - font-hack-nerd-font
 - brew:
-  - browserpass
-  - coreutils
-  - diff-so-fancy
-  - exa
-  - fd
-  - fzf
-  - gitlint
-  - gpg
-  - neovim
-  - node
-  - openssl
-  - pgcli
-  - pinentry-mac
-  - pyenv
-  - pyenv-virtualenv
-  - raycast
-  - readline
-  - rectangle
-  - ripgrep
-  - sqlite3
-  - starship
-  - stats
-  - tmux
-  - xz
-  - wget
-  - zlib
-  - zsh
-
+    - bat # better cat
+    - browserpass # password manager
+    - coreutils
+    - diff-so-fancy # fancy git diff
+    - exa # ls alternative
+    - fd # find alternative
+    - fzf # Fuzzy file finder
+    - git
+    - gitlint # Linting comiit messages
+    - glow # Render markdown
+    - gnupg
+    - htop # top alternative
+    - neovim # neovim
+    - node # Node
+    - openssl
+    - pgcli # PGCli
+    - pinentry-mac
+    - pyenv
+    - pyenv-virtualenv
+    - raycast # better Spotlight
+    - readline
+    - rectangle # macos window management
+    - ripgrep # very fast file searcher
+    - sqlite3
+    - starship # prompt
+    - stats # System stats menu bar
+    - tmux # sessions multiplexer
+    - xz # Compression
+    - wget
+    - zlib
+    - zsh
 - shell:
-  - [$(brew --prefix)/opt/fzf/install, Fzf install part 2]
-  - [pyenv install -s 3.11.0 3.10.9 3.9.16 3.8.16 3.7.16 3.6.15 && pyenv global 3.11.0, Install python versions]
-  - [python -m pip install --upgrade pip, Upgrade Pip]
-  - [git submodule update --init --recursive, Install submodules]
-  - [PREFIX='/usr/local/opt/browserpass' make hosts-chrome-user -f /usr/local/opt/browserpass/lib/browserpass/Makefile, Configure Browserpass]
-  - [pip install --user tmuxp, Install tmux session manager]
-  - [curl -sSL https://install.python-poetry.org | python3 -, Install poetry]
-  - [poetry self update, Update poetry]
-  - 
-    command: sudo chsh -s $(which zsh) ${USER}
-    description: Switch to ZSH
-
+    - [$(brew --prefix)/opt/fzf/install, Fzf install part 2] # Part 2 install fzf
+    - [pyenv install -s 3.11.0 3.10.9 3.9.16 3.8.16 3.7.16 3.6.15 && pyenv global
+        3.11.0, Install python versions] # install differents python versions
+    - [python -m pip install --upgrade pip, Upgrade Pip] # Upgrade pip
+    - [git submodule update --init --recursive, Install submodules] # install submodules
+    - [PREFIX='/usr/local/opt/browserpass' make hosts-chrome-user -f /usr/local/opt/browserpass/lib/browserpass/Makefile,
+      Configure Browserpass] # Configure browserpass extension
+    - [pip install --user tmuxp, Install tmux session manager] # install tmux
+    - ['curl -sSL https://install.python-poetry.org | python3 -', Install poetry] # install poetry
+    - [poetry self update, Update poetry] # update poetry
+    - command: sudo chsh -s $(which zsh) ${USER} # switch to zsh
+      description: Switch to ZSH
+    - command: tic -x "$PWD/resources/tmux.terminfo"
+      description: Add italics 256 colors to tmux
+    - command: $PWD/resources/macos_settings.sh
+      description: Defaults MacOS settings
   git:
     '~/.tmux/plugins/tpm':
       url: 'https://github.com/tmux-plugins/tpm.git'
