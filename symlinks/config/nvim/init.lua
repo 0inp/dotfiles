@@ -1,3 +1,4 @@
+require("user.config.globals")
 require("user.config.options")
 require("user.config.lazy")
 
