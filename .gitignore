@@ -36,3 +36,4 @@ tmux/plugins/!tpm
 tmux/plugins/
 vim/autoload/plug.vim
 vim/bundle/
+**/raycast/extensions/*
