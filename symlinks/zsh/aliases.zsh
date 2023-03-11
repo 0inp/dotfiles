@@ -50,7 +50,7 @@ fi
 # git
 command_exists "git"
 if [ "${?}" -eq "0" ]; then
-  alias gs='git status'
+  alias g='git'
 fi
 
 # tmux

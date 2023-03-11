@@ -53,3 +53,7 @@ deleted = " "
 
 [line_break]
 disabled = false
+
+[cmd_duration]
+min_time = 500
+format = 'took [$duration](bold yellow)'

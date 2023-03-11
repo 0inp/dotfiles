@@ -19,9 +19,12 @@ autoload -Uz _zinit
 ###################################################################################
 # load plugins
 ###################################################################################
-zinit light zdharma-continuum/fast-syntax-highlighting
+zinit ice atinit'zmodload zsh/zprof' \
+    atload'zprof | head -n 20; zmodload -u zsh/zprof'
 
 zinit wait lucid light-mode for \
+  atinit"zicompinit; zicdreplay" \
+      zdharma-continuum/fast-syntax-highlighting \
   atload"_zsh_autosuggest_start" \
       zsh-users/zsh-autosuggestions \
   blockf atpull'zinit creinstall -q .' \
@@ -38,6 +41,3 @@ autoload -Uz compinit
 compinit
 
 zinit cdreplay -q
-
-# profiling (comment in to profile zsh)
-#zprof
