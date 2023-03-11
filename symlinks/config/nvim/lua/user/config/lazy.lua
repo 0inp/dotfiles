@@ -13,97 +13,29 @@ vim.opt.rtp:prepend(lazypath)
 
 -- load lazy
 require("lazy").setup("user.plugins", {
-	-- defaults = { lazy = true },
-	ui = {
-		border = "rounded",
-	},
-	checker = { enabled = true },
+  -- defaults = { lazy = true },
+  ui = {
+    border = "rounded",
+  },
+  checker = { enabled = true },
   change_detection = { notify = false },
   install = { colorscheme = { "onedark" } },
   debug = true,
+  dev = {
+    path = "~/dev",
+  },
   performance = {
     rtp = {
       disabled_plugins = {
         "gzip",
         "matchit",
         "matchparen",
-          "netrwPlugin",
-          "tarPlugin",
-          "tohtml",
-          "tutor",
-          "zipPlugin",
-        },
+        "netrwPlugin",
+        "tarPlugin",
+        "tohtml",
+        "tutor",
+        "zipPlugin",
+      },
     },
   },
 })
-
-
-
--- Install your plugins here
-local plugins = {
-	-- "nvim-lua/plenary.nvim", -- Useful lua functions used by lots of plugins
-
-	-- "jiangmiao/auto-pairs", -- Autopairs, integrates with both cmp and treesitter
-	-- {
-	-- 	"numToStr/Comment.nvim", -- "gc" to comment visual regions/lines
-	-- 	config = function()
-	-- 		require("Comment").setup()
-	-- 	end,
-	-- },
-
-	-- "kyazdani42/nvim-web-devicons",
-	-- "nvim-lualine/lualine.nvim",
-	-- "lukas-reineke/indent-blankline.nvim",
-	-- "folke/which-key.nvim",
-
-	-- Colorschemes
-	--"navarasu/onedark.nvim", -- Theme inspired by Atom
-	-- "rebelot/kanagawa.nvim",
-	-- {
-	-- 	"rose-pine/neovim",
-	-- 	as = "rose-pine",
-	-- 	config = function()
-	-- 		require("rose-pine").setup()
-	-- 		vim.cmd("colorscheme rose-pine")
-	-- 	end,
-	-- },
-
-	-- Cmp
-	-- "hrsh7th/nvim-cmp", -- The completion plugin
-	-- "hrsh7th/cmp-buffer", -- buffer completions
-	-- "hrsh7th/cmp-path", -- path completions
-	-- "saadparwaiz1/cmp_luasnip", -- snippet completions
-	-- "hrsh7th/cmp-nvim-lua", -- lua completions
-	-- "hrsh7th/cmp-nvim-lsp", -- lsp completions
-
-	-- Snippets
-	-- "L3MON4D3/LuaSnip", --snippet engine
-	-- "rafamadriz/friendly-snippets", -- a bunch of snippets to use
-
-	-- LSP
-	"neovim/nvim-lspconfig", -- enable LSP
-	"williamboman/mason.nvim", -- simple to use language server installer
-	"williamboman/mason-lspconfig.nvim",
-	"jose-elias-alvarez/null-ls.nvim", -- for formatters and linters
-	"RRethy/vim-illuminate", -- highlighting
-
-  -- -- Telescope
-  -- "nvim-telescope/telescope.nvim",
-  -- -- Fuzzy Finder Algorithm which requires local dependencies to be built. Only load if `make` is available
-  -- { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
-
-	-- -- Treesitter
-	-- { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
-	--
-	-- -- Nvim-Tree
-	-- "kyazdani42/nvim-tree.lua",
-
-	-- Git
-	-- "lewis6991/gitsigns.nvim",
-
-  -- Toggle between relative and absolute number according to focus
-  -- "sitiom/nvim-numbertoggle",
-  -- "mg979/vim-visual-multi",
-}
-
-local opts = {}
