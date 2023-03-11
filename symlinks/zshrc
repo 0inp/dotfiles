@@ -1,22 +1,18 @@
-zmodload zsh/zprof
+# zmodload zsh/zprof
 
 [[ -f ~/.zsh/functions.zsh ]] && source ~/.zsh/functions.zsh
 [[ -f ~/.zsh/plugins_before.zsh ]] && source ~/.zsh/plugins_before.zsh
+[[ -f ~/.zsh/completions.zsh ]] && source ~/.zsh/completions.zsh
 [[ -f ~/.zsh/env_var.zsh ]] && source ~/.zsh/env_var.zsh
 [[ -f ~/.zsh/settings.zsh ]] && source ~/.zsh/settings.zsh
 [[ -f ~/.zsh/aliases.zsh ]] && source ~/.zsh/aliases.zsh
 [[ -f ~/.zsh/starship.zsh ]] && source ~/.zsh/starship.zsh
-# [[ -f ~/.zsh/zinit.zsh ]] && source ~/.zsh/zinit.zsh
 [[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
 
-# Load pyenv-virtualenv
-eval "$(pyenv virtualenv-init -)"
+[[ -f ~/.zsh/plugins_after.zsh ]] && source ~/.zsh/plugins_after.zsh
+[[ -f ~/.zsh/bindings.zsh ]] && source ~/.zsh/bindings.zsh
 
-
-gpgconf --launch gpg-agent
-ssh-add -K ~/.ssh/id\_rsa 2>/dev/null
-
-# Turn off beeps
-unsetopt BEEP
-
-zprof
+# zprof
+wd() {
+  . /Users/oinp/bin/wd/wd.sh
+}

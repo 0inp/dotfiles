@@ -7,17 +7,16 @@
       relink: true
 - clean: ['~']
 - link:
-    # ~/.bashrc: bashrc
     ~/.config: symlinks/config
     ~/.gitconfig: symlinks/gitconfig
     ~/.gitignore: symlinks/gitignore
     ~/.gnupg/gpg.conf: symlinks/gnupg/gpg.conf
     ~/.gnupg/gpg-agent.conf: symlinks/gnupg/gpg-agent.conf
     ~/.tmux.conf: symlinks/tmux.conf
+    ~/.pythonrc: symlinks/pythonrc
     ~/.warprc: symlinks/warprc
     ~/.zsh: symlinks/zsh
     ~/.zshrc: symlinks/zshrc
-    ~/.zfunc: symlinks/zfunc
 - shell:
     - [brew cleanup && brew upgrade, Upgrade brew]
 - tap:
@@ -65,6 +64,7 @@
     - [pyenv install -s 3.11.0 3.10.9 3.9.16 3.8.16 3.7.16 3.6.15 && pyenv global
         3.11.0, Install python versions] # install differents python versions
     - [python -m pip install --upgrade pip, Upgrade Pip] # Upgrade pip
+    - [git submodule sync --recursive, Sync submodules]
     - [git submodule update --init --recursive, Install submodules] # install submodules
     - [PREFIX='/usr/local/opt/browserpass' make hosts-chrome-user -f /usr/local/opt/browserpass/lib/browserpass/Makefile,
       Configure Browserpass] # Configure browserpass extension
@@ -77,6 +77,8 @@
       description: Add italics 256 colors to tmux
     - command: $PWD/resources/macos_settings.sh
       description: Defaults MacOS settings
+    - ['curl -L https://github.com/mfaerevaag/wd/raw/master/install.sh | sh', Install
+        wd]
   git:
     '~/.tmux/plugins/tpm':
       url: 'https://github.com/tmux-plugins/tpm.git'
