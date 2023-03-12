@@ -1,59 +1,4 @@
 # vim:ft=gitconfig
-[core]
-	editor = nvim
-  autocrlf = input
-  ignorecase = false
-  excludesfile = /Users/oinp/.gitignore
-  pager = diff-so-fancy
-
-[add "interactive"]
-	useBuiltin = false
-
-[interactive]
-  diffFilter = "diff-so-fancy --patch"
-
-[color]
-  ui = true
-
-[diff-highlight]
-  oldNormal = "red bold"
-  oldHighlight = "red bold 52"
-  newNormal = "green bold"
-  newHighlight = "green bold 22"
-
-[diff]
-  mnemonicPrefix = true
-  renames = true
-	ignoreSubmodules = dirty
-  meta = "11"
-  frag = "magenta bold"
-  func = "146 bold"
-  commit = "yellow bold"
-  old = "red bold"
-  new = "green bold"
-  whitespace = "red reverse"
-
-[pull]
-	rebase = merges
-
-[push]
-  default = current
-
-[fetch]
-  prune = true
-
-[commit]
-    gpgsign = true
-
-[gpg]
-	program = /usr/local/bin/gpg
-
-[rebase]
-  autosquash = true
-
-[log]
-  abbrevCommit = true
-
 [alias]
   co = checkout
   commend = commit --amend --no-edit
@@ -71,32 +16,74 @@
   sweep = "!git remote update -p && git purr && git branch --merged | grep -v '*' | grep -v master | xargs -I{} git branch -d {}"
   wync = "!git stash && git purr && git stash pop && git push"
 
+[add "interactive"]
+	useBuiltin = false
+
+[color]
+  ui = true
+
+[commit]
+  gpgsign = true
+
+[core]
+	editor = nvim
+  autocrlf = input
+  ignorecase = false
+  excludesfile = /Users/oinp/.gitignore
+  pager = diff-so-fancy
+
 [credential]
   helper = cache --timeout=28800
+
+[diff]
+  mnemonicPrefix = true
+  renames = true
+	ignoreSubmodules = dirty
+  meta = "11"
+  frag = "magenta bold"
+  func = "146 bold"
+  commit = "yellow bold"
+  old = "red bold"
+  new = "green bold"
+  whitespace = "red reverse"
+
+[diff-highlight]
+  oldNormal = "red bold"
+  oldHighlight = "red bold 52"
+  newNormal = "green bold"
+  newHighlight = "green bold 22"
+
+[fetch]
+  prune = true
+
+[gpg]
+	program = /usr/local/bin/gpg
+
+[http]
+  sslVerify = false
+
+[init]
+  defaultBranch = main
+
+[interactive]
+  diffFilter = "diff-so-fancy --patch"
+
+[log]
+  abbrevCommit = true
+
+[merge]
+  tool = vimdiff
+
+[pull]
+	rebase = merges
+
+[push]
+  default = current
+
+[rebase]
+  autosquash = true
 
 [user]
 	signingkey = 0D974584A399517C
   name = Stephane Point
   email = point.steph@gmail.com
-
-[include]
-  path = ~/.gitconfig-ma
-
-[merge]
-  tool = vimdiff
-
-[http]
-  sslVerify = false
-  [color "diff-highlight"]
-  oldNormal = red bold
-  oldHighlight = red bold 52
-  newNormal = green bold
-  newHighlight = green bold 22
-
-[color "diff"]
-  meta = 11
-  frag = magenta bold
-  commit = yellow bold
-  old = red bold
-  new = green bold
-  whitespace = red reverse
