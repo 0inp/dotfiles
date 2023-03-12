@@ -36,6 +36,3 @@ case $_distro in
 esac
 
 export STARSHIP_DISTRO="$ICON"
-
-# Load Starship
-eval "$(starship init zsh)"

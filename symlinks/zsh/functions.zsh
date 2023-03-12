@@ -42,3 +42,7 @@ function timezsh() {
 function dfu() {
   cd ~/.dotfiles && git pull --ff-only && ./install -q
 }
+
+function wd() {
+  . /Users/oinp/bin/wd/wd.sh
+}
