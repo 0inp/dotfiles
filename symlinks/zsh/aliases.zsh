@@ -53,6 +53,13 @@ if [ "${?}" -eq "0" ]; then
   alias g='git'
 fi
 
+# fzf
+command_exists "fzf"
+if [ "${?}" -eq "0" ]; then
+  alias al='alias | fzf'
+  alias printenv='printenv | fzf'
+fi
+
 # tmux
 alias ta='tmux attach'
 alias tls='tmux ls'

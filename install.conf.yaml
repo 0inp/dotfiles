@@ -33,7 +33,6 @@
     - diff-so-fancy # fancy git diff
     - exa # ls alternative
     - fd # find alternative
-    - fzf # Fuzzy file finder
     - git
     - gitlint # Linting comiit messages
     - glow # Render markdown
@@ -53,13 +52,16 @@
     - sqlite3
     - starship # prompt
     - stats # System stats menu bar
+    - the_silver_searcher
     - tmux # sessions multiplexer
     - xz # Compression
     - wget
     - zlib
     - zsh
 - shell:
-    - [$(brew --prefix)/opt/fzf/install, Fzf install part 2] # Part 2 install fzf
+    - ['chmod +x "${HOME}/dotfiles/resources/chtfzf.sh"', Ensure that cheatsheet fzf script is executable]
+    - command: if [ -d "$HOME/.fzf" ]; then cd ~/.fzf/ && git pull && ./install; else git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install; fi
+      description: FZF useful keybindings and competion
     - [pyenv install -s 3.11.0 3.10.9 3.9.16 3.8.16 3.7.16 3.6.15 && pyenv global
         3.11.0, Install python versions] # install differents python versions
     - [python -m pip install --upgrade pip, Upgrade Pip] # Upgrade pip
@@ -76,9 +78,10 @@
       description: Add italics 256 colors to tmux
     - command: $PWD/resources/macos_settings.sh
       description: Defaults MacOS settings
-    - ['curl -L https://github.com/mfaerevaag/wd/raw/master/install.sh | sh', Install
-        wd]
   git:
     '~/.tmux/plugins/tpm':
       url: 'https://github.com/tmux-plugins/tpm.git'
       description: 'tmux plugins manager'
+    '~/.fzf-tab':
+      url: 'https://github.com/Aloxaf/fzf-tab'
+      description: 'fzf-tab autocompletion with fzf'
