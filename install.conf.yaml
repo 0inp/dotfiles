@@ -14,7 +14,6 @@
     ~/.gnupg/gpg-agent.conf: symlinks/gnupg/gpg-agent.conf
     ~/.tmux.conf: symlinks/tmux.conf
     ~/.pythonrc: symlinks/pythonrc
-    ~/.warprc: symlinks/warprc
     ~/.zsh: symlinks/zsh
     ~/.zshrc: symlinks/zshrc
 - shell:
