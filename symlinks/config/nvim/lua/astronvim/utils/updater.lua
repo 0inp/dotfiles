@@ -76,7 +76,7 @@ end
 -- @param quiet boolean to quietly execute or send a notification
 -- @return the current AstroNvim version string
 function M.version(quiet)
-  local version = astronvim.install.version or git.current_version(false)
+  local version = astronvim.install.version or git.current_version(false) or "unknown"
   if astronvim.updater.options.channel ~= "stable" then version = ("nightly (%s)"):format(version) end
   if version and not quiet then notify("Version: " .. version) end
   return version
@@ -192,6 +192,10 @@ function M.update(opts)
   elseif not opts.branch then
     opts.branch = "nightly"
   end
+  -- setup branch if missing
+  if not git.ref_verify(opts.remote .. "/" .. opts.branch, false) then
+    git.remote_set_branches(opts.remote, opts.branch, false)
+  end
   -- fetch the latest remote
   if not git.fetch(opts.remote) then
     vim.api.nvim_err_writeln("Error fetching remote: " .. opts.remote)
@@ -278,7 +282,7 @@ function M.update(opts)
     end
     -- if update was unsuccessful throw an error
     if not updated then
-      vim.api.nvim_err_writeln "Error ocurred performing update"
+      vim.api.nvim_err_writeln "Error occurred performing update"
       return
     end
     -- print a summary of the update with the changelog

@@ -19,6 +19,19 @@ function M.extend_tbl(default, opts)
   return default and vim.tbl_deep_extend("force", default, opts) or opts
 end
 
+--- Insert one or more values into a list like table and maintain that you do not insert non-unique values (THIS MODIFIES `lst`)
+-- @param lst the list like table that you want to insert into
+-- @param vals either a list like table of values to be inserted or a single value to be inserted
+-- @return the modified list like table
+function M.list_insert_unique(lst, vals)
+  assert(vim.tbl_islist(lst), "Provided table is not a list like table")
+  if not vim.tbl_islist(vals) then vals = { vals } end
+  for _, val in ipairs(vals) do
+    if not vim.tbl_contains(lst, val) then table.insert(lst, val) end
+  end
+  return lst
+end
+
 --- Call function if a condition is met
 -- @param func the function to run
 -- @param condition a boolean value of whether to run the function or not
@@ -44,11 +57,19 @@ end
 -- @return table of highlight group properties
 function M.get_hlgroup(name, fallback)
   if vim.fn.hlexists(name) == 1 then
-    local hl = vim.api.nvim_get_hl_by_name(name, vim.o.termguicolors)
-    if not hl["foreground"] then hl["foreground"] = "NONE" end
-    if not hl["background"] then hl["background"] = "NONE" end
-    hl.fg, hl.bg, hl.sp = hl.foreground, hl.background, hl.special
-    hl.ctermfg, hl.ctermbg = hl.foreground, hl.background
+    local hl
+    if vim.api.nvim_get_hl then -- check for new neovim 0.9 API
+      hl = vim.api.nvim_get_hl(0, { name = name, link = false })
+      if not hl.fg then hl.fg = "NONE" end
+      if not hl.bg then hl.bg = "NONE" end
+    else
+      hl = vim.api.nvim_get_hl_by_name(name, vim.o.termguicolors)
+      if not hl.foreground then hl.foreground = "NONE" end
+      if not hl.background then hl.background = "NONE" end
+      hl.fg, hl.bg = hl.foreground, hl.background
+      hl.ctermfg, hl.ctermbg = hl.fg, hl.bg
+      hl.sp = hl.special
+    end
     return hl
   end
   return fallback
@@ -73,14 +94,14 @@ end
 function M.system_open(path)
   local cmd
   if vim.fn.has "win32" == 1 and vim.fn.executable "explorer" == 1 then
-    cmd = "explorer"
+    cmd = { "cmd.exe", "/K", "explorer" }
   elseif vim.fn.has "unix" == 1 and vim.fn.executable "xdg-open" == 1 then
-    cmd = "xdg-open"
+    cmd = { "xdg-open" }
   elseif (vim.fn.has "mac" == 1 or vim.fn.has "unix" == 1) and vim.fn.executable "open" == 1 then
-    cmd = "open"
+    cmd = { "open" }
   end
   if not cmd then M.notify("Available system opening tool not found!", "error") end
-  vim.fn.jobstart({ cmd, path or vim.fn.expand "<cfile>" }, { detach = true })
+  vim.fn.jobstart(vim.fn.extend(cmd, { path or vim.fn.expand "<cfile>" }), { detach = true })
 end
 
 -- term_details can be either a string for just a command or
@@ -143,9 +164,9 @@ function M.is_available(plugin)
 end
 
 --- A helper function to wrap a module function to require a plugin before running
--- @param plugin the plugin string to call `require("lazy").laod` with
+-- @param plugin the plugin string to call `require("lazy").load` with
 -- @param module the system module where the functions live (e.g. `vim.ui`)
--- @param func_names a string or a list like table of strings for functions to wrap in the given moduel (e.g. `{ "ui", "select }`)
+-- @param func_names a string or a list like table of strings for functions to wrap in the given module (e.g. `{ "ui", "select }`)
 function M.load_plugin_with_func(plugin, module, func_names)
   if type(func_names) == "string" then func_names = { func_names } end
   for _, func in ipairs(func_names) do

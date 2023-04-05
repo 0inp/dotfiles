@@ -59,11 +59,11 @@ autocmd({ "VimEnter", "FileType", "BufEnter", "WinEnter" }, {
 })
 
 local view_group = augroup("auto_view", { clear = true })
-autocmd("BufWinLeave", {
+autocmd({ "BufWinLeave", "BufWritePost", "WinLeave" }, {
   desc = "Save view with mkview for real files",
   group = view_group,
   callback = function(event)
-    if vim.b[event.buf].view_activated then vim.cmd.mkview() end
+    if vim.b[event.buf].view_activated then vim.cmd.mkview { mods = { emsg_silent = true } } end
   end,
 })
 autocmd("BufWinEnter", {
@@ -82,12 +82,15 @@ autocmd("BufWinEnter", {
   end,
 })
 
-autocmd("FileType", {
+autocmd("BufWinEnter", {
   desc = "Make q close help, man, quickfix, dap floats",
   group = augroup("q_close_windows", { clear = true }),
-  pattern = { "qf", "help", "man", "dap-float" },
   callback = function(event)
-    vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true, nowait = true })
+    local filetype = vim.api.nvim_get_option_value("filetype", { buf = event.buf })
+    local buftype = vim.api.nvim_get_option_value("buftype", { buf = event.buf })
+    if buftype == "nofile" or filetype == "help" then
+      vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true, nowait = true })
+    end
   end,
 })
 

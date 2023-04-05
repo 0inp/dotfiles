@@ -15,11 +15,11 @@ local M = {}
 -- @return true if the buffer is valid or false
 function M.is_valid(bufnr)
   if not bufnr or bufnr < 1 then return false end
-  return vim.bo[bufnr].buflisted and vim.api.nvim_buf_is_valid(bufnr)
+  return vim.api.nvim_buf_is_valid(bufnr) and vim.bo[bufnr].buflisted
 end
 
 --- Move the current buffer tab n places in the bufferline
--- @param n numer of tabs to move the current buffer over by (positive = right, negative = left)
+-- @param n number of tabs to move the current buffer over by (positive = right, negative = left)
 function M.move(n)
   if n == 0 then return end -- if n = 0 then no shifts are needed
   local bufs = vim.t.bufs -- make temp variable
@@ -56,6 +56,10 @@ function M.nav(n)
     end
   end
 end
+
+--- Navigate to a specific buffer by its position in the bufferline
+-- @param tabnr the position of the buffer to navigate to
+function M.nav_to(tabnr) vim.cmd.b(vim.t.bufs[tabnr]) end
 
 --- Close a given buffer
 -- @param bufnr? the buffer number to close or the current buffer if not provided
