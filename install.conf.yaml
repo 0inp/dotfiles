@@ -10,12 +10,12 @@
     ~/.config: symlinks/config
     ~/.gitconfig: symlinks/gitconfig
     ~/.gitignore: symlinks/gitignore
-    ~/.gnupg/gpg.conf: symlinks/gnupg/gpg.conf
     ~/.gnupg/gpg-agent.conf: symlinks/gnupg/gpg-agent.conf
-    ~/.tmux.conf: symlinks/tmux.conf
+    ~/.gnupg/gpg.conf: symlinks/gnupg/gpg.conf
     ~/.python-version: symlinks/python-version
     ~/.pythonrc: symlinks/pythonrc
     ~/.tmux-windows: symlinks/tmux-windows
+    ~/.tmux.conf: symlinks/tmux.conf
     ~/.zsh: symlinks/zsh
     ~/.zshrc: symlinks/zshrc
 - shell:
@@ -62,7 +62,7 @@
     - zsh
 - shell:
     - ['chmod +x "${HOME}/dotfiles/resources/chtfzf.sh"', Ensure that cheatsheet fzf script is executable]
-    - command: if [ -d "$HOME/.fzf" ]; then cd ~/.fzf/ && git pull && ./install; else git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install; fi
+    - command: if [ -d "$HOME/.fzf" ]; then cd ~/.fzf/ && git pull && ./install --key-bindings --completion --update-rc --no-bash --no-fish; else git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install --key-bindings --completion --update-rc --no-bash --no-fish; fi
       description: FZF useful keybindings and competion
     - [pyenv install -s && head -n 1 ~/.python-version | xargs pyenv global, Install python versions] # install differents python versions
     - [python -m pip install --upgrade pip, Upgrade Pip] # Upgrade pip
