@@ -13,6 +13,7 @@
     ~/.gnupg/gpg.conf: symlinks/gnupg/gpg.conf
     ~/.gnupg/gpg-agent.conf: symlinks/gnupg/gpg-agent.conf
     ~/.tmux.conf: symlinks/tmux.conf
+    ~/.python-version: symlinks/python-version
     ~/.pythonrc: symlinks/pythonrc
     ~/.tmux-windows: symlinks/tmux-windows
     ~/.zsh: symlinks/zsh
@@ -63,8 +64,7 @@
     - ['chmod +x "${HOME}/dotfiles/resources/chtfzf.sh"', Ensure that cheatsheet fzf script is executable]
     - command: if [ -d "$HOME/.fzf" ]; then cd ~/.fzf/ && git pull && ./install; else git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install; fi
       description: FZF useful keybindings and competion
-    - [pyenv install -s 3.11.0 3.10.9 3.9.16 3.8.16 3.7.16 3.6.15 && pyenv global
-        3.11.0, Install python versions] # install differents python versions
+    - [pyenv install -s && head -n 1 ~/.python-version | xargs pyenv global, Install python versions] # install differents python versions
     - [python -m pip install --upgrade pip, Upgrade Pip] # Upgrade pip
     - [git submodule sync --recursive, Sync submodules]
     - [git submodule update --init --recursive, Install submodules] # install submodules
