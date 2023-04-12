@@ -15,4 +15,7 @@
 # Load Starship
 eval "$(starship init zsh)"
 
+# Load tmuxifier
+eval "$(tmuxifier init -)"
+
 # zprof

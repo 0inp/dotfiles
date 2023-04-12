@@ -8,6 +8,9 @@ export PATH=$(pyenv root)/shims:$PATH
 export PATH=${HOME}/.local/bin:$PATH
 # node
 export PATH="/usr/local/bin:$PATH"
+# tmuxifier
+export PATH="${HOME}/.tmux/plugins/tmuxifier/bin:$PATH"
+export TMUXIFIER_LAYOUT_PATH=~/.tmux-windows
 
 # Use vim as the editor
 export EDITOR=nvim
