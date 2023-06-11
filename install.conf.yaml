@@ -21,13 +21,16 @@
 - shell:
     - [brew cleanup && brew upgrade, Upgrade brew]
 - tap:
+    - amar1729/formulae
     - homebrew/bundle
-    - homebrew/core
     - homebrew/cask
     - homebrew/cask-fonts
-    - amar1729/formulae
+    - homebrew/core
 - cask:
     - font-hack-nerd-font
+    - raycast # better Spotlight
+    - rectangle # macos window management
+    - stats # System stats menu bar
 - brew:
     - bat # better cat
     - browserpass # password manager
@@ -47,17 +50,14 @@
     - pinentry-mac
     - pyenv
     - pyenv-virtualenv
-    - raycast # better Spotlight
     - readline
-    - rectangle # macos window management
     - ripgrep # very fast file searcher
     - sqlite3
     - starship # prompt
-    - stats # System stats menu bar
     - the_silver_searcher
     - tmux # sessions multiplexer
-    - xz # Compression
     - wget
+    - xz # Compression
     - zlib
     - zsh
 - shell:
@@ -79,10 +79,10 @@
       description: Add italics 256 colors to tmux
     - command: $PWD/resources/macos_settings.sh
       description: Defaults MacOS settings
-  git:
-    '~/.tmux/plugins/tpm':
-      url: 'https://github.com/tmux-plugins/tpm.git'
-      description: 'tmux plugins manager'
+- git:
     '~/.fzf-tab':
       url: 'https://github.com/Aloxaf/fzf-tab'
       description: 'fzf-tab autocompletion with fzf'
+    '~/.tmux/plugins/tpm':
+      url: 'https://github.com/tmux-plugins/tpm.git'
+      description: 'tmux plugins manager'
