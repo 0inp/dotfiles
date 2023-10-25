@@ -43,6 +43,7 @@
     - glow # Render markdown
     - gnupg
     - htop # top alternative
+    - lazygit # git interface
     - neovim # neovim
     - node # Node
     - openssl
