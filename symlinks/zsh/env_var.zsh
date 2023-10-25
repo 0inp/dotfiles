@@ -4,6 +4,7 @@ export PASSWORD_STORE_DIR=${HOME}/my_password_store
 export GPG_TTY=$(tty)
 # python
 export PATH=$(pyenv root)/shims:$PATH
+export PYENV_ROOT=$(pyenv root)
 #poetry
 export PATH=${HOME}/.local/bin:$PATH
 # node
