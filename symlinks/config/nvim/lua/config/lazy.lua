@@ -11,9 +11,42 @@ require("lazy").setup({
     -- add LazyVim and import its plugins
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
     -- import any extras modules here
-    -- { import = "lazyvim.plugins.extras.lang.typescript" },
-    -- { import = "lazyvim.plugins.extras.lang.json" },
-    -- { import = "lazyvim.plugins.extras.ui.mini-animate" },
+    -- -- UI --
+    -- edgy (better window management)
+    { import = "lazyvim.plugins.extras.ui.edgy" },
+    -- use mini-starter.nvim as welcome screen instead of alpha.nvim
+    { import = "lazyvim.plugins.extras.ui.mini-starter" },
+    -- -- EDITOR --
+    -- list symbols <leader>cs
+    { import = "lazyvim.plugins.extras.editor.aerial" },
+    -- move with f/F/t/T
+    { import = "lazyvim.plugins.extras.editor.leap" },
+    -- -- FORMATTING --
+    { import = "lazyvim.plugins.extras.formatting.black" },
+    { import = "lazyvim.plugins.extras.formatting.prettier" },
+    -- -- LANGUAGES --
+    -- docker
+    { import = "lazyvim.plugins.extras.lang.docker" },
+    -- json
+    { import = "lazyvim.plugins.extras.lang.json" },
+    -- markdown
+    { import = "lazyvim.plugins.extras.lang.markdown" },
+    -- python
+    { import = "lazyvim.plugins.extras.lang.python" },
+    -- python color syntax
+    { import = "lazyvim.plugins.extras.lang.python-semshi" },
+    -- yaml
+    { import = "lazyvim.plugins.extras.lang.yaml" },
+    -- -- EXTRAS --
+    --  LSP with none-ls
+    { import = "lazyvim.plugins.extras.lsp.none-ls" },
+    -- TESTING
+    -- core
+    { import = "lazyvim.plugins.extras.dap.core" },
+    -- lua
+    { import = "lazyvim.plugins.extras.dap.nlua" },
+    -- neotest
+    { import = "lazyvim.plugins.extras.test.core" },
     -- import/override with your plugins
     { import = "plugins" },
   },
@@ -26,7 +59,7 @@ require("lazy").setup({
     version = false, -- always use the latest git commit
     -- version = "*", -- try installing the latest stable version for plugins that support semver
   },
-  install = { colorscheme = { "tokyonight", "habamax" } },
+  install = { colorscheme = { "catppuccin" } },
   checker = { enabled = true }, -- automatically check for plugin updates
   performance = {
     rtp = {
