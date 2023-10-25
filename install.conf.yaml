@@ -5,7 +5,7 @@
       stderr: true
     link:
       relink: true
-- clean: ['~']
+- clean: ["~"]
 - link:
     ~/.config: symlinks/config
     ~/.gitconfig: symlinks/gitconfig
@@ -61,17 +61,28 @@
     - zlib
     - zsh
 - shell:
-    - ['chmod +x "${HOME}/dotfiles/resources/chtfzf.sh"', Ensure that cheatsheet fzf script is executable]
+    - [
+        'chmod +x "${HOME}/dotfiles/resources/chtfzf.sh"',
+        Ensure that cheatsheet fzf script is executable,
+      ]
     - command: if [ -d "$HOME/.fzf" ]; then cd ~/.fzf/ && git pull && ./install --key-bindings --completion --update-rc --no-bash --no-fish; else git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install --key-bindings --completion --update-rc --no-bash --no-fish; fi
       description: FZF useful keybindings and competion
-    - [pyenv install -s && head -n 1 ~/.python-version | xargs pyenv global, Install python versions] # install differents python versions
+    - [
+        pyenv install -s && head -n 1 ~/.python-version | xargs pyenv global,
+        Install python versions,
+      ] # install differents python versions
     - [python -m pip install --upgrade pip, Upgrade Pip] # Upgrade pip
     - [git submodule sync --recursive, Sync submodules]
     - [git submodule update --init --recursive, Install submodules] # install submodules
-    - [PREFIX='/usr/local/opt/browserpass' make hosts-chrome-user -f /usr/local/opt/browserpass/lib/browserpass/Makefile,
-      Configure Browserpass] # Configure browserpass extension
+    - [
+        PREFIX='/usr/local/opt/browserpass' make hosts-chrome-user -f /usr/local/opt/browserpass/lib/browserpass/Makefile,
+        Configure Browserpass,
+      ] # Configure browserpass extension
     - [pip install --user tmuxp, Install tmux session manager] # install tmux
-    - ['curl -sSL https://install.python-poetry.org | python3 -', Install poetry] # install poetry
+    - [
+        "curl -sSL https://install.python-poetry.org | python3 -",
+        Install poetry,
+      ] # install poetry
     - [poetry self update, Update poetry] # update poetry
     - command: sudo chsh -s $(which zsh) ${USER} # switch to zsh
       description: Switch to ZSH
@@ -80,9 +91,9 @@
     - command: $PWD/resources/macos_settings.sh
       description: Defaults MacOS settings
 - git:
-    '~/.fzf-tab':
-      url: 'https://github.com/Aloxaf/fzf-tab'
-      description: 'fzf-tab autocompletion with fzf'
-    '~/.tmux/plugins/tpm':
-      url: 'https://github.com/tmux-plugins/tpm.git'
-      description: 'tmux plugins manager'
+    "~/.fzf-tab":
+      url: "https://github.com/Aloxaf/fzf-tab"
+      description: "fzf-tab autocompletion with fzf"
+    "~/.tmux/plugins/tpm":
+      url: "https://github.com/tmux-plugins/tpm.git"
+      description: "tmux plugins manager"
