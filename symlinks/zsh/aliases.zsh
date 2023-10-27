@@ -53,6 +53,12 @@ if [ "${?}" -eq "0" ]; then
   alias g='git'
 fi
 
+# lazygit
+command_exists "lazygit"
+if [ "${?}" -eq "0" ]; then
+  alias gg=lazygit
+fi
+
 # fzf
 command_exists "fzf"
 if [ "${?}" -eq "0" ]; then

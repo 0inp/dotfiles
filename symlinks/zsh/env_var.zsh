@@ -27,3 +27,6 @@ export PYTHONSTARTUP=$HOME/.pythonrc
 
 # Docker
 export DOCKER_SCAN_SUGGEST=false
+
+# Lazygit config
+export LG_CONFIG_FILE="$HOME/.config/lazygit.yaml"
