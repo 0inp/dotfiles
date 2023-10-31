@@ -1,4 +1,5 @@
-vim/.netrwhist
+**/lazy-lock.json
+**/raycast/extensions/*
 *.swp
 bin/.DS_Store
 bin/advpng
@@ -32,8 +33,8 @@ bin/test.256.pl
 bin/test.gzip
 bin/trim
 bin/upgradedb
-tmux/plugins/!tpm
 tmux/plugins/
+tmux/plugins/!tpm
+vim/.netrwhist
 vim/autoload/plug.vim
 vim/bundle/
-**/raycast/extensions/*
