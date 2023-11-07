@@ -23,6 +23,7 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.editor.leap" },
     -- -- FORMATTING --
     { import = "lazyvim.plugins.extras.formatting.black" },
+    { import = "lazyvim.plugins.extras.linting.eslint" },
     { import = "lazyvim.plugins.extras.formatting.prettier" },
     -- -- LANGUAGES --
     -- docker
