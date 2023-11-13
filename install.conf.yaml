@@ -33,6 +33,7 @@
     - rectangle # macos window management
     - stats # System stats menu bar
 - brew:
+    - alacritty
     - bat # better cat
     - browserpass # password manager
     - coreutils
