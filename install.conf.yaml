@@ -33,6 +33,7 @@
     - rectangle # macos window management
     - stats # System stats menu bar
 - brew:
+    - alacritty
     - bat # better cat
     - browserpass # password manager
     - coreutils
@@ -45,6 +46,7 @@
     - gnupg
     - htop # top alternative
     - lazygit # git interface
+    - font-monaspace
     - neovim # neovim
     - node # Node
     - openssl
