@@ -61,6 +61,7 @@
     - zellij # multiplexer
     - zlib
     - zsh
+    - zoxide
 - shell:
     - [
         'chmod +x "${HOME}/dotfiles/resources/chtfzf.sh"',
