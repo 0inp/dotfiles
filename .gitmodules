@@ -13,9 +13,6 @@
 [submodule "symlinks/zsh/zsh_plugins/zsh-autosuggestions"]
 	path = symlinks/zsh/zsh_plugins/zsh-autosuggestions
 	url = https://github.com/zsh-users/zsh-autosuggestions.git
-[submodule "symlinks/zsh/zsh_plugins/forgit"]
-	path = symlinks/zsh/zsh_plugins/forgit
-	url = https://github.com/wfxr/forgit.git
 [submodule "symlinks/zsh/zsh_plugins/zsh-colored-man-pages"]
 	path = symlinks/zsh/zsh_plugins/zsh-colored-man-pages
 	url = https://github.com/ael-code/zsh-colored-man-pages.git
