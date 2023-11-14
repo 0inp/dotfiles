@@ -15,7 +15,7 @@
 # Load Starship
 eval "$(starship init zsh)"
 
-# Load tmuxifier
-eval "$(tmuxifier init -)"
+# Autostart a new zellij shell, if not already inside one
+eval "$(zellij setup --generate-auto-start zsh)"
 
 # zprof

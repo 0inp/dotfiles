@@ -59,9 +59,9 @@
     - sqlite3
     - starship # prompt
     - the_silver_searcher
-    - tmux # sessions multiplexer
     - wget
     - xz # Compression
+    - zellij # multiplexer
     - zlib
     - zsh
 - shell:
