@@ -4,10 +4,8 @@ command_exists() { (( $+commands[$1] )) }
 
 alias less='less -r'
 alias vi='nvim'
-alias tmux='tmux -2'
+alias ze='zellij'
 alias python=python3
-
-alias fixssh='eval $(tmux showenv -s SSH_AUTH_SOCK)'
 
 # ls => exa
 
@@ -65,9 +63,3 @@ if [ "${?}" -eq "0" ]; then
   alias al='alias | fzf'
   alias printenv='printenv | fzf'
 fi
-
-# tmux
-alias ta='tmux attach'
-alias tls='tmux ls'
-alias tat='tmux attach -t'
-alias tns='tmux new-session -s'
