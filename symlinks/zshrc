@@ -12,9 +12,6 @@
 [[ -f ~/.zsh/plugins_after.zsh ]] && source ~/.zsh/plugins_after.zsh
 [[ -f ~/.zsh/bindings.zsh ]] && source ~/.zsh/bindings.zsh
 
-# Autostart a new zellij shell, if not already inside one
-eval "$(zellij setup --generate-auto-start zsh)"
-
 # Load Starship
 eval "$(starship init zsh)"
 
