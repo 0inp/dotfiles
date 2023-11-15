@@ -9,7 +9,10 @@ vim.opt.rtp:prepend(vim.env.LAZY or lazypath)
 require("lazy").setup({
   spec = {
     -- add LazyVim and import its plugins
-    { "LazyVim/LazyVim", import = "lazyvim.plugins" },
+    {
+      "LazyVim/LazyVim",
+      import = "lazyvim.plugins",
+    },
     -- import any extras modules here
     -- -- UI --
     -- edgy (better window management)
@@ -21,23 +24,8 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.editor.aerial" },
     -- move with f/F/t/T
     { import = "lazyvim.plugins.extras.editor.leap" },
-    -- -- FORMATTING --
-    { import = "lazyvim.plugins.extras.formatting.black" },
-    { import = "lazyvim.plugins.extras.linting.eslint" },
-    { import = "lazyvim.plugins.extras.formatting.prettier" },
     -- -- LANGUAGES --
-    -- docker
-    { import = "lazyvim.plugins.extras.lang.docker" },
-    -- json
-    { import = "lazyvim.plugins.extras.lang.json" },
-    -- markdown
-    { import = "lazyvim.plugins.extras.lang.markdown" },
-    -- python
-    { import = "lazyvim.plugins.extras.lang.python" },
-    -- python color syntax
     { import = "lazyvim.plugins.extras.lang.python-semshi" },
-    -- yaml
-    { import = "lazyvim.plugins.extras.lang.yaml" },
     -- -- EXTRAS --
     --  LSP with none-ls
     { import = "lazyvim.plugins.extras.lsp.none-ls" },
@@ -60,7 +48,6 @@ require("lazy").setup({
     version = false, -- always use the latest git commit
     -- version = "*", -- try installing the latest stable version for plugins that support semver
   },
-  install = { colorscheme = { "catppuccin" } },
   checker = { enabled = true }, -- automatically check for plugin updates
   performance = {
     rtp = {
