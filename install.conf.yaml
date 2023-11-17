@@ -56,9 +56,9 @@
     - sqlite3
     - starship # prompt
     - the_silver_searcher
+    - tmux
     - wget
     - xz # Compression
-    - zellij # multiplexer
     - zlib
     - zsh
     - zoxide
@@ -74,6 +74,7 @@
         Install python versions,
       ] # install differents python versions
     - [python -m pip install --upgrade pip, Upgrade Pip] # Upgrade pip
+    - [python3 -m pip install --user libtmux, Install libtmux useful for tmux-window-name plugin]
     - [git submodule sync --recursive, Sync submodules]
     - [git submodule update --init --recursive, Install submodules] # install submodules
     - [
@@ -93,3 +94,7 @@
     "~/.fzf-tab":
       url: "https://github.com/Aloxaf/fzf-tab"
       description: "fzf-tab autocompletion with fzf"
+    "~/.tmux/plugins/tpm":
+      url: "https://github.com/tmux-plugins/tpm"
+      method: "clone-or-pull"
+      description: "Tmux Plugin Manager"
