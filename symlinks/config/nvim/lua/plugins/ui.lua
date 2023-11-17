@@ -25,4 +25,14 @@ return {
       }
     end,
   },
+  {
+    "christoomey/vim-tmux-navigator",
+    lazy = false,
+    keys = {
+      { "<C-H>", "<cmd>TmuxNavigateLeft<cr>", "Move to left window" },
+      { "<C-J>", "<cmd>TmuxNavigateDown<cr>", "Move to down window" },
+      { "<C-K>", "<cmd>TmuxNavigateUp<cr>", "Move to up window" },
+      { "<C-L>", "<cmd>TmuxNavigateRight<cr>", "Move to right window" },
+    },
+  },
 }
