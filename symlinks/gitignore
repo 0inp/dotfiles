@@ -12,3 +12,4 @@
 **/.syncthing**.tmp
 **/.DS_Store
 
+**/*.pyc
