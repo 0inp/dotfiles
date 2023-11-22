@@ -32,6 +32,7 @@
     - stats # System stats menu bar
 - brew:
     - alacritty
+    - bash
     - bat # better cat
     - browserpass # password manager
     - coreutils
