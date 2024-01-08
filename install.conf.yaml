@@ -98,5 +98,4 @@
       description: "fzf-tab autocompletion with fzf"
     "~/.tmux/plugins/tpm":
       url: "https://github.com/tmux-plugins/tpm"
-      method: "clone-or-pull"
       description: "Tmux Plugin Manager"
