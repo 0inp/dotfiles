@@ -1,146 +1,116 @@
-return {
-  -- tools
-  {
-    "williamboman/mason.nvim",
-    opts = function(_, opts)
-      vim.list_extend(opts.ensure_installed, {
-        "astro-language-server",
-        "black",
-        "css-lsp",
-        "debugpy",
-        "docker-compose-language-service",
-        "dockerfile-language-server",
-        "eslint-lsp",
-        "flake8",
-        "hadolint",
-        "isort",
-        "json-lsp",
-        "lua-language-server",
-        "markdownlint",
-        "marksman",
-        "mypy",
-        "prettier",
-        "pyright",
-        "ruff-lsp",
-        "shellcheck",
-        "shfmt",
-        "stylua",
-        "tailwindcss-language-server",
-        "typescript-language-server",
-        "yaml-language-server",
-      })
-    end,
-  },
+-- LSP
+local M = {
+	{
+		"williamboman/mason.nvim",
+		config = function()
+			require("mason").setup()
+		end,
+	},
+	{
+		"williamboman/mason-lspconfig.nvim",
+		config = function()
+			require("mason-lspconfig").setup({
+				ensure_installed = {
+					"astro",
+					"bashls",
+					"cssls",
+					"docker_compose_language_service",
+					"dockerls",
+					"eslint",
+					"html",
+					"jsonls",
+					"lua_ls",
+					"marksman",
+					"ruff_lsp",
+					"tsserver",
+					"yamlls",
+				},
+			})
+		end,
+	},
+	{
+		"jay-babu/mason-null-ls.nvim",
+		event = { "BufReadPre", "BufNewFile" },
+		dependencies = {
+			"williamboman/mason.nvim",
+			"nvimtools/none-ls.nvim",
+		},
+		config = function()
+			require("mason-null-ls").setup({
+				ensure_installed = {
+					"debugpy",
+          "eslint",
+					"mypy",
+					"prettier",
+					"stylua",
+				},
+			})
+		end,
+	},
+	{
+		"neovim/nvim-lspconfig",
+		config = function()
+			local lspconfig = require("lspconfig")
+			lspconfig.astro.setup({})
+			lspconfig.lua_ls.setup({})
+			lspconfig.tsserver.setup({})
 
-  -- lsp servers
-  {
-    "neovim/nvim-lspconfig",
-    opts = {
-      inlay_hints = { enabled = true },
-      --@type lspconfig.options
-      servers = {
-        tsserver = {
-          single_file_support = false,
-          settings = {
-            typescript = {
-              inlayHints = {
-                includeInlayParameterNameHints = "literal",
-                includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-                includeInlayFunctionParameterTypeHints = true,
-                includeInlayVariableTypeHints = false,
-                includeInlayPropertyDeclarationTypeHints = true,
-                includeInlayFunctionLikeReturnTypeHints = true,
-                includeInlayEnumMemberValueHints = true,
-              },
-            },
-            javascript = {
-              inlayHints = {
-                includeInlayParameterNameHints = "all",
-                includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-                includeInlayFunctionParameterTypeHints = true,
-                includeInlayVariableTypeHints = true,
-                includeInlayPropertyDeclarationTypeHints = true,
-                includeInlayFunctionLikeReturnTypeHints = true,
-                includeInlayEnumMemberValueHints = true,
-              },
-            },
-          },
-        },
-        html = {},
-        yamlls = {
-          settings = {
-            yaml = {
-              keyOrdering = false,
-            },
-          },
-        },
-        lua_ls = {
-          -- enabled = false,
-          single_file_support = true,
-          settings = {
-            Lua = {
-              workspace = {
-                checkThirdParty = false,
-              },
-              completion = {
-                workspaceWord = true,
-                callSnippet = "Both",
-              },
-              misc = {
-                parameters = {
-                  -- "--log-level=trace",
-                },
-              },
-              hint = {
-                enable = true,
-                setType = false,
-                paramType = true,
-                paramName = "Disable",
-                semicolon = "Disable",
-                arrayIndex = "Disable",
-              },
-              doc = {
-                privateName = { "^_" },
-              },
-              type = {
-                castNumberToInteger = true,
-              },
-              diagnostics = {
-                disable = { "incomplete-signature-doc", "trailing-space" },
-                -- enable = false,
-                groupSeverity = {
-                  strong = "Warning",
-                  strict = "Warning",
-                },
-                groupFileStatus = {
-                  ["ambiguity"] = "Opened",
-                  ["await"] = "Opened",
-                  ["codestyle"] = "None",
-                  ["duplicate"] = "Opened",
-                  ["global"] = "Opened",
-                  ["luadoc"] = "Opened",
-                  ["redefined"] = "Opened",
-                  ["strict"] = "Opened",
-                  ["strong"] = "Opened",
-                  ["type-check"] = "Opened",
-                  ["unbalanced"] = "Opened",
-                  ["unused"] = "Opened",
-                },
-                unusedLocalExclude = { "_*" },
-              },
-              format = {
-                enable = false,
-                defaultConfig = {
-                  indent_style = "space",
-                  indent_size = "2",
-                  continuation_indent_size = "2",
-                },
-              },
-            },
-          },
-        },
-      },
-      setup = {},
-    },
-  },
+			-- Global mappings.
+			-- See `:help vim.diagnostic.*` for documentation on any of the below functions
+			vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float)
+			vim.keymap.set("n", "[d", vim.diagnostic.goto_prev)
+			vim.keymap.set("n", "]d", vim.diagnostic.goto_next)
+			vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist)
+
+			-- Use LspAttach autocommand to only map the following keys
+			-- after the language server attaches to the current buffer
+			vim.api.nvim_create_autocmd("LspAttach", {
+				group = vim.api.nvim_create_augroup("UserLspConfig", {}),
+				callback = function(ev)
+					-- Enable completion triggered by <c-x><c-o>
+					vim.bo[ev.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
+
+					-- Buffer local mappings.
+					-- See `:help vim.lsp.*` for documentation on any of the below functions
+					local opts = { buffer = ev.buf }
+					vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
+					vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+					vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+					vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
+					vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts)
+					vim.keymap.set("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, opts)
+					vim.keymap.set("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, opts)
+					vim.keymap.set("n", "<leader>wl", function()
+						print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+					end, opts)
+					vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, opts)
+					vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+					vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
+					vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+					vim.keymap.set("n", "<leader>f", function()
+						vim.lsp.buf.format({ async = true })
+					end, opts)
+				end,
+			})
+		end,
+	},
+	{
+		"nvimtools/none-ls.nvim",
+		config = function()
+			local null_ls = require("null-ls")
+
+			null_ls.setup({
+				sources = {
+					-- null_ls.builtins.formatting.debugpy,
+					null_ls.builtins.diagnostics.mypy,
+					null_ls.builtins.formatting.prettier,
+					null_ls.builtins.formatting.stylua,
+          null_ls.builtins.diagnostics.eslint
+				},
+			})
+			vim.keymap.set("n", "<leader>gf", vim.lsp.buf.format, {})
+		end,
+	},
 }
+
+return M
