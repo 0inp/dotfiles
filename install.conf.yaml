@@ -17,13 +17,11 @@
     ~/.zsh: symlinks/zsh
     ~/.zshrc: symlinks/zshrc
 - shell:
-    - [brew cleanup && brew upgrade, Upgrade brew]
+    - [brew cleanup && brew update && brew upgrade, Upgrade brew]
 - tap:
     - amar1729/formulae
     - homebrew/bundle
-    - homebrew/cask
     - homebrew/cask-fonts
-    - homebrew/core
     - jesseduffield/lazygit
 - cask:
     - font-hack-nerd-font
@@ -43,8 +41,10 @@
     - gitlint # Linting comiit messages
     - glow # Render markdown
     - gnupg
+    - hiddenbar
     - htop # top alternative
     - httpie
+    - itsycal
     - lazygit # git interface
     - neovim # neovim
     - node # Node
