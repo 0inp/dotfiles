@@ -34,8 +34,9 @@
     - bat # better cat
     - browserpass # password manager
     - coreutils
-    - exa # ls alternative
+    - eza # ls alternative
     - fd # find alternative
+    - fzf
     - git
     - git-delta # Better git diff
     - gitlint # Linting comiit messages
@@ -57,7 +58,7 @@
     - ripgrep # very fast file searcher
     - sqlite3
     - starship # prompt
-    - the_silver_searcher
+    - tlrc
     - tmux
     - wget
     - xz # Compression
@@ -69,8 +70,6 @@
         'chmod +x "${HOME}/dotfiles/resources/chtfzf.sh"',
         Ensure that cheatsheet fzf script is executable,
       ]
-    - command: if [ -d "$HOME/.fzf" ]; then cd ~/.fzf/ && git pull && ./install --key-bindings --completion --update-rc --no-bash --no-fish; else git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install --key-bindings --completion --update-rc --no-bash --no-fish; fi
-      description: FZF useful keybindings and competion
     - [
         pyenv install -s && head -n 1 ~/.python-version | xargs pyenv global,
         Install python versions,
@@ -93,9 +92,6 @@
     - command: $PWD/resources/macos_settings.sh
       description: Defaults MacOS settings
 - git:
-    "~/.fzf-tab":
-      url: "https://github.com/Aloxaf/fzf-tab"
-      description: "fzf-tab autocompletion with fzf"
     "~/.tmux/plugins/tpm":
       url: "https://github.com/tmux-plugins/tpm"
       description: "Tmux Plugin Manager"

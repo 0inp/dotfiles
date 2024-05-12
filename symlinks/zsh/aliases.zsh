@@ -4,18 +4,17 @@ command_exists() { (( $+commands[$1] )) }
 
 alias less='less -r'
 alias vi='nvim'
-alias ze='zellij'
 alias python=python3
 
-# ls => exa
+# ls => eza
 
-# exchange ls with exa
-# https://the.exa.website/
-command_exists "exa"
+# exchange ls with eza
+command_exists "eza"
 if [ "${?}" -eq "0" ]; then
-  alias ls='exa'
+  # alias ls='eza'
+  alias ls="eza --color=always --long --git --icons=always"
 else
-  # if no exa can be used make ls colorful
+  # if no eza can be used make ls colorful
   if [ "${OSTYPE}" = "linux-gnu" ]; then
     alias ls='ls --color=auto'
   elif [ "${OSTYPE}" = "darwin" ]; then
@@ -29,8 +28,12 @@ alias lsa='ls -lah'
 alias l='ls -la'
 alias ll='ls -l'
 
-# grep => ripgrep
 
+# exchange cd with zoxide
+command_exists "zoxide"
+if [ "${?}" -eq "0" ]; then
+  alias cd='z'
+fi
 # exchange grep with ripgrep
 # https://github.com/BurntSushi/ripgrep
 command_exists "rg"

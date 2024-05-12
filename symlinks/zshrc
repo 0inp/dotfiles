@@ -1,16 +1,16 @@
 # zmodload zsh/zprof
 
+[[ -f ~/.zsh/completion.zsh ]] && source ~/.zsh/completion.zsh
+[[ -f ~/.zsh/zinit.zsh ]] && source ~/.zsh/zinit.zsh
 [[ -f ~/.zsh/functions.zsh ]] && source ~/.zsh/functions.zsh
 [[ -f ~/.zsh/plugins_before.zsh ]] && source ~/.zsh/plugins_before.zsh
-[[ -f ~/.zsh/completions.zsh ]] && source ~/.zsh/completions.zsh
 [[ -f ~/.zsh/env_var.zsh ]] && source ~/.zsh/env_var.zsh
 [[ -f ~/.zsh/settings.zsh ]] && source ~/.zsh/settings.zsh
 [[ -f ~/.zsh/aliases.zsh ]] && source ~/.zsh/aliases.zsh
-[[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
-[[ -f ~/.fzf-tab/fzf-tab.plugin.zsh ]] && source ~/.fzf-tab/fzf-tab.plugin.zsh
-
-[[ -f ~/.zsh/plugins_after.zsh ]] && source ~/.zsh/plugins_after.zsh
 [[ -f ~/.zsh/bindings.zsh ]] && source ~/.zsh/bindings.zsh
+
+# Load fzf
+eval "$(fzf --zsh)"
 
 # Load Starship
 eval "$(starship init zsh)"
