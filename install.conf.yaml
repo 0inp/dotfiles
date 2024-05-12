@@ -65,6 +65,10 @@
     - zlib
     - zsh
     - zoxide
+- git:
+    "~/.tmux/plugins/tpm":
+      url: "https://github.com/tmux-plugins/tpm"
+      description: "Tmux Plugin Manager"
 - shell:
     - [
         'chmod +x "${HOME}/dotfiles/resources/chtfzf.sh"',
@@ -91,7 +95,3 @@
       description: Switch to ZSH
     - command: $PWD/resources/macos_settings.sh
       description: Defaults MacOS settings
-- git:
-    "~/.tmux/plugins/tpm":
-      url: "https://github.com/tmux-plugins/tpm"
-      description: "Tmux Plugin Manager"
