@@ -24,7 +24,7 @@
     - homebrew/cask-fonts
     - jesseduffield/lazygit
 - cask:
-    - font-hack-nerd-font
+    - font-iosevka-nerd-font
     - raycast # better Spotlight
     - rectangle # macos window management
     - stats # System stats menu bar
