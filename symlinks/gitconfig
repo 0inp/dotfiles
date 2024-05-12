@@ -17,7 +17,7 @@
   wync = "!git stash && git purr && git stash pop && git push"
 
 [add "interactive"]
-	useBuiltin = false
+  useBuiltin = false
 
 [color]
   ui = true
@@ -26,7 +26,7 @@
   gpgsign = true
 
 [core]
-	editor = nvim
+  editor = nvim
   autocrlf = input
   ignorecase = false
   excludesfile = /Users/oinp/.gitignore
@@ -57,7 +57,7 @@
   prune = true
 
 [gpg]
-	program = /usr/local/bin/gpg
+  program = /usr/local/bin/gpg
 
 [http]
   sslVerify = false
@@ -75,7 +75,7 @@
   tool = vimdiff
 
 [pull]
-	rebase = merges
+  rebase = merges
 
 [push]
   default = current
@@ -84,6 +84,6 @@
   autosquash = true
 
 [user]
-	signingkey = 0D974584A399517C
+  signingkey = 0D974584A399517C
   name = Stephane Point
   email = point.steph@gmail.com
