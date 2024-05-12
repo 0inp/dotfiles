@@ -8,3 +8,4 @@ autoload -Uz _zinit
 zinit light zsh-users/zsh-autosuggestions
 zinit light zdharma-continuum/fast-syntax-highlighting
 zinit light Aloxaf/fzf-tab
+zinit light ael-code/zsh-colored-man-pages
