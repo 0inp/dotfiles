@@ -34,10 +34,10 @@
     - bat # better cat
     - browserpass # password manager
     - coreutils
-    - diff-so-fancy # fancy git diff
     - exa # ls alternative
     - fd # find alternative
     - git
+    - git-delta # Better git diff
     - gitlint # Linting comiit messages
     - glow # Render markdown
     - gnupg

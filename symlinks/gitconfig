@@ -30,28 +30,31 @@
   autocrlf = input
   ignorecase = false
   excludesfile = /Users/oinp/.gitignore
-  pager = "diff-so-fancy | less --tabs=4 -RFX"
+  pager = "delta"
 
 [credential]
   helper = cache --timeout=28800
 
-[diff]
-  mnemonicPrefix = true
-  renames = true
-	ignoreSubmodules = dirty
-  meta = "11"
-  frag = "magenta bold"
-  func = "146 bold"
-  commit = "yellow bold"
-  old = "red bold"
-  new = "green bold"
-  whitespace = "red reverse"
+[delta]
+  features = decorations
+  navigate = true
+  light = false
+  minus-style                   = bold red
+  minus-non-emph-style          = bold red
+  minus-emph-style              = bold reverse red
+  minus-empty-line-marker-style = normal "#3f0001"
+  plus-style                    = bold green
+  plus-non-emph-style           = bold green
+  plus-emph-style               = bold reverse green
 
-[diff-highlight]
-  oldNormal = "red bold"
-  oldHighlight = "red bold 52"
-  newNormal = "green bold"
-  newHighlight = "green bold 22"
+[delta "interactive"]
+  keep-plus-minus-markers = false
+
+[delta "decorations"]
+  commit-decoration-style = bold yellow box ul
+  file-style = bold yellow ul
+  file-decoration-style = none
+  hunk-header-decoration-style = cyan box ul
 
 [fetch]
   prune = true
@@ -66,7 +69,7 @@
   defaultBranch = main
 
 [interactive]
-  diffFilter = "diff-so-fancy --patch"
+  diffFilter = "delta --color-only --features=interactive"
 
 [log]
   abbrevCommit = true
