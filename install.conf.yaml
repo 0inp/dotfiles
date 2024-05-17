@@ -22,7 +22,6 @@
     - amar1729/formulae
     - homebrew/bundle
     - homebrew/cask-fonts
-    - jesseduffield/lazygit
 - cask:
     - font-iosevka-nerd-font
     - raycast # better Spotlight
@@ -46,6 +45,7 @@
     - htop # top alternative
     - httpie
     - itsycal
+    - lazydocker
     - lazygit # git interface
     - neovim # neovim
     - node # Node

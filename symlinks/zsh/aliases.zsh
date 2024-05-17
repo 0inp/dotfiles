@@ -60,6 +60,12 @@ if [ "${?}" -eq "0" ]; then
   alias gg=lazygit
 fi
 
+# lazydocker
+command_exists "lazydocker"
+if [ "${?}" -eq "0" ]; then
+  alias lzd=lazydocker
+fi
+
 # fzf
 command_exists "fzf"
 if [ "${?}" -eq "0" ]; then
