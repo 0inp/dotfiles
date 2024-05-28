@@ -21,7 +21,6 @@
 - tap:
     - amar1729/formulae
     - homebrew/bundle
-    - homebrew/cask-fonts
 - cask:
     - font-iosevka-nerd-font
     - raycast # better Spotlight
