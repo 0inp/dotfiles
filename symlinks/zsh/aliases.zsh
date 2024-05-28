@@ -5,6 +5,7 @@ command_exists() { (( $+commands[$1] )) }
 alias less='less -r'
 alias vi='nvim'
 alias python=python3
+alias c='clear'
 
 # ls => eza
 
@@ -13,6 +14,7 @@ command_exists "eza"
 if [ "${?}" -eq "0" ]; then
   # alias ls='eza'
   alias ls="eza --color=always --long --git --icons=always"
+  alias lt='ls --tree'
 else
   # if no eza can be used make ls colorful
   if [ "${OSTYPE}" = "linux-gnu" ]; then

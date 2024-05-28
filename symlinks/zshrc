@@ -1,5 +1,11 @@
 # zmodload zsh/zprof
 
+if [[ -f "/opt/homebrew/bin/brew" ]] then
+  # If you're using macOS, you'll want this enabled
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
+
 [[ -f ~/.zsh/completion.zsh ]] && source ~/.zsh/completion.zsh
 [[ -f ~/.zsh/zinit.zsh ]] && source ~/.zsh/zinit.zsh
 [[ -f ~/.zsh/functions.zsh ]] && source ~/.zsh/functions.zsh

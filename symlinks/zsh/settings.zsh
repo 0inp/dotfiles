@@ -7,14 +7,18 @@ autoload -U edit-command-line && zle -N edit-command-line
 # Enable interactive comments (# on the command line)
 setopt interactivecomments
 
-# Nicer history
-HISTSIZE=1048576
+# History
+HISTSIZE=5000
 HISTFILE="$HOME/.zsh_history"
 SAVEHIST=$HISTSIZE
+HISTDUP=erase
 setopt appendhistory
-setopt incappendhistory
-setopt extendedhistory
-setopt histignorealldups
+setopt sharehistory
+setopt hist_ignore_space
+setopt hist_ignore_all_dups
+setopt hist_save_no_dups
+setopt hist_ignore_dups
+setopt hist_find_no_dups
 
 # Time to wait for additional characters in a sequence
 KEYTIMEOUT=1 # corresponds to 10ms

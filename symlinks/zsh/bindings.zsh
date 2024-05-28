@@ -31,5 +31,9 @@ bindkey -s '^ ' ' git status --short^M'
 bindkey '^[^M' autosuggest-execute
 bindkey '^[^J' autosuggest-execute
 
+# history search
+bindkey '^p' history-search-backward
+bindkey '^n' history-search-forward
+
 # Disable flow control (ctrl+s, ctrl+q) to enable saving with ctrl+s in Vim
 stty -ixon -ixoff
