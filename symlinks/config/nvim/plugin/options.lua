@@ -73,3 +73,10 @@ vim.opt.formatoptions:remove { 'r', 'o' }
 -- completions
 vim.opt.completeopt = { 'menu', 'menuone', 'noselect' }
 vim.opt.shortmess:append 'c'
+
+-- Tabs & Indentation
+vim.opt.tabstop = 2
+vim.opt.shiftwidth = 2
+vim.opt.expandtab = true
+vim.opt.autoindent = true
+vim.bo.softtabstop = 2
