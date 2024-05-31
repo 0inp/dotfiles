@@ -21,17 +21,23 @@ vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
 vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
 vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
 
--- Keybinds to make split navigation easier.
---  Use CTRL+<hjkl> to switch between windows
---
---  See `:help wincmd` for a list of all window commands
--- vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
--- vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
--- vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
--- vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
-
 vim.keymap.set('n', '<leader>om', '<cmd>Mason<CR>', { desc = 'Package Manager - [Mason]' })
 vim.keymap.set('n', '<leader>ol', '<cmd>Lazy<CR>', { desc = 'Plugin Manager - [LazyVim]' })
 vim.keymap.set('n', '<leader>oL', '<cmd>LspInfo<CR>', { desc = 'Lsp Info' })
 
 vim.keymap.set('n', '<leader>t', '<cmd>Neotree filesystem reveal right toggle<CR>', { desc = 'Toggle NeoTree' })
+
+-- Move Lines
+vim.keymap.set('n', '<A-j>', '<cmd>m .+1<cr>==', { desc = 'Move Down' })
+vim.keymap.set('n', '<A-k>', '<cmd>m .-2<cr>==', { desc = 'Move Up' })
+vim.keymap.set('i', '<A-j>', '<esc><cmd>m .+1<cr>==gi', { desc = 'Move Down' })
+vim.keymap.set('i', '<A-k>', '<esc><cmd>m .-2<cr>==gi', { desc = 'Move Up' })
+vim.keymap.set('v', '<A-j>', ":m '>+1<cr>gv=gv", { desc = 'Move Down' })
+vim.keymap.set('v', '<A-k>', ":m '<-2<cr>gv=gv", { desc = 'Move Up' })
+
+-- better indenting
+vim.keymap.set('v', '<', '<gv')
+vim.keymap.set('v', '>', '>gv')
+
+-- tabs
+vim.keymap.set('n', 'te', '<cmd>tabnew<cr>', { desc = 'New Tab' })
