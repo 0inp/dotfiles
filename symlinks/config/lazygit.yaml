@@ -1,8 +1,8 @@
 disableStartupPopups: true
 git:
   paging:
+    pager: delta --dark --paging=never
     colorArg: always
-    useConfig: true
 customCommands:
   - key: "<c-v>"
     context: "global"
