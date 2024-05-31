@@ -29,9 +29,9 @@ local statusline_config = function()
           return require("lazy.status").updates()
       end
 
-      -- local wtf = function()
-      --     return require("wtf").get_status()
-      -- end
+        local wtf = function()
+          return require('wtf').get_status()
+        end
 
       local auto_format_indicator = function()
           if vim.g.vin_autoformat_enabled then
