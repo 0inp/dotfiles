@@ -1,12 +1,71 @@
+-- LSP Support
+
+-- LSP Configuration
+local base_pathes = {
+  repos = vim.fn.expand '~/dev',
+  config_home = vim.fn.expand '$XDG_CONFIG_HOME',
+}
+
+local config = {
+  pathes = {
+    repos = base_pathes.repos,
+    config = {
+      nvim = base_pathes.config_home .. '/nvim',
+    },
+  },
+  ensure_installed = {
+    -- :h mason-lspconfig-server-map
+    servers = {
+      'astro',
+      'bashls',
+      'cssls',
+      'html',
+      'jsonls',
+      'lua_ls',
+      'marksman',
+      'pyright',
+      'taplo',
+      'tsserver',
+      'yamlls',
+    },
+    -- :h mason-tool-installer
+    tools = {
+      'black',
+      'debugpy',
+      'flake8',
+      'isort',
+      'js-debug-adapter',
+      'mypy',
+      'pylint',
+      'prettierd',
+      'shellcheck',
+      'shfmt',
+      'stylua',
+      'yamllint',
+    },
+  },
+}
+
 return {
   {
-    'neovim/nvim-lspconfig',
+    -- https://github.com/williamboman/mason.nvim
+    'williamboman/mason.nvim',
+    opts = {},
+    config = function(_, opts)
+      require('mason').setup(opts)
+    end,
+  },
+  {
+    -- https://github.com/neovim/nvim-lspconfig
+    'williamboman/mason-lspconfig.nvim',
     dependencies = {
-      'folke/neodev.nvim',
       'williamboman/mason.nvim',
-      'williamboman/mason-lspconfig.nvim',
-      'WhoIsSethDaniel/mason-tool-installer.nvim',
-
+      'neovim/nvim-lspconfig',
+      -- Additional lua configuration, makes nvim stuff amazing!
+      -- https://github.com/folke/neodev.nvim
+      'folke/neodev.nvim',
+      -- Useful status updates for LSP
+      -- https://github.com/j-hui/fidget.nvim
       { 'j-hui/fidget.nvim', opts = {} },
 
       -- Autoformatting
@@ -141,6 +200,82 @@ return {
     end,
   },
   {
+    -- https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim
+    'WhoIsSethDaniel/mason-tool-installer.nvim',
+    dependencies = 'williamboman/mason.nvim',
+    -- https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim/issues/39
+    lazy = false,
+    opts = {
+      ensure_installed = config.ensure_installed.tools,
+    },
+  },
+  {
+    -- https://github.com/stevearc/conform.nvim
+    'stevearc/conform.nvim',
+    event = { 'BufReadPre', 'BufNewFile' },
+    cmd = { 'ConformInfo' },
+    keys = {
+      {
+        -- Customize or remove this keymap to your liking
+        '<leader>f',
+        function()
+          require('conform').format { async = true, lsp_fallback = true }
+        end,
+        mode = '',
+        desc = 'Format buffer',
+      },
+    },
+    opts = {
+      formatters_by_ft = {
+        css = { { 'prettierd', 'prettier' } },
+        scss = { { 'prettierd', 'prettier' } },
+        graphql = { { 'prettierd', 'prettier' } },
+        html = { { 'prettierd', 'prettier' } },
+        javascript = { { 'prettierd', 'prettier' } },
+        javascriptreact = { { 'prettierd', 'prettier' } },
+        json = { { 'prettierd', 'prettier' } },
+        lua = { 'stylua' },
+        markdown = { { 'prettierd', 'prettier' } },
+        python = { 'black', 'isort' },
+        typescript = { { 'prettierd', 'prettier' } },
+        typescriptreact = { { 'prettierd', 'prettier' } },
+        yaml = { 'prettierd', 'prettier' },
+        toml = { 'taplo' },
+        sh = { 'shfmt' },
+      },
+      format_on_save = {
+        -- These options will be passed to conform.format()
+        timeout_ms = 500,
+        lsp_fallback = true,
+      },
+    },
+    -- config = function()
+    --   local slow_format_filetypes = {}
+    --   require('conform').setup {
+    --     format_on_save = function(bufnr)
+    --       if slow_format_filetypes[vim.bo[bufnr].filetype] then
+    --         return
+    --       end
+    --       local function on_format(err)
+    --         if err and err:match 'timeout$' then
+    --           slow_format_filetypes[vim.bo[bufnr].filetype] = true
+    --         end
+    --       end
+    --
+    --       return { timeout_ms = 200, lsp_fallback = true }, on_format
+    --     end,
+    --
+    --     format_after_save = function(bufnr)
+    --       if not slow_format_filetypes[vim.bo[bufnr].filetype] then
+    --         return
+    --       end
+    --       return { lsp_fallback = true }
+    --     end,
+    --   }
+    -- end,
+  },
+  {
+    -- https://github.com/brenoprata10/nvim-highlight-colors
     'brenoprata10/nvim-highlight-colors',
     config = function()
       require('nvim-highlight-colors').setup {}
