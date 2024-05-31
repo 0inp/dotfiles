@@ -1,6 +1,11 @@
 return {
   -- Detect tabstop and shiftwidth automatically
-  'tpope/vim-sleuth',
+  {
+    'nmac427/guess-indent.nvim',
+    config = function()
+      require('guess-indent').setup {}
+    end,
+  },
 
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
@@ -13,6 +18,6 @@ return {
     'lewis6991/gitsigns.nvim',
     config = function()
       require('gitsigns').setup()
-    end
+    end,
   },
 }
