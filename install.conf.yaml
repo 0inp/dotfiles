@@ -79,7 +79,10 @@
         Install python versions,
       ] # install differents python versions
     - [python -m pip install --upgrade pip, Upgrade Pip] # Upgrade pip
-    - [python3 -m pip install --user libtmux, Install libtmux useful for tmux-window-name plugin]
+    - [
+        python3 -m pip install --user libtmux,
+        Install libtmux useful for tmux-window-name plugin,
+      ]
     - [git submodule sync --recursive, Sync submodules]
     - [git submodule update --init --recursive, Install submodules] # install submodules
     - [
