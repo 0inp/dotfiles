@@ -13,8 +13,8 @@ alias c='clear'
 command_exists "eza"
 if [ "${?}" -eq "0" ]; then
   # alias ls='eza'
-  alias ls="eza --color=always --long --git --icons=always"
-  alias lt='ls --tree'
+  alias ls="eza --color=always --long --git --icons=always --ignore-glob='*.pyc|node_modules'"
+  alias lt='ls --tree --group-directories-first'
 else
   # if no eza can be used make ls colorful
   if [ "${OSTYPE}" = "linux-gnu" ]; then
