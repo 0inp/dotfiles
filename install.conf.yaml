@@ -49,6 +49,7 @@
     - neovim # neovim
     - node # Node
     - openssl
+    - oven-sh/bun/bun
     - pgcli # PGCli
     - pinentry-mac
     - pyenv
