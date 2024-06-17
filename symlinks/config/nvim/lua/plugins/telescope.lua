@@ -1,82 +1,77 @@
 return {
-  'nvim-telescope/telescope.nvim',
-  tag = '0.1.6',
+  "nvim-telescope/telescope.nvim",
   dependencies = {
-    { 'nvim-lua/plenary.nvim' },
+    { "nvim-telescope/telescope-ui-select.nvim" },
+  },
+  keys = {
+    { "<leader>,", false },
+    { "<leader>/", false },
+    { "<leader>:", false },
+    { "<leader><space>", LazyVim.pick("files"), desc = "Find Files (Root Dir)" },
+    -- find
+    { "<leader>fb", false },
+    { "<leader>fc", LazyVim.pick.config_files(), desc = "Find Config File" },
+    { "<leader>ff", LazyVim.pick("files"), desc = "Find Files (Root Dir)" },
+    { "<leader>fF", false },
+    { "<leader>fg", false },
+    { "<leader>fr", false },
+    { "<leader>fR", false },
+    -- git
+    { "<leader>gc", "<cmd>Telescope git_commits<CR>", desc = "Commits" },
+    { "<leader>gs", false },
+    -- search
+    { '<leader>s"', false },
+    { "<leader>sa", "<cmd>Telescope autocommands<cr>", desc = "Auto Commands" },
+    { "<leader>sb", "<cmd>Telescope current_buffer_fuzzy_find<cr>", desc = "Buffer" },
+    { "<leader>sc", "<cmd>Telescope command_history<cr>", desc = "Command History" },
+    { "<leader>sC", "<cmd>Telescope commands<cr>", desc = "Commands" },
+    { "<leader>sd", "<cmd>Telescope diagnostics bufnr=0<cr>", desc = "Document Diagnostics" },
+    { "<leader>sD", "<cmd>Telescope diagnostics<cr>", desc = "Workspace Diagnostics" },
+    { "<leader>sg", LazyVim.pick("live_grep"), desc = "Grep (Root Dir)" },
+    { "<leader>sG", false },
+    { "<leader>sh", "<cmd>Telescope help_tags<cr>", desc = "Help Pages" },
+    { "<leader>sH", false },
+    { "<leader>sj", false },
+    { "<leader>sk", "<cmd>Telescope keymaps<cr>", desc = "Key Maps" },
+    { "<leader>sl", false },
+    { "<leader>sM", "<cmd>Telescope man_pages<cr>", desc = "Man Pages" },
+    { "<leader>sm", false },
+    { "<leader>so", "<cmd>Telescope vim_options<cr>", desc = "Options" },
+    { "<leader>sR", "<cmd>Telescope resume<cr>", desc = "Resume" },
+    { "<leader>sq", "<cmd>Telescope quickfix<cr>", desc = "Quickfix List" },
+    { "<leader>sw", false },
+    { "<leader>sW", false },
+    { "<leader>sw", false },
+    { "<leader>sW", false },
+    { "<leader>uC", LazyVim.pick("colorscheme", { enable_preview = true }), desc = "Colorscheme with Preview" },
     {
-      'nvim-telescope/telescope-fzf-native.nvim',
-      build = 'make',
-      cond = function()
-        return vim.fn.executable 'make' == 1
+      "<leader>ss",
+      function()
+        require("telescope.builtin").lsp_document_symbols({
+          symbols = require("lazyvim.config").get_kind_filter(),
+        })
       end,
+      desc = "Goto Symbol",
     },
-    { 'nvim-telescope/telescope-ui-select.nvim' },
-    { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
+    {
+      "<leader>sS",
+      function()
+        require("telescope.builtin").lsp_dynamic_workspace_symbols({
+          symbols = require("lazyvim.config").get_kind_filter(),
+        })
+      end,
+      desc = "Goto Symbol (Workspace)",
+    },
+  },
+  opts = {
+    extensions = {
+      ["ui-select"] = {
+        require("telescope.themes").get_dropdown(),
+      },
+    },
   },
   config = function()
-    -- [[ Configure Telescope ]]
-    -- See `:help telescope` and `:help telescope.setup()`
-    require('telescope').setup {
-      --  `:help telescope.setup()`
-      --
-      -- defaults = {
-      --   mappings = {
-      --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-      --   },
-      -- },
-      -- pickers = {}
-      pickers = {
-        colorscheme = {
-          enable_preview = true,
-          theme = 'dropdown',
-        },
-      },
-      extensions = {
-        ['ui-select'] = {
-          require('telescope.themes').get_dropdown(),
-        },
-      },
-    }
-
     -- Enable telescope extensions, if they are installed
-    require('telescope').load_extension 'ui-select'
-    require('telescope').load_extension 'fzf'
-
-    -- See `:help telescope.builtin`
-    local builtin = require 'telescope.builtin'
-    vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
-    vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
-    vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
-    vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
-    vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
-    vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
-    vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
-    vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
-    vim.keymap.set('n', '<leader>sc', builtin.colorscheme, { desc = '[S]earch [C]olorscheme' })
-    vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
-    vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
-
-    -- Slightly advanced example of overriding default behavior and theme
-    vim.keymap.set('n', '<leader>/', function()
-      -- You can pass additional configuration to telescope to change theme, layout, etc.
-      builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-        winblend = 10,
-        previewer = false,
-      })
-    end, { desc = '[/] Fuzzily search in current buffer' })
-
-    -- Also possible to pass additional configuration options.
-    --  See `:help telescope.builtin.live_grep()` for information about particular keys
-    vim.keymap.set('n', '<leader>s/', function()
-      builtin.live_grep {
-        grep_open_files = true,
-        prompt_title = 'Live Grep in Open Files',
-      }
-    end, { desc = '[S]earch [/] in Open Files' })
-
-    -- Shortcut for searching your neovim configuration files
-    vim.keymap.set('n', '<leader>sn', function()
-      builtin.find_files { cwd = vim.fn.stdpath 'config' }
-    end, { desc = '[S]earch [N]eovim files' })
+    require("telescope").load_extension("ui-select")
   end,
 }
