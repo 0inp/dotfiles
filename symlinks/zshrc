@@ -1,11 +1,5 @@
 # zmodload zsh/zprof
 
-if [[ -f "/opt/homebrew/bin/brew" ]] then
-  # If you're using macOS, you'll want this enabled
-  eval "$(/opt/homebrew/bin/brew shellenv)"
-fi
-
-
 [[ -f ~/.zsh/completion.zsh ]] && source ~/.zsh/completion.zsh
 [[ -f ~/.zsh/zinit.zsh ]] && source ~/.zsh/zinit.zsh
 [[ -f ~/.zsh/functions.zsh ]] && source ~/.zsh/functions.zsh
@@ -18,9 +12,10 @@ fi
 # Load fzf
 eval "$(fzf --zsh)"
 
-# Load Starship
-eval "$(starship init zsh)"
-
+# Load Oh-My-Posh
+if [ "$TERM_PROGRAM" != "Apple_Terminal" ]; then
+  eval "$(oh-my-posh init zsh --config ~/.config/ohmyposh.toml)"
+fi
 # Load zoxide
 eval "$(zoxide init zsh)"
 
