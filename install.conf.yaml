@@ -22,7 +22,7 @@
     - amar1729/formulae
     - homebrew/bundle
 - cask:
-    - font-iosevka-nerd-font
+    - font-anonymice-nerd-font
     - raycast # better Spotlight
     - rectangle # macos window management
     - stats # System stats menu bar

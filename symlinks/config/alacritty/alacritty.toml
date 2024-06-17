@@ -42,15 +42,15 @@ TERM = "screen-256color"
 size = 12
 
 [font.bold]
-family = "Iosevka Nerd Font"
+family = "AnonymicePro Nerd Font"
 style = "Bold"
 
 [font.italic]
-family = "Iosevka Nerd Font"
+family = "AnonymicePro Nerd Font"
 style = "Italic"
 
 [font.normal]
-family = "Iosevka Nerd Font"
+family = "AnonymicePro Nerd Font"
 style = "Regular"
 
 [mouse]
@@ -73,6 +73,5 @@ opacity = 0.8
 blur = true
 option_as_alt = "Both"
 startup_mode = "SimpleFullscreen"
-dimensions = {columns = 110, lines = 52}
-padding = {x = 5, y = 5}
-
+dimensions = { columns = 110, lines = 52 }
+padding = { x = 5, y = 5 }
