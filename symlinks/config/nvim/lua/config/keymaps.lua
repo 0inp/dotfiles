@@ -21,3 +21,19 @@ vim.keymap.set("n", "te", "<cmd>tabnew<cr>", { desc = "New Tab" })
 -- vim.keymap.del("n", "<C-j>")
 -- vim.keymap.del("n", "<C-k>")
 -- vim.keymap.del("n", "<C-l>")
+
+-- When searching for stuff, search results show in the middle
+vim.keymap.set("n", "n", "nzzzv")
+vim.keymap.set("n", "N", "Nzzzv")
+
+vim.keymap.set("n", "<leader>cMs", function()
+  -- Simulate pressing "z=" with "m" option using feedkeys
+  -- vim.api.nvim_replace_termcodes ensures "z=" is correctly interpreted
+  -- 'm' is the {mode}, which in this case is 'Remap keys'. This is default.
+  -- If {mode} is absent, keys are remapped.
+  --
+  -- I tried this keymap as usually with
+  -- vim.cmd("normal! z=")
+  -- But didn't work, only with nvim_feedkeys
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("z=", true, false, true), "m", true)
+end, { desc = "[P]Spelling suggestions" })

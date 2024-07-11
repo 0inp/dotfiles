@@ -9,6 +9,7 @@
 - link:
     ~/.config: symlinks/config
     ~/.gitconfig: symlinks/gitconfig
+    ~/.prettierrc.yaml: symlinks/prettierrc.yaml
     ~/.gitignore: symlinks/gitignore
     ~/.gnupg/gpg-agent.conf: symlinks/gnupg/gpg-agent.conf
     ~/.gnupg/gpg.conf: symlinks/gnupg/gpg.conf
