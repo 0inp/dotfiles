@@ -14,8 +14,8 @@ newline = true
 [[blocks.segments]]
 type = 'path'
 style = 'plain'
-background = 'transparent'
 foreground = '#7eb8da'
+background = 'transparent'
 template = '{{ .Path }} '
 
 
@@ -33,6 +33,13 @@ template = ' {{ .HEAD }}{{ if or (.Working.Changed) (.Staging.Changed) }}*{{ end
 branch_icon = ''
 commit_icon = '@'
 fetch_status = true
+
+[[blocks.segments]]
+type = 'python'
+style = "plain"
+foreground = "#bdbf3d"
+background = "transparent"
+template = "  {{ .Full }} "
 
 [[blocks]]
 type = 'rprompt'
