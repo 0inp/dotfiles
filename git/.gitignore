@@ -13,3 +13,8 @@
 **/.DS_Store
 
 **/*.pyc
+
+**/lazy-lock.json
+
+# tmux/plugins/
+# tmux/plugins/!tpm
