@@ -1,16 +1,28 @@
-# dotfiles
+# Dotfiles
+
+Here are my dotfiles. They are MacOS oriented.
 
 ## Installation
 
+Make sure you have git and stow installed.
+
 ```bash
-git clone git@github.com:MeilleursAgents/dotfiles.git ~/dotfiles
+brew install git stow
 ```
 
-## Usage
+```bash
+git clone https://github.com/0inp/dotfiles.git ~/dotfiles
+cd ~/dotfiles
+chmod +x "${HOME}/dotfiles/bin/install.sh" && ./bin/install.sh
+brew bundle
+stow */
+```
+
+## Update
 
 ```bash
 cd ~/dotfiles
-./install
+./bin/update.sh
 ```
 
 ## Misc
