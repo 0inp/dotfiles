@@ -27,3 +27,6 @@ export DOCKER_SCAN_SUGGEST=false
 
 # Lazygit config
 export LG_CONFIG_FILE="$HOME/.config/lazygit.yaml"
+
+# Brew
+export PATH="/usr/local/sbin:$PATH"
