@@ -1,12 +1,3 @@
--- local logo = table.concat({
---   "            ██╗      █████╗ ███████╗██╗   ██╗██╗   ██╗██╗███╗   ███╗          Z",
---   "            ██║     ██╔══██╗╚══███╔╝╚██╗ ██╔╝██║   ██║██║████╗ ████║      Z    ",
---   "            ██║     ███████║  ███╔╝  ╚████╔╝ ██║   ██║██║██╔████╔██║   z       ",
---   "            ██║     ██╔══██║ ███╔╝    ╚██╔╝  ╚██╗ ██╔╝██║██║╚██╔╝██║ z         ",
---   "            ███████╗██║  ██║███████╗   ██║    ╚████╔╝ ██║██║ ╚═╝ ██║           ",
---   "            ╚══════╝╚═╝  ╚═╝╚══════╝   ╚═╝     ╚═══╝  ╚═╝╚═╝     ╚═╝           ",
--- }, "\n")
-
 local logo = table.concat({
   "    .-'''-.                                              ",
   "   '   _    \\                                            ",
@@ -25,8 +16,6 @@ local logo = table.concat({
 
 return {
   "echasnovski/mini.starter",
-  version = false, -- wait till new 0.7.0 release to put it back on semver
-  event = "VimEnter",
   opts = {
     header = logo,
   },
