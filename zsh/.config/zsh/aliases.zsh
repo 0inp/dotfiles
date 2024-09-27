@@ -13,8 +13,12 @@ alias c='clear'
 command_exists "eza"
 if [ "${?}" -eq "0" ]; then
   # alias ls='eza'
-  alias ls="eza --color=always --long --git --icons=always --ignore-glob='*.pyc|node_modules'"
-  alias lt='ls --tree --group-directories-first'
+  alias ls="eza --color=always --long --git --icons=always --ignore-glob='*.pyc|.git|node_modules'"
+  # options
+  alias lsa='ls -lah'
+  alias l='ls -la'
+  alias ll='ls -l'
+  alias lt='lsa --tree --group-directories-first'
 else
   # if no eza can be used make ls colorful
   if [ "${OSTYPE}" = "linux-gnu" ]; then
@@ -25,10 +29,6 @@ else
   fi
 fi
 
-# options
-alias lsa='ls -lah'
-alias l='ls -la'
-alias ll='ls -l'
 
 
 # exchange cd with zoxide
@@ -73,4 +73,10 @@ command_exists "fzf"
 if [ "${?}" -eq "0" ]; then
   alias al='alias | fzf'
   alias printenv='printenv | fzf'
+fi
+
+# rg
+command_exists "rg"
+if [ "${?}" -eq "0" ]; then
+  alias rg="rg --hidden --glob '!.git'"
 fi

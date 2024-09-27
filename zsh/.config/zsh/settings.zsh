@@ -82,9 +82,10 @@ disable r
 # Turn off beeps
 unsetopt BEEP
 
-# Load pyenv-virtualenv
-eval "$(pyenv virtualenv-init -)"
+# # Load pyenv-virtualenv
+# eval "$(pyenv virtualenv-init -)"
 
 # GPG config
 gpgconf --launch gpg-agent
-ssh-add -K ~/.ssh/id\_rsa 2>/dev/null
+# ssh-add -K ~/.ssh/id\_rsa 2>/dev/null
+ssh-add -K ~/.ssh/id\_ed25519 2>/dev/null
