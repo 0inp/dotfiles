@@ -87,5 +87,4 @@ unsetopt BEEP
 
 # GPG config
 gpgconf --launch gpg-agent
-# ssh-add -K ~/.ssh/id\_rsa 2>/dev/null
-ssh-add -K ~/.ssh/id\_ed25519 2>/dev/null
+# ssh-add ~/.ssh/id\_ed25519 2>/dev/null

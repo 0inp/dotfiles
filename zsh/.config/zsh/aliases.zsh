@@ -80,3 +80,9 @@ command_exists "rg"
 if [ "${?}" -eq "0" ]; then
   alias rg="rg --hidden --glob '!.git'"
 fi
+
+# fdfind
+command_exists "fdfind"
+if [ "${?}" -eq "0" ]; then
+  alias fd="fdfind"
+fi

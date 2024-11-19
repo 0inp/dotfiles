@@ -3,14 +3,17 @@ export PASSWORD_STORE_DIR=${HOME}/my_password_store
 # gpg
 export GPG_TTY=$(tty)
 # python
-export PATH=$(pyenv root)/shims:$PATH
-export PYENV_ROOT=$(pyenv root)
+export PYENV_ROOT=${HOME}/.pyenv
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+
 #poetry
 export PATH=${HOME}/.local/bin:$PATH
 # node
 export PATH="/usr/local/bin:$PATH"
 
 # Use vim as the editor
+export PATH="$PATH:/opt/nvim/"
 export EDITOR=nvim
 
 # # pip should only run if there is a virtualenv currently activated
