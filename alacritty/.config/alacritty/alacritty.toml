@@ -39,22 +39,22 @@ shape = "Beam"
 TERM = "screen-256color"
 
 [font]
-size = 13
+size = 11
 
 [font.bold]
-family = "AnonymicePro Nerd Font"
+family = "ZedMono Nerd Font"
 style = "Bold"
 
 [font.italic]
-family = "AnonymicePro Nerd Font"
+family = "ZedMono Nerd Font"
 style = "Italic"
 
 [font.normal]
-family = "AnonymicePro Nerd Font"
+family = "ZedMono Nerd Font"
 style = "Regular"
 
-[mouse]
-hide_when_typing = true
+# [mouse]
+# hide_when_typing = true
 
 [scrolling]
 history = 10000
@@ -63,15 +63,12 @@ multiplier = 3
 [selection]
 save_to_clipboard = true
 
-[shell]
-program = "/usr/local/bin/zsh"
-
-[window]
-decorations = "none"
-dynamic_title = true
-opacity = 0.8
-blur = true
-option_as_alt = "Both"
-startup_mode = "SimpleFullscreen"
-dimensions = { columns = 110, lines = 52 }
-padding = { x = 5, y = 5 }
+# [window]
+# decorations = "none"
+# dynamic_title = true
+# opacity = 0.8
+# blur = true
+# option_as_alt = "Both"
+# startup_mode = "SimpleFullscreen"
+# dimensions = { columns = 110, lines = 52 }
+# padding = { x = 5, y = 5 }
