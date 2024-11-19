@@ -1,5 +1,4 @@
 # Comments and blank lines are allowed.
-
 RCS
 .+,v
 
@@ -24,3 +23,11 @@ _darcs
 
 \.DS_STORE
 ^/resources
+
+# bin directory
+bin
+macos
+ubuntu
+pkglist
+font_install
+resources
