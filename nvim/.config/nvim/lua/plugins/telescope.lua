@@ -2,9 +2,6 @@ return {
   { "benfowler/telescope-luasnip.nvim", module = "telescope._extensions.luasnip" },
   {
     "nvim-telescope/telescope.nvim",
-    dependencies = {
-      { "nvim-telescope/telescope-ui-select.nvim" },
-    },
     keys = {
       { "<leader>,", false },
       { "<leader>/", false },
@@ -63,13 +60,6 @@ return {
           })
         end,
         desc = "Goto Symbol (Workspace)",
-      },
-    },
-    opts = {
-      extensions = {
-        ["ui-select"] = {
-          require("telescope.themes").get_dropdown(),
-        },
       },
     },
     config = function()

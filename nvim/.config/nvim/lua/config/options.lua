@@ -21,5 +21,8 @@ vim.opt.formatoptions:remove({ "r", "o" })
 
 vim.g.python3_host_prog = "python"
 
-vim.opt.path:append({"**"})
-vim.opt.wildignore:append({"*/node_modules/*"})
+vim.opt.path:append({ "**" })
+vim.opt.wildignore:append({ "*/node_modules/*" })
+
+-- remap localleader to ,
+vim.g.maplocalleader = ","
