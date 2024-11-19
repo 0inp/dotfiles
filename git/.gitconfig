@@ -60,7 +60,8 @@
   prune = true
 
 [gpg]
-  program = /usr/local/bin/gpg
+  ; program = /usr/local/bin/gpg
+  program = /usr/bin/gpg
 
 [http]
   sslVerify = false
@@ -87,6 +88,7 @@
   autosquash = true
 
 [user]
-  signingkey = 0D974584A399517C
+  ; signingkey = 0D974584A399517C
+  signingkey = 386844B8F68CD636EEBFCD0E83378CDE4A0A3FFD
   name = Stephane Point
   email = point.steph@gmail.com
