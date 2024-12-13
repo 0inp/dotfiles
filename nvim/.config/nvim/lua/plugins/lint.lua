@@ -1,5 +1,4 @@
 return {
-  -- change trouble config
   {
     "mfussenegger/nvim-lint",
     -- opts will be merged with the parent spec

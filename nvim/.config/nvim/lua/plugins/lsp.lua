@@ -1,9 +1,10 @@
 return {
-  "williamboman/mason.nvim",
-  opts = {
-    ensure_installed = {
-      "shfmt",
-      "mypy",
+  {
+    "williamboman/mason.nvim",
+    opts = {
+      ensure_installed = {
+        "mypy",
+      },
     },
   },
 }

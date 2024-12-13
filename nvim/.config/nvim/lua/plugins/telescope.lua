@@ -1,5 +1,6 @@
 return {
   { "benfowler/telescope-luasnip.nvim", module = "telescope._extensions.luasnip" },
+  { "nvim-telescope/telescope-ui-select.nvim" },
   {
     "nvim-telescope/telescope.nvim",
     keys = {
@@ -64,8 +65,8 @@ return {
     },
     config = function()
       -- Enable telescope extensions, if they are installed
-      require("telescope").load_extension("ui-select")
       require("telescope").load_extension("luasnip")
+      require("telescope").load_extension("ui-select")
     end,
   },
 }
