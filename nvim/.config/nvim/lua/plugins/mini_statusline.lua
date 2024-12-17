@@ -30,7 +30,7 @@ local statusline_config = function()
         end
 
         local auto_format_indicator = function()
-          if vim.g.vin_autoformat_enabled then
+          if vim.g.vim_autoformat_enabled then
             return "󰉶 On"
           else
             return "󰉶 Off"
