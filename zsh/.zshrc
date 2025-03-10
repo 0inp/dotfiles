@@ -1,4 +1,4 @@
-# zmodload zsh/zprof
+zmodload zsh/zprof
 
 [[ -f ~/.config/zsh/completion.zsh ]] && source ~/.config/zsh/completion.zsh
 [[ -f ~/.config/zsh/zinit.zsh ]] && source ~/.config/zsh/zinit.zsh
@@ -17,12 +17,7 @@ eval "$(oh-my-posh init zsh --config ~/.config/ohmyposh.toml)"
 # Load zoxide
 eval "$(zoxide init zsh)"
 
-# zprof
-
-
-
-
-[ -f "/home/spoint/.ghcup/env" ] && . "/home/spoint/.ghcup/env" # ghcup-env
 export NVM_DIR="$HOME/.config/nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+zprof
