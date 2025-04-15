@@ -1,6 +1,6 @@
 return {
   {
-    "scottmckendry/cyberdream.nvim",
+    "Mofiqul/dracula.nvim",
     lazy = false,
     priority = 1000,
   },
@@ -8,7 +8,7 @@ return {
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "cyberdream",
+      colorscheme = "dracula",
     },
   },
 }

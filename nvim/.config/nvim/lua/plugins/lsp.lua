@@ -1,10 +1,11 @@
-return {
-  {
-    "williamboman/mason.nvim",
-    opts = {
-      ensure_installed = {
-        "mypy",
-      },
-    },
-  },
-}
+return {}
+-- return {
+--   {
+--     "williamboman/mason.nvim",
+--     opts = {
+--       ensure_installed = {
+--         "mypy",
+--       },
+--     },
+--   },
+-- }
