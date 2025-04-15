@@ -1,13 +1,19 @@
 ## check if given command exists on the system
 command_exists() { (( $+commands[$1] )) }
 
-
 alias less='less -r'
-alias vi='nvim'
 alias python=python3
 alias c='clear'
 
-# ls => eza
+# Navigation
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+alias -- -="cd -"
+
+# Brew
+alias bu="brew update; brew upgrade; brew cleanup; brew autoremove"
 
 # exchange ls with eza
 command_exists "eza"
@@ -29,13 +35,12 @@ else
   fi
 fi
 
-
-
 # exchange cd with zoxide
 command_exists "zoxide"
 if [ "${?}" -eq "0" ]; then
   alias cd='z'
 fi
+
 # exchange grep with ripgrep
 # https://github.com/BurntSushi/ripgrep
 command_exists "rg"
@@ -43,11 +48,18 @@ if [ "${?}" -eq "0" ]; then
   alias grep='rg'
 fi
 
+# rg
+command_exists "rg"
+if [ "${?}" -eq "0" ]; then
+  alias rg="rg --max-columns=150 --max-columns-preview --colors=line:style:bold --smart-case --hidden --glob '!.git'"
+fi
+
 # neovim
 command_exists "nvim"
 if [ "${?}" -eq "0" ]; then
-  alias vim=nvim
-  alias nv=nvim
+  alias vim='nvim'
+  alias nv='nvim'
+  alias vi='nvim'
 fi
 
 # git
@@ -75,14 +87,5 @@ if [ "${?}" -eq "0" ]; then
   alias printenv='printenv | fzf'
 fi
 
-# rg
-command_exists "rg"
-if [ "${?}" -eq "0" ]; then
-  alias rg="rg --hidden --glob '!.git'"
-fi
-
-# fdfind
-command_exists "fdfind"
-if [ "${?}" -eq "0" ]; then
-  alias fd="fdfind"
-fi
+# IP address
+alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
