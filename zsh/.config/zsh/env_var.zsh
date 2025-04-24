@@ -19,14 +19,6 @@ export SAVEHIST=10000                   # Maximum events in history file
 # password store
 export PASSWORD_STORE_DIR=${HOME}/my_password_store
 
-# # gpg
-# export GPG_TTY=$(tty)
-
-# # python
-export PYENV_ROOT=${HOME}/.pyenv
-[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init --path --no-rehash)"
-
 #poetry
 export PATH=${HOME}/.local/bin:$PATH
 
@@ -38,9 +30,6 @@ export NVM_DIR="${XDG_CONFIG_HOME}/nvm"
 
 # Use vim as the editor
 export PATH="$PATH:/opt/nvim/"
-
-# # pip should only run if there is a virtualenv currently activated
-export PIP_REQUIRE_VIRTUALENV=true
 
 # Cache pip-installed packages to avoid re-downloading
 export PIP_DOWNLOAD_CACHE=$HOME/.pip/cache
@@ -59,6 +48,11 @@ export PATH="/usr/local/sbin:$PATH"
 
 # Golang
 export PATH=$HOME/go/bin:/usr/local/go/bin:$PATH
+
+# PostgreSQL
+export PATH="/usr/local/opt/postgresql@17/bin:$PATH"
+export LDFLAGS="-L/usr/local/opt/postgresql@17/lib"
+export CPPFLAGS="-I/usr/local/opt/postgresql@17/include"
 
 # fzf
 # check if given command exists on the system
