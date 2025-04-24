@@ -39,9 +39,6 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.linting.eslint" },
     { import = "lazyvim.plugins.extras.lsp.none-ls" },
     { import = "lazyvim.plugins.extras.test.core" },
-    -- { import = "lazyvim.plugins.extras.ui.mini-starter" },
-    -- { import = "lazyvim.plugins.extras.util.mini-hipatterns" },
-    -- { import = "lazyvim.plugins.extras.util.startuptime" },
 
     -- import/override with your plugins
     { import = "plugins" },
