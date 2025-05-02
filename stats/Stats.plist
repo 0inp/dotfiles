@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>BAT_mini_alignment</key>
+	<string>left</string>
+	<key>BAT_mini_label</key>
+	<true/>
+	<key>Battery_barChart_position</key>
+	<integer>3</integer>
+	<key>Battery_batteryDetails_position</key>
+	<integer>4</integer>
+	<key>Battery_battery_additional</key>
+	<string>time</string>
+	<key>Battery_battery_color</key>
+	<true/>
+	<key>Battery_battery_position</key>
+	<integer>0</integer>
+	<key>Battery_battery_xlSize</key>
+	<true/>
+	<key>Battery_color</key>
+	<true/>
+	<key>Battery_label_position</key>
+	<integer>2</integer>
+	<key>Battery_mini_position</key>
+	<integer>1</integer>
+	<key>Battery_notifications_low</key>
+	<string>0.1</string>
+	<key>Battery_oneView</key>
+	<true/>
+	<key>Battery_position</key>
+	<integer>6</integer>
+	<key>Battery_timeFormat</key>
+	<string>short</string>
+	<key>Battery_widget</key>
+	<string>battery,mini</string>
+	<key>Bluetooth_position</key>
+	<integer>7</integer>
+	<key>CPU_barChart_position</key>
+	<integer>4</integer>
+	<key>CPU_chartColor</key>
+	<string>system</string>
+	<key>CPU_label_position</key>
+	<integer>1</integer>
+	<key>CPU_lineChartScale</key>
+	<string>linear</string>
+	<key>CPU_lineChart_position</key>
+	<integer>3</integer>
+	<key>CPU_mini_color</key>
+	<string>utilization</string>
+	<key>CPU_mini_position</key>
+	<integer>0</integer>
+	<key>CPU_pieChart_position</key>
+	<integer>5</integer>
+	<key>CPU_position</key>
+	<integer>0</integer>
+	<key>CPU_tachometer_position</key>
+	<integer>2</integer>
+	<key>CPU_updateInterval</key>
+	<integer>2</integer>
+	<key>CPU_widget</key>
+	<string>mini</string>
+	<key>Clock_position</key>
+	<integer>8</integer>
+	<key>CombinedModules</key>
+	<true/>
+	<key>CombinedModules_separator</key>
+	<true/>
+	<key>CombinedModules_spacing</key>
+	<string>5</string>
+	<key>Disk_A654596C-FB14-41C7-8B03-537565A780AE_popup</key>
+	<false/>
+	<key>Disk_barChart_position</key>
+	<integer>3</integer>
+	<key>Disk_disk</key>
+	<string>macOS</string>
+	<key>Disk_label_position</key>
+	<integer>1</integer>
+	<key>Disk_memory_position</key>
+	<integer>4</integer>
+	<key>Disk_mini_position</key>
+	<integer>2</integer>
+	<key>Disk_networkChart_position</key>
+	<integer>6</integer>
+	<key>Disk_pieChart_position</key>
+	<integer>0</integer>
+	<key>Disk_position</key>
+	<integer>3</integer>
+	<key>Disk_speed_position</key>
+	<integer>5</integer>
+	<key>Disk_widget</key>
+	<string>pie_chart</string>
+	<key>GPU_position</key>
+	<integer>1</integer>
+	<key>GPU_showType</key>
+	<true/>
+	<key>GPU_state</key>
+	<true/>
+	<key>LaunchAtLoginNext</key>
+	<true/>
+	<key>NSNavPanelExpandedSizeForSaveMode</key>
+	<string>{800, 448}</string>
+	<key>NSOSPLastRootDirectory</key>
+	<data>
+	Ym9va9wCAAAAAAQQMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAtAEA
+	AAQAAAADAwAAAAQAAAUAAAABAQAAVXNlcnMAAAAEAAAAAQEAAG9pbnADAAAAAQEAAGRl
+	dgAMAAAAAQYAABAAAAAgAAAALAAAAAgAAAAEAwAALFIAAAAAAAAIAAAABAMAAGTFAAAA
+	AAAACAAAAAQDAADl3woAAAAAAAwAAAABBgAATAAAAFwAAABsAAAACAAAAAAEAABBxq/9
+	tU/osRgAAAABAgAAAgAAAAAAAAAfAgAAAAAAAB8CAAAAAAAAAAAAAAEFAAAIAAAABAMA
+	AAEAAAAAAAAABAAAAAMDAAD1AQAACAAAAAEJAABmaWxlOi8vLwUAAAABAQAAbWFjT1MA
+	AAAIAAAABAMAAADAWtToAAAACAAAAAAEAABBxtUXTIAAACQAAAABAQAAMDQxNDYwQzAt
+	NDEzQS00REQyLTlFNjUtMzRCM0ZCNUFFMEI3GAAAAAECAACBAAAAAQAAAO8TAAABAAAA
+	7xMAAAEAAAABAAAAAQEAAC8AAAAwAAAAAQIAAGRuaWIAAAAAAQAAAAAAAAAAAAAAAAAA
+	AAAAAAAAAAAAAAAAAHJkbGYCAAAAAAAAAPAAAAD+////AQAAAAAAAAATAAAABBAAADgA
+	AAAAAAAABRAAAHwAAAAAAAAAEBAAAKAAAAAAAAAAQBAAAJAAAAAAAAAAAiAAAHABAAAA
+	AAAABSAAAOQAAAAAAAAAECAAAPQAAAAAAAAAESAAACQBAAAAAAAAEiAAAAQBAAAAAAAA
+	EyAAABQBAAAAAAAAICAAAFABAAAAAAAAMCAAAMAAAAAAAAAAAcAAAMgAAAAAAAAAEcAA
+	ACAAAAAAAAAAEsAAANgAAAAAAAAAAdAAAMAAAAAAAAAAENAAAAQAAAAAAAAAF/AAACwA
+	AAAAAAAAIvAAAHwBAAAAAAAA
+	</data>
+	<key>NSStatusItem Preferred Position CombinedModules</key>
+	<real>209</real>
+	<key>NSStatusItem Restore Position Battery_battery</key>
+	<integer>209</integer>
+	<key>NSStatusItem Restore Position Battery_label</key>
+	<integer>276</integer>
+	<key>NSStatusItem Restore Position CPU_label</key>
+	<integer>450</integer>
+	<key>NSStatusItem Restore Position CPU_mini</key>
+	<integer>540</integer>
+	<key>NSStatusItem Restore Position CPU_tachometer</key>
+	<integer>416</integer>
+	<key>NSStatusItem Restore Position Disk_label</key>
+	<integer>471</integer>
+	<key>NSStatusItem Restore Position Disk_mini</key>
+	<integer>322</integer>
+	<key>NSStatusItem Restore Position Disk_pie_chart</key>
+	<integer>437</integer>
+	<key>NSStatusItem Restore Position Network_label</key>
+	<integer>415</integer>
+	<key>NSStatusItem Restore Position Network_network_chart</key>
+	<integer>298</integer>
+	<key>NSStatusItem Restore Position Network_speed</key>
+	<integer>344</integer>
+	<key>NSStatusItem Restore Position RAM_mini</key>
+	<integer>493</integer>
+	<key>NSToolbar Configuration eu.exelban.Stats.Settings.Toolbar</key>
+	<dict>
+		<key>TB Display Mode</key>
+		<integer>1</integer>
+		<key>TB Icon Size Mode</key>
+		<integer>1</integer>
+		<key>TB Is Shown</key>
+		<true/>
+		<key>TB Size Mode</key>
+		<integer>1</integer>
+	</dict>
+	<key>NSWindow Frame NSNavPanelAutosaveName</key>
+	<string>320 320 800 448 0 0 1440 875 </string>
+	<key>Network_chartHistory</key>
+	<integer>300</integer>
+	<key>Network_chartScale</key>
+	<string>logarithmic</string>
+	<key>Network_label_position</key>
+	<integer>2</integer>
+	<key>Network_networkChart_position</key>
+	<integer>0</integer>
+	<key>Network_oneView</key>
+	<true/>
+	<key>Network_position</key>
+	<integer>5</integer>
+	<key>Network_reverseOrder</key>
+	<false/>
+	<key>Network_speed_icon</key>
+	<string>chars</string>
+	<key>Network_speed_position</key>
+	<integer>1</integer>
+	<key>Network_state_position</key>
+	<integer>3</integer>
+	<key>Network_text_position</key>
+	<integer>4</integer>
+	<key>Network_widget</key>
+	<string>speed,network_chart</string>
+	<key>RAM_barChart_position</key>
+	<integer>3</integer>
+	<key>RAM_label_position</key>
+	<integer>1</integer>
+	<key>RAM_lineChartScale</key>
+	<string>linear</string>
+	<key>RAM_lineChart_position</key>
+	<integer>2</integer>
+	<key>RAM_memory_position</key>
+	<integer>5</integer>
+	<key>RAM_mini_alignment</key>
+	<string>left</string>
+	<key>RAM_mini_color</key>
+	<string>pressure</string>
+	<key>RAM_mini_position</key>
+	<integer>0</integer>
+	<key>RAM_pieChart_position</key>
+	<integer>4</integer>
+	<key>RAM_position</key>
+	<integer>2</integer>
+	<key>RAM_tachometer_position</key>
+	<integer>6</integer>
+	<key>RAM_text_position</key>
+	<integer>7</integer>
+	<key>RAM_updateInterval</key>
+	<integer>2</integer>
+	<key>RAM_widget</key>
+	<string>mini</string>
+	<key>Sensors_position</key>
+	<integer>4</integer>
+	<key>runAtLoginInitialized</key>
+	<true/>
+	<key>setupProcess</key>
+	<true/>
+	<key>support_ts</key>
+	<integer>1745197920</integer>
+	<key>telemetry</key>
+	<false/>
+	<key>telemetry_id</key>
+	<string>2A8F114D-8D7F-4D94-9DF5-D79AA9CC33EC</string>
+	<key>temperature_units</key>
+	<string>system</string>
+	<key>update-interval</key>
+	<string>Once per day</string>
+	<key>updater_check_ts</key>
+	<integer>1746202341</integer>
+	<key>version</key>
+	<string>2.11.42</string>
+</dict>
+</plist>
