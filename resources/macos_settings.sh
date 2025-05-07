@@ -52,6 +52,11 @@ defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool
 echo "Enable Safari’s debug menu"
 defaults write com.apple.Safari IncludeInternalDebugMenu -bool true
 
+echo "Set custom location for screenshots and screen recordings"
+mkdir -p ~/Pictures/Screenshots
+defaults write com.apple.screencapture location ~/Pictures/Screenshots
+killall SystemUIServer
+
 # SSD specifics
 # Remove the sleep image file to save disk space
 sudo rm /private/var/vm/sleepimage
