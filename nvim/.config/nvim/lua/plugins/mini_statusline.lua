@@ -1,4 +1,3 @@
-return {}
 -- local statusline_config = function()
 --   local mini_statusline = require("mini.statusline")
 --   mini_statusline.setup({
@@ -47,7 +46,7 @@ return {}
 --         local searchcount = m.section_searchcount({ trunc_width = 75 })
 --         local location = m.section_location({ trunc_width = 120 })
 --         local fileinfo = m.section_fileinfo({ trunc_width = 125 })
---         local filename = MiniStatusline.section_filename({ trunc_width = 140 })
+--         local filename = require("mini.statusline").section_filename({ trunc_width = 140 })
 --
 --         return m.combine_groups({
 --           { hl = mode_hl, strings = { mode } },
@@ -81,12 +80,15 @@ return {}
 --     set_vim_settings = false,
 --   })
 -- end
---
--- return {
---   {
---     "echasnovski/mini.statusline",
---     version = false,
---     event = "VeryLazy",
---     config = statusline_config,
---   },
--- }
+
+return {
+  {
+    "echasnovski/mini.statusline",
+    version = "*",
+    event = "VeryLazy",
+    -- config = statusline_config,
+    config = function()
+      require("mini.statusline").setup()
+    end,
+  },
+}
