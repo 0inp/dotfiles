@@ -19,14 +19,17 @@ export SAVEHIST=10000                   # Maximum events in history file
 # password store
 export PASSWORD_STORE_DIR=${HOME}/my_password_store
 
-#poetry
+# poetry
 export PATH=${HOME}/.local/bin:$PATH
 
 # node
 export PATH="/usr/local/bin:$PATH"
-export NVM_DIR="${XDG_CONFIG_HOME}/nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+export NVM_DIR="$HOME/.nvm"
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+
 
 # Use vim as the editor
 export PATH="$PATH:/opt/nvim/"

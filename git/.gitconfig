@@ -24,7 +24,7 @@
   ui = true
 
 [commit]
-  gpgsign = true
+	gpgsign = true
 
 [core]
   editor = nvim
@@ -61,7 +61,7 @@
   prune = true
 
 [gpg]
-  program = /usr/local/bin/gpg
+  program = /opt/homebrew/bin/gpg
 
 [http]
   sslVerify = false
@@ -92,3 +92,5 @@
 	signingkey = 71EB7F5901C39E99B25CD4002AF762FE32AB906F
   name = Stephane Point
   email = point.steph@gmail.com
+[tag]
+	gpgSign = true
