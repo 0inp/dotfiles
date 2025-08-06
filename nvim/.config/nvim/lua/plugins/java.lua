@@ -38,7 +38,6 @@ return {
               {
                 name = "JavaSE-21",
                 path = "/Users/spoint/.jenv/versions/21",
-                default = true,
               },
               {
                 name = "JavaSE-11",
