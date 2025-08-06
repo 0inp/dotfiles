@@ -58,11 +58,10 @@
   prune = true
 
 [gpg]
-  program = /usr/local/bin/gpg
+  program = /opt/homebrew/bin/gpg
 
 [http]
   sslVerify = false
-
 [init]
   defaultBranch = main
 
@@ -85,9 +84,9 @@
   autosquash = true
 
 [user]
-	signingkey = 71EB7F5901C39E99B25CD4002AF762FE32AB906F
+	signingkey = EB29FD9934624DA07698FB989F7800A8ACB317B1
   name = Stephane Point
-  email = point.steph@gmail.com
+  email = spoint@twilio.com
 
 [tag]
 	gpgSign = true
