@@ -16,14 +16,6 @@ zmodload zsh/complist
 # Load fzf
 source <(fzf --zsh)
 
-# Java
-eval "$(jenv init -)"
-if ! jenv plugins | grep -q 'export'; then                                                                                                                                                                                        █│
-  echo "Enabling jenv export plugin…"                                                                                                                                                                                            █│
-  jenv enable-plugin export                                                                                                                                                                                                          █│
-  jenv rehash                                                                                                                                                                                                                        █│
-fi
-
 # Prompt
 autoload -U promptinit; promptinit
 # turn on git stash status

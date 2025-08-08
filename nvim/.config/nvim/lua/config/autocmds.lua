@@ -28,7 +28,7 @@ local function clean_lsp_logs()
   if vim.fn.filereadable(log_path) == 1 then
     vim.fn.delete(log_path)
     -- Optional: display a message confirming deletion
-    -- vim.notify("LSP log file deleted: " .. log_path, vim.log.levels.INFO)
+    vim.notify("LSP log file deleted: " .. log_path, vim.log.levels.INFO)
   end
 end
 

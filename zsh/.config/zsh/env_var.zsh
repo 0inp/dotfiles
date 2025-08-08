@@ -52,9 +52,6 @@ export PATH="/usr/local/sbin:$PATH"
 # Golang
 export PATH=$HOME/go/bin:/usr/local/go/bin:$PATH
 
-# Java
-export PATH="$HOME/.jenv/bin:$PATH"
-
 # PostgreSQL
 export PATH="/usr/local/opt/postgresql@17/bin:$PATH"
 export LDFLAGS="-L/usr/local/opt/postgresql@17/lib"
