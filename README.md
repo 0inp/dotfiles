@@ -44,3 +44,12 @@ Fix it with following command when it's broken.
 sudo chown -R "$(whoami)" "$(brew --prefix)"/*
 brew doctor
 ```
+
+## Notion Integration
+
+To publish dotfiles improvements to Notion (under your MCP Contents page), run:
+
+```bash
+export MCP_CONTENTS_NOTION_PAGE_ID="<Your MCP Contents Notion page ID>"
+scripts/publish_dotfiles_improvements.sh
+```

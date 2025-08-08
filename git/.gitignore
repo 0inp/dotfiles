@@ -16,5 +16,25 @@
 
 **/lazy-lock.json
 
-# tmux/plugins/
-# tmux/plugins/!tpm
+# ───── Eclipse / JDT Language Server ────────
+# Eclipse workspace metadata & project files
+.metadata/
+.project
+.classpath
+.settings/
+
+# Eclipse APT / JDTLS
+.factorypath
+.apt_generated/
+
+# Eclipse code recommenders
+.recommenders/
+
+# Eclipse build-path files (older versions, some plugins)
+.buildpath
+
+# other Eclipse temp files/folders
+.externalToolBuilders/
+.loadpath
+
+.gnupg/*

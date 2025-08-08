@@ -30,12 +30,8 @@
   editor = nvim
   autocrlf = input
   ignorecase = false
-  excludesfile = /Users/oinp/.gitignore
+  excludesfile = /Users/spoint/.gitignore
   pager = "delta"
-
-[credential]
-  helper = cache --timeout=28800
-
 [delta]
   features = decorations
   navigate = true
@@ -61,7 +57,7 @@
   prune = true
 
 [gpg]
-  program = /usr/local/bin/gpg
+  program = /opt/homebrew/bin/gpg
 
 [http]
   sslVerify = false
@@ -89,8 +85,9 @@
 
 [user]
   ; signingkey = 0D974584A399517C
-	signingkey = 71EB7F5901C39E99B25CD4002AF762FE32AB906F
+	signingkey = 9F7800A8ACB317B1
   name = Stephane Point
-  email = point.steph@gmail.com
+  email = spoint@twilio.com
+
 [tag]
 	gpgSign = true

@@ -89,3 +89,24 @@ fi
 
 # IP address
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
+
+# twilio
+alias tup="tup_func"
+tup_func() {
+  local root=~/dev/twilio-reactor
+  local subdirs=(twilio-foundation-reactor twilio-com sendgrid segment)
+  local orig_dir=$PWD
+  cd $root || return
+  local branch=$(git symbolic-ref --short HEAD 2>/dev/null)
+  git checkout twilio-develop && git pull
+  git checkout "$branch"
+  for dir in "${subdirs[@]}"; do
+    cd "$root/$dir" || continue
+    git checkout twilio-develop && git pull
+    git checkout "$branch"
+  done
+  cd "$orig_dir"
+}
+alias run-author="java -Xms4g -Xmx4g -XX:MetaspaceSize=256m -XX:MaxMetaspaceSize=512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:InitiatingHeapOccupancyPercent=45 -XX:+ParallelRefProcEnabled -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:+UseStringDeduplication -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005 -jar aem-author-p4502.jar"
+alias mvn-all="jenv shell 11 && mvn -T 1C clean install -PautoInstallSinglePackage -Dmaven.clean.failOnError=false -Djava.awt.headless=true && jenv shell --unset"
+alias mvn-no-test="jenv shell 11 && mvn -T 1C clean install -PautoInstallSinglePackage -Dmaven.clean.failOnError=false -Djava.awt.headless=true -DskipTests -Dcheckstyle.skip && jenv shell --unset"

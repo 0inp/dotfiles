@@ -5,6 +5,7 @@ zmodload zsh/complist
 
 # Loading of dependencies
 [[ -f ~/.config/zsh/env_var.zsh ]] && source ~/.config/zsh/env_var.zsh
+[[ -f ~/.config/zsh/secrets.zsh ]] && source ~/.config/zsh/secrets.zsh
 [[ -f ~/.config/zsh/aliases.zsh ]] && source ~/.config/zsh/aliases.zsh
 [[ -f ~/.config/zsh/settings.zsh ]] && source ~/.config/zsh/settings.zsh
 [[ -f ~/.config/zsh/bindings.zsh ]] && source ~/.config/zsh/bindings.zsh
@@ -14,6 +15,14 @@ zmodload zsh/complist
 
 # Load fzf
 source <(fzf --zsh)
+
+# Java
+eval "$(jenv init -)"
+if ! jenv plugins | grep -q 'export'; then                                                                                                                                                                                        █│
+  echo "Enabling jenv export plugin…"                                                                                                                                                                                            █│
+  jenv enable-plugin export                                                                                                                                                                                                          █│
+  jenv rehash                                                                                                                                                                                                                        █│
+fi
 
 # Prompt
 autoload -U promptinit; promptinit
