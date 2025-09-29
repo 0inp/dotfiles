@@ -1,0 +1,27 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "theme": "system",
+  "autoupdate": false,
+  "mcp": {
+    "sequential-thinking": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking",
+      ],
+    },
+    "fetch": {
+      "type": "local",
+      "command": ["uvx", "mcp-server-fetch"],
+    },
+    "time": {
+      "type": "local",
+      "command": ["uvx", "mcp-server-time"],
+    },
+    "Context7": {
+      "type": "local",
+      "command": ["npx", "-y", "@upstash/context7-mcp"],
+    },
+  },
+}
