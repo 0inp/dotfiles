@@ -19,7 +19,7 @@ local function hsl_to_rgb(h, s, l)
 end
 
 return {
-  "echasnovski/mini.hipatterns",
+  "nvim-mini/mini.hipatterns",
   opts = function(_, opts)
     local hipatterns = require("mini.hipatterns")
     opts.highlighters = vim.tbl_extend("force", opts.highlighters or {}, {

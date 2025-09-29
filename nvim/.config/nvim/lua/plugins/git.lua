@@ -1,7 +1,7 @@
 return {
   {
-    "echasnovski/mini-git",
-    dependencies = { "echasnovski/mini.notify" },
+    "nvim-mini/mini-git",
+    dependencies = { "nvim-mini/mini.notify" },
     version = "*",
     event = "VeryLazy",
     config = function()

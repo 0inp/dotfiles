@@ -15,7 +15,7 @@ local logo = table.concat({
 }, "\n")
 
 return {
-  "echasnovski/mini.starter",
+  "nvim-mini/mini.starter",
   opts = {
     header = logo,
   },

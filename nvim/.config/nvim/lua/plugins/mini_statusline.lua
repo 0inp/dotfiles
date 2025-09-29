@@ -1,6 +1,6 @@
 return {
   {
-    "echasnovski/mini.statusline",
+    "nvim-mini/mini.statusline",
     version = "*",
     event = "VeryLazy",
     -- config = statusline_config,
