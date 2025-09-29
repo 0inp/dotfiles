@@ -18,6 +18,7 @@ export SAVEHIST=10000                   # Maximum events in history file
 # OTHER SOFTWARES
 # password store
 export PASSWORD_STORE_DIR=${HOME}/my_password_store
+export GPG_TTY=$(tty)
 
 # poetry
 export PATH=${HOME}/.local/bin:$PATH
