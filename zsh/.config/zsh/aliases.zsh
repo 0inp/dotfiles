@@ -85,3 +85,53 @@ fi
 
 # IP address
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
+
+# twilio
+alias tup="tup_func"
+tup_func() {
+  local root=~/dev/twilio-reactor
+  local subdirs=(twilio-foundation-reactor twilio-com sendgrid segment)
+  local orig_dir=$PWD
+  echo "tup_func: Starting..."
+  echo "tup_func: root = $root"
+  echo "tup_func: subdirs = ${subdirs[@]}"
+  echo "tup_func: orig_dir = $orig_dir"
+  cd $root || { echo "tup_func: Failed to cd to $root"; return; }
+  local branch=$(git symbolic-ref --short HEAD 2>/dev/null)
+  echo "tup_func: current branch = $branch"
+  if [ "$branch" = "twilio-develop" ]; then
+    echo "tup_func: Already on twilio-develop, running git pull"
+    git pull
+  else
+    echo "tup_func: In $root, checkout twilio-develop"
+    git checkout twilio-develop && git pull
+    echo "tup_func: In $root, switch back to $branch"
+    git checkout "$branch"
+  fi
+  for dir in "${subdirs[@]}"; do
+    echo "tup_func: Processing subdir $dir"
+    cd "$root/$dir" || { echo "tup_func: Failed to cd to $root/$dir, skipping..."; continue; }
+    local sub_branch=$(git symbolic-ref --short HEAD 2>/dev/null)
+    echo "tup_func: current branch in $dir = $sub_branch"
+    if [ "$sub_branch" = "twilio-develop" ]; then
+      echo "tup_func: Already on twilio-develop in $dir, running git pull"
+      git pull
+    else
+      echo "tup_func: In $root/$dir, checkout twilio-develop"
+      git checkout twilio-develop && git pull
+      echo "tup_func: In $root/$dir, switch back to $branch"
+      git checkout "$branch"
+    fi
+  done
+  cd "$orig_dir"
+  echo "tup_func: Returned to $orig_dir"
+  echo "tup_func: Done!"
+}
+
+alias run-author="java -Xms4g -Xmx4g -XX:MetaspaceSize=256m -XX:MaxMetaspaceSize=512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:InitiatingHeapOccupancyPercent=45 -XX:+ParallelRefProcEnabled -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:+UseStringDeduplication -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005 -jar aem-author-p4502.jar"
+alias run-publish="java -Xms4g -Xmx4g -XX:MetaspaceSize=256m -XX:MaxMetaspaceSize=512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:InitiatingHeapOccupancyPercent=45 -XX:+ParallelRefProcEnabled -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:+UseStringDeduplication -jar aem-publish-p4503.jar"
+
+alias mvn-all="mvn -T 1C clean install -PautoInstallSinglePackage -Dmaven.clean.failOnError=false -Djava.awt.headless=true"
+
+alias mvn-no-test="mvn -T 1C clean install -PautoInstallSinglePackage -Dmaven.clean.failOnError=false -Djava.awt.headless=true -DskipTests -Dcheckstyle.skip"
+
