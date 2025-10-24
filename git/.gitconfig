@@ -30,7 +30,7 @@
   editor = nvim
   autocrlf = input
   ignorecase = false
-  excludesfile = /Users/oinp/.gitignore
+  excludesfile = /Users/spoint/.gitignore
   pager = "delta"
 
 [delta]
