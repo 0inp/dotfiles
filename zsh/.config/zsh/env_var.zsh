@@ -59,6 +59,10 @@ export PATH="/usr/local/opt/postgresql@17/bin:$PATH"
 export LDFLAGS="-L/usr/local/opt/postgresql@17/lib"
 export CPPFLAGS="-I/usr/local/opt/postgresql@17/include"
 
+# Java
+export PATH="$HOME/.jenv/bin:$PATH"
+eval "$(jenv init -)"
+
 # fzf
 # check if given command exists on the system
 command_exists() { (( $+commands[$1] )) }
