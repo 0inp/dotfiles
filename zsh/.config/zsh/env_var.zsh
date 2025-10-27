@@ -14,6 +14,7 @@ export VISUAL="nvim"
 export HISTFILE="${HOME}/.zhistory"    # History filepath
 export HISTSIZE=10000                   # Maximum events for internal history
 export SAVEHIST=10000                   # Maximum events in history file
+export LS_COLORS="$(vivid generate dracula)"
 
 # OTHER SOFTWARES
 # password store

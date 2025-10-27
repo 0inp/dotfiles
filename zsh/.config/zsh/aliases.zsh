@@ -19,19 +19,15 @@ alias bu="brew update; brew upgrade; brew cleanup; brew autoremove"
 command_exists "eza"
 if [ "${?}" -eq "0" ]; then
   # alias ls='eza'
-  alias ls="eza --color=always --long --git --icons=always --ignore-glob='*.pyc|.git|node_modules'"
+  alias ls="eza -lah --sort=name --group-directories-first --color=always --long --git --icons=always --ignore-glob='*.pyc|.git|node_modules'"
   # options
-  alias lsa='ls -lah'
-  alias l='ls -la'
-  alias ll='ls -l'
-  alias lt='lsa --tree --group-directories-first'
+  alias lt='ls --tree'
 else
   # if no eza can be used make ls colorful
   if [ "${OSTYPE}" = "linux-gnu" ]; then
     alias ls='ls --color=auto'
   elif [ "${OSTYPE}" = "darwin" ]; then
     export CLICOLOR=1
-    export LSCOLORS=GxFxCxDxBxegedabagaced
   fi
 fi
 

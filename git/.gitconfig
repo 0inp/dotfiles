@@ -32,6 +32,7 @@
   ignorecase = false
   excludesfile = /Users/oinp/.gitignore
   pager = "delta"
+
 [delta]
   features = decorations
   navigate = true
