@@ -1,1 +1,7 @@
-zsh/.config/zsh/secrets.zsh
+-e zsh/.config/zsh/secrets.zsh
+gnupg/.gnupg/.#*
+gnupg/.gnupg/private-keys-v1.d/
+gnupg/.gnupg/pubring.kbx
+gnupg/.gnupg/pubring.kbx~
+gnupg/.gnupg/random_seed
+gnupg/.gnupg/trustdb.gpg
