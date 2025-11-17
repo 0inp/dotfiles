@@ -5,3 +5,5 @@ gnupg/.gnupg/pubring.kbx
 gnupg/.gnupg/pubring.kbx~
 gnupg/.gnupg/random_seed
 gnupg/.gnupg/trustdb.gpg
+nvim/.config/nvim/lazy-lock.json
+tmux/.config/tmux/plugins
