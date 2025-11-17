@@ -27,9 +27,9 @@ gui:
     defaultFgColor:
       - "#c0caf5"
 git:
-  paging:
-    pager: delta --dark --paging=never
-    colorArg: always
+  pagers:
+    - pager: delta --dark --paging=never
+      colorArg: always
   overrideGpg: true
 customCommands:
   - key: "<c-v>"
