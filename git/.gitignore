@@ -38,3 +38,7 @@
 .loadpath
 
 .gnupg/*
+
+**/AGENTS.md
+
+./zsh/.config/zsh/secrets.zsh
