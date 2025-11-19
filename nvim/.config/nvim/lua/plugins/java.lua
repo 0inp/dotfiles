@@ -18,7 +18,7 @@ local function build_cmd(workspace_dir)
     "java.base/java.lang=ALL-UNNAMED",
     "-javaagent:" .. lombok_path,
     "-jar",
-    jdtls_path .. "/plugins/org.eclipse.equinox.launcher_1.7.0.v20250519-0528.jar",
+    jdtls_path .. "/plugins/org.eclipse.equinox.launcher_1.7.100.v20251014-1222.jar",
     "-configuration",
     jdtls_path .. "/config_mac",
     "-data",
