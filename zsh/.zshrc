@@ -30,3 +30,6 @@ gpgconf --launch gpg-agent
 # ssh-add ~/.ssh/id\_ed25519 2>/dev/null
 
 # zprof
+
+# bun completions
+[ -s "/Users/oinp/.bun/_bun" ] && source "/Users/oinp/.bun/_bun"
