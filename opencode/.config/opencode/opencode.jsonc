@@ -3,6 +3,8 @@
   "theme": "system",
   "autoupdate": false,
   "default_agent": "plan",
+  "model": "google/gemini-2.5-flash",
+  "plugin": ["opencode-gemini-auth@latest"],
   "mcp": {
     "sequential-thinking": {
       "type": "local",
