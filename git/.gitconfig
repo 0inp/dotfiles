@@ -58,10 +58,12 @@
   prune = true
 
 [gpg]
-  program = /usr/local/bin/gpg
+  format = ssh
+  [ssh]
+    allowedSignersFile = "$HOME/.ssh/allowed_signers"
 
 [http]
-  sslVerify = false
+  sslVerify = true
 
 [init]
   defaultBranch = main
@@ -85,9 +87,9 @@
   autosquash = true
 
 [user]
-	signingkey = 71EB7F5901C39E99B25CD4002AF762FE32AB906F
-  name = Stephane Point
-  email = point.steph@gmail.com
+	signingkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJ6bYKA/jEjXIWVgUY+tMO6Nqv0EAN2LsRwR+FpxLKk5 point-stephane@proton.me"
+  name = "Stephane Point"
+  email = point-stephane@proton.me
 
 [tag]
 	gpgSign = true
