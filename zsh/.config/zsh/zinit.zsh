@@ -8,10 +8,14 @@ source "${ZINIT_HOME}/zinit.zsh"
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
 
-zinit light zsh-users/zsh-syntax-highlighting
-zinit light zsh-users/zsh-autosuggestions
 zinit light zsh-users/zsh-completions
 zinit light Aloxaf/fzf-tab
+
+zinit ice wait lucid
+zinit light zsh-users/zsh-syntax-highlighting
+zinit light zsh-users/zsh-autosuggestions
+
+zinit ice as'program' atload'zicompinit'
 zinit light ael-code/zsh-colored-man-pages
 
 zinit cdreplay -q
