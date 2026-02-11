@@ -17,6 +17,8 @@ export SAVEHIST=10000                   # Maximum events in history file
 export LS_COLORS="$(vivid generate dracula)"
 
 # OTHER SOFTWARES
+# bitwarden ssh-agent
+export SSH_AUTH_SOCK=/Users/oinp/.bitwarden-ssh-agent.sock
 # password store
 export PASSWORD_STORE_DIR=${HOME}/my_password_store
 export GPG_TTY=$(tty)
