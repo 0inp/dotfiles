@@ -1,0 +1,8 @@
+require("plugins.colorscheme")
+require("plugins.formatting")
+require("plugins.ui")
+require("plugins.treesitter")
+require("plugins.lsp")
+require("plugins.telescope")
+require("plugins.completion")
+require("plugins.code-enhancements")
