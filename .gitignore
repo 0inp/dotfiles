@@ -1,4 +1,4 @@
--e zsh/.config/zsh/secrets.zsh
+zsh/.config/zsh/secrets.zsh
 gnupg/.gnupg/.#*
 gnupg/.gnupg/private-keys-v1.d/
 gnupg/.gnupg/pubring.kbx
