@@ -4,6 +4,7 @@ bindkey -v
 # Initialize editing command line
 autoload -Uz edit-command-line 
 zle -N edit-command-line
+bindkey "^x^e" edit-command-line
 
 # Enable interactive comments (# on the command line)
 setopt interactivecomments

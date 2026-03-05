@@ -51,11 +51,12 @@ if [ "${?}" -eq "0" ]; then
 fi
 
 # neovim
+alias vi="${HOME}/nvim-macos-x86_64/bin/nvim"
 command_exists "nvim"
 if [ "${?}" -eq "0" ]; then
   alias vim='nvim'
   alias nv='nvim'
-  alias vi='nvim'
+  # alias vi='nvim'
 fi
 
 # git

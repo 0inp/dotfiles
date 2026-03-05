@@ -7,8 +7,8 @@ export XDG_DATA_HOME=$XDG_CONFIG_HOME/local/share
 export XDG_CACHE_HOME=$XDG_CONFIG_HOME/cache
 
 # editor
-export EDITOR="nvim"
-export VISUAL="nvim"
+export EDITOR="${HOME}/nvim-macos-x86_64/bin/nvim"
+export VISUAL="${HOME}/nvim-macos-x86_64/bin/nvim"
 
 # zsh
 export HISTFILE="${HOME}/.zhistory"    # History filepath
