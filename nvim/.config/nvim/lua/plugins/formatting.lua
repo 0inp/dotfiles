@@ -8,6 +8,7 @@ require("conform").setup({
 	},
 	notify_on_missing_formatters = true,
 	formatters_by_ft = {
+		bash = { " shfmt" },
 		lua = { "stylua" },
 		json = { "jq" },
 		jsonc = { "jq" },

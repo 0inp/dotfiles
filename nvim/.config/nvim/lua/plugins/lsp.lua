@@ -61,6 +61,9 @@ local lsp_servers = {
 	jq = {},
 	-- TOML
 	tombi = {},
+	-- bash
+	bashls = {},
+	shfmt = {},
 }
 
 require("mason-tool-installer").setup({
