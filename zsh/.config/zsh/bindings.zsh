@@ -2,8 +2,6 @@
 
 # Vim style bindings (for Home/End keys...)
 bindkey -v
-# Edit line
-bindkey -M vicmd v edit-command-line
 
 # # In menu completion, the Return key will accept the current selected match
 # bindkey -M menuselect '^M' .accept-line

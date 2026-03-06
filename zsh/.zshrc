@@ -27,7 +27,6 @@ eval "$(zoxide init zsh)"
 
 # GPG config
 gpgconf --launch gpg-agent
-# ssh-add ~/.ssh/id\_ed25519 2>/dev/null
 
 # zprof
 
