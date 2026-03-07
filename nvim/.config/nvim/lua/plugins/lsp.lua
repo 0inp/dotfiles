@@ -62,7 +62,9 @@ local lsp_servers = {
 	-- TOML
 	tombi = {},
 	-- bash
-	bashls = {},
+	bashls = {
+		filetypes = { "sh", "zsh" },
+	},
 	shfmt = {},
 }
 
