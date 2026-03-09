@@ -65,6 +65,12 @@ if [ "${?}" -eq "0" ]; then
   alias g='git'
 fi
 
+# gh-cli
+command_exists "gh"
+if [ "${?}" -eq "0" ]; then
+  alias ghd='gh dash'
+fi
+
 # lazygit
 command_exists "lazygit"
 if [ "${?}" -eq "0" ]; then

@@ -27,6 +27,12 @@ if [[ "$(uname)" == "Darwin" ]]; then
   brew autoremove
 fi
 
+# Install gh-dash extension
+if command -v gh &>/dev/null; then
+  echo "Installing GH-Dash extension..."
+  gh extension install dlvhdr/gh-dash
+fi
+
 # Setup worktrunk
 if command -v wt &>/dev/null; then
   echo "Setting up worktrunk"
