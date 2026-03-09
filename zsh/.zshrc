@@ -28,9 +28,13 @@ eval "$(zoxide init zsh)"
 # GPG config
 gpgconf --launch gpg-agent
 
-# zprof
-
 # bun completions
 [ -s "/Users/oinp/.bun/_bun" ] && source "/Users/oinp/.bun/_bun"
 
+#setup worktrunk
 if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
+
+# setup mise
+eval "$(mise activate zsh)"
+
+# zprof
