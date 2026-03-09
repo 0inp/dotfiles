@@ -32,3 +32,5 @@ gpgconf --launch gpg-agent
 
 # bun completions
 [ -s "/Users/oinp/.bun/_bun" ] && source "/Users/oinp/.bun/_bun"
+
+if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi

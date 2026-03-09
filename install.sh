@@ -27,6 +27,12 @@ if [[ "$(uname)" == "Darwin" ]]; then
   brew autoremove
 fi
 
+# Setup worktrunk
+if command -v wt &>/dev/null; then
+  echo "Setting up worktrunk"
+  wt config shell install
+fi
+
 # Install oh-my-zsh
 # sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 ## install zsh-autosuggestions

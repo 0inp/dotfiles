@@ -84,5 +84,11 @@ if [ "${?}" -eq "0" ]; then
   alias printenv='printenv | fzf'
 fi
 
+# worktrunk
+command_exists "wt"
+if [ "${?}" -eq "0" ]; then
+  alias wsa='wt switch --create --execute=opencode'
+fi
+
 # IP address
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
