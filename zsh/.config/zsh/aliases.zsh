@@ -19,7 +19,7 @@ alias bu="brew update; brew upgrade; brew cleanup; brew autoremove"
 command_exists "eza"
 if [ "${?}" -eq "0" ]; then
   # alias ls='eza'
-  alias ls="eza -lah --sort=name --group-directories-first --color=always --long --git --icons=always --ignore-glob='*.pyc|.git|node_modules'"
+  alias ls="eza -lah --sort=name --group-directories-first --color=always --long --git --icons=always --ignore-glob='*.pyc|.git|node_modules|.venv|.ruff_cache'"
   # options
   alias lt='ls --tree'
 else
