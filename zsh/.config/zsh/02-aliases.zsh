@@ -1,7 +1,3 @@
-## check if given command exists on the system
-command_exists() { (( $+commands[$1] )) }
-
-alias less='less -r'
 alias python=python3
 alias c='clear'
 
@@ -11,6 +7,8 @@ alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
 alias -- -="cd -"
+
+alias mkdir='mkdir -p'
 
 # Brew
 alias bu="brew update; brew upgrade; brew cleanup; brew autoremove"
@@ -29,6 +27,18 @@ else
   elif [ "${OSTYPE}" = "darwin" ]; then
     export CLICOLOR=1
   fi
+fi
+
+# exchange cat/less with bat
+# https://github.com/sharkdp/bat
+command_exists "bat"
+if [ "${?}" -eq "0" ]; then
+  alias cat='bat -pp'
+  alias less='bat --paging=always'
+
+  # override MANPAGER
+  export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+
 fi
 
 # exchange cd with zoxide
@@ -95,6 +105,8 @@ command_exists "wt"
 if [ "${?}" -eq "0" ]; then
   alias wsa='wt switch --create --execute=opencode'
 fi
+
+alias ssh='TERM=xterm ssh'
 
 # IP address
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"

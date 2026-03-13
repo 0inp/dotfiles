@@ -32,5 +32,12 @@ bindkey -s '^ ' ' git status --short^M'
 bindkey '^p' history-search-backward
 bindkey '^n' history-search-forward
 
+# Up and down arrow key support for most terminal emulators.
+bindkey "^[OA" history-search-backward
+bindkey "^[OB" history-search-forward
+bindkey "^[[A" history-search-backward
+bindkey "^[[B" history-search-forward
+
+
 # Disable flow control (ctrl+s, ctrl+q) to enable saving with ctrl+s in Vim
 stty -ixon -ixoff

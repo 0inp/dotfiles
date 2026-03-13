@@ -93,3 +93,6 @@ function rfv() {
 }
 zle -N rfv{,}
 bindkey '^e' rfv
+
+# check if given command exists on the system
+command_exists() { (( $+commands[$1] )) }
