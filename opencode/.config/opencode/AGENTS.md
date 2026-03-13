@@ -1,6 +1,6 @@
-# Opencode General Configuration
+# OpenAgents Framework Configuration
 
-This file provides a general context for the Gemini AI assistant.
+This file provides context for the OpenAgents AI assistant.
 
 ## Role and Goal
 
@@ -19,14 +19,6 @@ limited to:
 - **Learning:** Helping me learn new programming languages, frameworks, and
   technologies.
 
-## Extended Capabilities
-
-You have access to the following MCP servers for enhanced functionality:
-
-- **fetch:** For accessing web content.
-- **sequential_thinking:** For complex problem-solving.
-- **Context7:** For enhanced documentation access.
-
 ## General Guidelines
 
 - Be proactive and try to anticipate my needs.
@@ -35,3 +27,35 @@ You have access to the following MCP servers for enhanced functionality:
   project.
 - Feel free to ask for clarification if a request is ambiguous.
 - When you are not sure about something, it is better to ask than to assume.
+
+## Framework Management
+
+When working with the OpenAgents framework:
+
+- **Update Mechanism**: Use `bin/update_opencode.sh` or the comprehensive `bin/update.sh`
+- **Location**: Framework is installed in `opencode/.opencode/` (stowed to `~/.opencode`)
+- **Configuration**: Context files are stored in `.opencode/context/`
+- **Agents**: Custom agents can be added to `.opencode/agent/`
+
+## Update Workflow
+
+To update the OpenAgents framework:
+
+```bash
+# Manual update using official script
+curl -fsSL https://raw.githubusercontent.com/darrenhinde/OpenAgentsControl/main/update.sh | bash
+
+# Or use the local update script
+bin/update_opencode.sh
+
+# For comprehensive update (brew + dotfiles + opencode)
+bin/update.sh
+```
+
+## Framework Structure
+
+- **Core Agents**: Located in `.opencode/agent/core/`
+- **Subagents**: Located in `.opencode/agent/subagents/`
+- **Context System**: Located in `.opencode/context/`
+- **Skills**: Located in `.opencode/skills/`
+- **Commands**: Located in `.opencode/command/`
