@@ -1,8 +1,5 @@
 # zmodload zsh/zprof
 
-# # load complist zsh module
-# zmodload zsh/complist
-#
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 [ ! -d $ZINIT_HOME ] && mkdir -p "$(dirname $ZINIT_HOME)"
 [ ! -d $ZINIT_HOME/.git ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
@@ -11,56 +8,63 @@ source "${ZINIT_HOME}/zinit.zsh"
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
 
-zinit light zdharma-continuum/fast-syntax-highlighting
+# Load plugins LAZILY (after prompt appears)
+zinit wait lucid for \
+  zdharma-continuum/fast-syntax-highlighting \
+  zsh-users/zsh-autosuggestions \
+  wfxr/forgit
 
-# prompt
+# Load pure prompt IMMEDIATELY (not lazy)
 zinit ice compile'(pure|async).zsh' pick'async.zsh' src'pure.zsh'
 zinit light sindresorhus/pure
 
-zinit light wfxr/forgit
-
-zinit light zsh-users/zsh-autosuggestions
-
+# Load zsh-completions (before compinit, lazy)
+zinit ice as"completion" wait lucid
 zinit light zsh-users/zsh-completions
 
-zinit light Aloxaf/fzf-tab
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
-
-zinit ice as'program' atload'zicompinit'
+# Load zsh-colored-man-pages (lazy)
+zinit ice as'program' atload'zicompinit' wait lucid
 zinit light ael-code/zsh-colored-man-pages
 
+# Load zoxide (lazy)
+zinit ice as"command" atload"eval $(zoxide init zsh)" wait lucid
+zinit light ajeetdsouza/zoxide
 
-# Loading of dependencies
+# Load fzf (lazy)
+zinit ice as"command" atload'source <(fzf --zsh)' wait lucid
+zinit light junegunn/fzf
+
+# Load your modular configs (except 06-fzf-tab.zsh)
 for config_file (${HOME}/.config/zsh/*.zsh); do
-  [[ -f ${config_file} ]] && source ${config_file}
+  [[ -f ${config_file} ]] && [[ ${config_file} != "${HOME}/.config/zsh/06-fzf-tab.zsh" ]] && source ${config_file}
 done
 
-# # Load fzf
-# source <(fzf --zsh)
-#
-# # Prompt
-# autoload -U promptinit; promptinit
-# # turn on git stash status
-# zstyle :prompt:pure:git:stash show yes
-# prompt pure
-
-# Load zoxide
-eval "$(zoxide init zsh)"
-
-# GPG config
-gpgconf --launch gpg-agent
-
-# bun completions
-[ -s "/Users/oinp/.bun/_bun" ] && source "/Users/oinp/.bun/_bun"
-
-#setup worktrunk
-if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
-
-# setup mise
-eval "$(mise activate zsh)"
-
+# Initialize completion system (cached)
 autoload -Uz compinit
-compinit
+if [[ -n ${ZDOTDIR}/.zcompdump(#qN.mh+24) ]]; then
+  compinit -C
+else
+  compinit
+fi
+
+zinit wait lucid for \
+  atload'eval "$(command wt config shell init zsh)"' max-sixty/worktrunk
+
+# Lazy-load mise on first use
+mise() {
+  if ! declare -f _mise_loaded > /dev/null; then
+    # Load mise only once
+    eval "$(command mise activate zsh)" 2>/dev/null
+    _mise_loaded() { :; }  # Dummy function to mark mise as loaded
+  fi
+  command mise "$@"
+}
+
+# Load bun completions (directly, no zinit)
+source "$(brew --prefix bun)/share/zsh/site-functions/_bun"
+
+# Load fzf-tab after compinit
+source "${HOME}/.config/zsh/06-fzf-tab.zsh"
 
 zinit cdreplay -q
 # zprof

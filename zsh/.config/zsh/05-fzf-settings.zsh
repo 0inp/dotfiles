@@ -55,6 +55,3 @@ _fzf_comprun() {
     *)            fzf --preview "$show_file_or_dir_preview" "$@" ;;
   esac
 }
-
-# Enable fzf
-source <(fzf --zsh)
