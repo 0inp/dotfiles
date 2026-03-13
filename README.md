@@ -25,6 +25,21 @@ cd ~/dotfiles
 ./bin/update.sh
 ```
 
+## Structure
+
+- `aerospace/` - Window management
+- `brew/` - Homebrew packages
+- `git/` - Git configuration
+- `gnupg/` - GPG setup
+- `htop/` - System monitor
+- `mise/` - Runtime manager
+- `nvim/` - Neovim editor
+- `pgcli/` - PostgreSQL CLI
+- `python/` - Python setup
+- `tmux/` - Terminal multiplexer
+- `zsh/` - Zsh shell
+- `worktrunk/` - Workspace manager
+
 ## Misc
 
 ### Command Line Tools (macOS)
