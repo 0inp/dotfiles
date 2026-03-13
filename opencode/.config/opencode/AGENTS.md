@@ -59,3 +59,7 @@ bin/update.sh
 - **Context System**: Located in `.opencode/context/`
 - **Skills**: Located in `.opencode/skills/`
 - **Commands**: Located in `.opencode/command/`
+
+## Installation
+
+The main installation script for the dotfiles repository is located at `bin/install.sh`

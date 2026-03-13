@@ -84,3 +84,11 @@ The comprehensive update script (`bin/update.sh`) handles:
 4. Stow configuration reapplication
 
 Run it periodically to keep everything up to date.
+
+## Installation
+
+The main installation script is located at `bin/install.sh`. Use it to set up your development environment:
+
+```bash
+chmod +x bin/install.sh && ./bin/install.sh
+```
