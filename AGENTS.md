@@ -63,7 +63,7 @@ This includes:
 curl -fsSL https://raw.githubusercontent.com/darrenhinde/OpenAgentsControl/main/update.sh | bash
 
 # Or use the update script
-bin/update_opencode.sh
+scripts/update_opencode.sh
 ```
 
 ### Troubleshooting stow issues:
@@ -77,7 +77,7 @@ stow -D toolname && stow toolname
 
 ## Update Workflow
 
-The comprehensive update script (`bin/update.sh`) handles:
+The comprehensive update script (`scripts/update.sh`) handles:
 1. Homebrew package updates
 2. Dotfiles repository updates
 3. OpenAgents framework updates
@@ -87,8 +87,8 @@ Run it periodically to keep everything up to date.
 
 ## Installation
 
-The main installation script is located at `bin/install.sh`. Use it to set up your development environment:
+The main installation script is located at `scripts/install.sh`. Use it to set up your development environment:
 
 ```bash
-chmod +x bin/install.sh && ./bin/install.sh
+chmod +x scripts/install.sh && ./scripts/install.sh
 ```

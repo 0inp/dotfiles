@@ -32,7 +32,7 @@ limited to:
 
 When working with the OpenAgents framework:
 
-- **Update Mechanism**: Use `bin/update_opencode.sh` or the comprehensive `bin/update.sh`
+- **Update Mechanism**: Use `scripts/update_opencode.sh` or the comprehensive `scripts/update.sh`
 - **Location**: Framework is installed in `opencode/.opencode/` (stowed to `~/.opencode`)
 - **Configuration**: Context files are stored in `.opencode/context/`
 - **Agents**: Custom agents can be added to `.opencode/agent/`
@@ -46,10 +46,10 @@ To update the OpenAgents framework:
 curl -fsSL https://raw.githubusercontent.com/darrenhinde/OpenAgentsControl/main/update.sh | bash
 
 # Or use the local update script
-bin/update_opencode.sh
+scripts/update_opencode.sh
 
 # For comprehensive update (brew + dotfiles + opencode)
-bin/update.sh
+scripts/update.sh
 ```
 
 ## Framework Structure
@@ -62,4 +62,4 @@ bin/update.sh
 
 ## Installation
 
-The main installation script for the dotfiles repository is located at `bin/install.sh`
+The main installation script for the dotfiles repository is located at `scripts/install.sh`

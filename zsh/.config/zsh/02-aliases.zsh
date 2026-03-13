@@ -14,7 +14,7 @@ alias mkdir='mkdir -p'
 alias bu="brew update; brew upgrade; brew cleanup; brew autoremove"
 
 # Dotfiles
-alias dotup="cd ${HOME}/dotfiles; ./bin/update.sh; cd -"
+alias dotup="cd ${HOME}/dotfiles; ./scripts/update.sh; cd -"
 
 # exchange ls with eza
 command_exists "eza"

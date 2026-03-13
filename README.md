@@ -13,7 +13,7 @@ brew install git stow
 ```bash
 git clone https://github.com/0inp/dotfiles.git ~/dotfiles
 cd ~/dotfiles
-chmod +x "${HOME}/dotfiles/bin/install.sh" && ./bin/install.sh
+chmod +x "${HOME}/dotfiles/scripts/install.sh" && ./scripts/install.sh
 brew bundle
 stow */
 ```
@@ -22,7 +22,7 @@ stow */
 
 ```bash
 cd ~/dotfiles
-./bin/update.sh
+./scripts/update.sh
 ```
 
 ## Structure
