@@ -27,7 +27,7 @@
 	gpgsign = true
 
 [core]
-  editor = /Users/oinp/nvim-macos-x86_64/bin/nvim
+  editor = nvim
   autocrlf = input
   ignorecase = false
   excludesfile = /Users/oinp/.gitignore
