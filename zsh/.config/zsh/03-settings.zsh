@@ -29,7 +29,7 @@ setopt sharehistory             # Share history between all sessions.
 KEYTIMEOUT=1 # corresponds to 10ms
 
 # Bat Settings
-export BAT_THEME="Catppuccin Mocha"
+export BAT_THEME="TwoDark"
 
 # Turn off beeps
 unsetopt BEEP
