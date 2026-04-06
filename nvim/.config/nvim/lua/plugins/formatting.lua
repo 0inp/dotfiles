@@ -21,5 +21,6 @@ require("conform").setup({
 		typescript = { "biome" },
 		typescriptreact = { "biome" },
 		markdown = { "markdownlint" },
+		go = { "gofmt", "goimports" },
 	},
 })

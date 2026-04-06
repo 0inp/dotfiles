@@ -13,5 +13,6 @@ require("nvim-treesitter").install({
 	"typescript",
 	"vim",
 	"vimdoc",
+	"go",
 })
 require("nvim-treesitter").update()

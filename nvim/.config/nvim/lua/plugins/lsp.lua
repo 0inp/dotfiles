@@ -66,6 +66,29 @@ local lsp_servers = {
 		filetypes = { "sh", "zsh" },
 	},
 	shfmt = {},
+	-- Go
+	gopls = {
+		settings = {
+			gopls = {
+				analyses = { unusedparams = true },
+				staticcheck = true,
+			},
+		},
+	},
+	golangci_lint_ls = {
+		cmd = { "golangci-lint-langserver" },
+		root_markers = { ".git", "go.mod" },
+		init_options = {
+			command = {
+				"golangci-lint",
+				"run",
+				"--output.json.path",
+				"stdout",
+				"--show-stats=false",
+				"--issues-exit-code=1",
+			},
+		},
+	},
 }
 
 require("mason-tool-installer").setup({
@@ -75,9 +98,9 @@ require("mason-tool-installer").setup({
 -- configure each lsp server on the table
 -- to check what clients are attached to the current buffer, use
 -- `:checkhealth vim.lsp`. to view default lsp keybindings, use `:h lsp-defaults`.
-local on_attach_keymaps = function(client, bufnr)
+local on_attach_keymaps = function(_, bufnr)
 	vim.keymap.set("n", "<leader>co", function()
-		vim.lsp.buf.code_action({ context = { only = { "source.organizeImports" } }, apply = true })
+		vim.lsp.buf.code_action({ context = { only = { "source.organizeImports" }, diagnostics = {} }, apply = true })
 	end, { noremap = true, silent = true, desc = "[C]ode [O]rganize Imports", buffer = bufnr })
 	vim.keymap.set("n", "<leader>ca", function()
 		vim.lsp.buf.code_action({
