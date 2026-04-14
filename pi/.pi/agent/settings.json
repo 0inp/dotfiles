@@ -1,0 +1,12 @@
+{
+  "quietStartup": true,
+  "skills": [
+    "./skills"
+  ],
+  "enableSkillCommands": true,
+  "lastChangelogVersion": "0.66.1",
+  "packages": [
+    "git:github.com/apmantza/pi-lens",
+    "git:github.com/JuliusBrussee/caveman"
+  ]
+}

@@ -11,3 +11,6 @@ tmux/.config/tmux/.tmux/
 opencode/.opencode/package-lock.json
 litecli/.config/litecli/history
 litecli/.config/litecli/log
+pi/.pi/agent/sessions
+pi/.pi/agent/git
+.pi-lens/
