@@ -41,3 +41,5 @@
 
 # tmp directory that holds .md files used by opencode
 .tmp/
+
+**/.pi-lens
