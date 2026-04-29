@@ -1,8 +1,12 @@
 vim.pack.add({
 	{ src = "https://github.com/nvim-treesitter/nvim-treesitter" },
 })
+
 require("nvim-treesitter").install({
+	"css",
+	"html",
 	"bash",
+	"go",
 	"javascript",
 	"json",
 	"lua",
@@ -13,6 +17,5 @@ require("nvim-treesitter").install({
 	"typescript",
 	"vim",
 	"vimdoc",
-	"go",
 })
 require("nvim-treesitter").update()

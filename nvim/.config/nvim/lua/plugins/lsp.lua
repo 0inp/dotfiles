@@ -8,7 +8,7 @@ vim.pack.add({
 }, { confirm = false })
 
 require("mason").setup()
-vim.keymap.set("n", "<leader>m", vim.cmd.Mason, { desc = "Mason" })
+vim.keymap.set("n", "<leader>M", vim.cmd.Mason, { desc = "Mason" })
 require("mason-lspconfig").setup()
 
 local lsp_servers = {
@@ -19,6 +19,7 @@ local lsp_servers = {
 				globals = { "vim" },
 			},
 			workspace = { library = vim.api.nvim_get_runtime_file("lua", true) },
+			telemetry = { enable = false },
 		},
 	},
 	stylua = {},
@@ -51,6 +52,8 @@ local lsp_servers = {
 	biome = {},
 	-- CSS
 	tailwindcss = {},
+	-- HTML
+	prettier = {},
 	-- Markdown
 	marksman = {},
 	markdownlint = {},

@@ -1,7 +1,10 @@
 vim.opt.background = "dark"
 vim.opt.backup = false
+vim.opt.writebackup = false -- do not write to a backup file
 vim.opt.swapfile = false
 vim.opt.winborder = "rounded"
+vim.opt.autoread = true -- auto-reload changes if outside of neovim
+vim.opt.autowrite = false -- do not auto-save
 
 -- enable true color support
 vim.opt.termguicolors = true
@@ -10,6 +13,7 @@ vim.opt.termguicolors = true
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.scrolloff = 8
+vim.opt.sidescrolloff = 8
 
 -- enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = "a"
@@ -61,17 +65,38 @@ vim.opt.cursorline = true
 -- set highlight on search, but clear on pressing <Esc> in normal mode
 vim.opt.hlsearch = true
 -- show pattern while typing search
-vim.o.incsearch = true
+vim.opt.incsearch = true
 
 -- enable line wrapping
 vim.opt.wrap = false
 
+-- completion options
+vim.opt.completeopt = "menuone,noinsert,noselect"
+vim.opt.pumheight = 10 -- popup menu height
+vim.opt.pumblend = 10 -- popup menu transparency
+vim.opt.winblend = 0 -- floating window transparency
+vim.opt.conceallevel = 0 -- do not hide markup
+vim.opt.concealcursor = "" -- do not hide cursorline in markup
+vim.opt.synmaxcol = 300 -- syntax highlighting limit
+vim.opt.fillchars = { eob = " " } -- hide "~" on empty lines
+
+vim.opt.hidden = true -- allow hidden buffers
+vim.opt.errorbells = false -- no error sounds
+vim.opt.backspace = "indent,eol,start" -- better backspace behaviour
+vim.opt.autochdir = false -- do not autochange directories
+vim.opt.iskeyword:append("-") -- include - in words
+vim.opt.selection = "inclusive" -- include last char in selection
+vim.opt.modifiable = true -- allow buffer modifications
+vim.opt.encoding = "utf-8" -- set encoding
+
 -- formatting
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
+vim.opt.softtabstop = 2
 vim.opt.expandtab = true
 vim.opt.textwidth = 80
 vim.opt.smartindent = true
+vim.opt.autoindent = true
 
 vim.diagnostic.config({
 	signs = {
@@ -93,3 +118,17 @@ vim.opt.formatoptions:remove({ "r", "o" })
 vim.g.python3_host_prog = os.getenv("HOME") .. "/.virtualenvs/neovim/bin/python3"
 vim.opt.path:append({ "**" })
 vim.opt.wildignore:append({ "*/node_modules/*" })
+
+vim.opt.guicursor =
+	"n-v-c:block,i-ci-ve:block,r-cr:hor20,o:hor50,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor,sm:block-blinkwait175-blinkoff150-blinkon175" -- cursor blinking and settings
+
+-- Folding: requires treesitter available at runtime; safe fallback if not
+vim.opt.foldmethod = "expr" -- use expression for folding
+vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()" -- use treesitter for folding
+vim.opt.foldlevel = 99 -- start with all folds open
+
+vim.opt.wildmenu = true -- tab completion
+vim.opt.wildmode = "longest:full,full" -- complete longest common match, full completion list, cycle through with Tab
+vim.opt.diffopt:append("linematch:60") -- improve diff display
+vim.opt.redrawtime = 10000 -- increase neovim redraw tolerance
+vim.opt.maxmempattern = 20000 -- increase max memory
