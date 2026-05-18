@@ -1,26 +1,8 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "autoupdate": false,
-  "model": "mistral/devstral-medium-latest",
+  "model": "mistral/mistral-large-latest",
   "enabled_providers": [
     "mistral"
   ],
-  "default_agent": "OpenAgent",
-  "mcp": {
-    "Context7": {
-      "type": "local",
-      "command": [
-        "npx",
-        "-y",
-        "@upstash/context7-mcp"
-      ]
-    },
-    "Github": {
-      "type": "remote",
-      "url": "https://api.githubcopilot.com/mcp/",
-      "headers": {
-        "Authorization": "Bearer {env:GITHUB_PAT}"
-      }
-    }
-  }
 }
