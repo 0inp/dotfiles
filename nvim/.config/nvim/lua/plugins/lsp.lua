@@ -36,14 +36,15 @@ local lsp_servers = {
 		},
 	},
 	pyright = {
-		settings = {
-			python = {
-				analysis = {
-					autoSearchPaths = true,
-					diagnosticMode = "openFilesOnly",
-					useLibraryCodeForTypes = true,
-					typeCheckingMode = "basic", -- or "strict"
-				},
+		python = {
+			pythonPath = vim.fn.getcwd() .. "/.venv/bin/python", -- Path to your venv's Python
+			analysis = {
+				autoSearchPaths = true,
+				diagnosticMode = "workspace",
+				useLibraryCodeForTypes = true,
+				typeCheckingMode = "basic", -- or "strict"
+				reportMissingImports = true,
+				-- optional extraPaths = { vim.fn.getcwd() .. "/.venv/lib/python3.14/site-packages" },
 			},
 		},
 	},
@@ -131,7 +132,24 @@ vim.api.nvim_create_user_command("LspInfo", function()
 end, { desc = "Show LSP client information" })
 
 -- Configure all LSP servers
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities.textDocument.completion.completionItem = {
+	snippetSupport = true,
+	preselectSupport = true,
+	insertReplaceSupport = true,
+	labelDetailsSupport = true,
+	deprecatedSupport = true,
+	commitCharactersSupport = true,
+	tagSupport = { valueSet = { 1 } },
+	resolveSupport = {
+		properties = {
+			"documentation",
+			"detail",
+			"additionalTextEdits",
+		},
+	},
+}
 for server, config in pairs(lsp_servers) do
-	vim.lsp.config(server, { settings = config, on_attach = on_attach_keymaps })
+	vim.lsp.config(server, { settings = config, on_attach = on_attach_keymaps, capabilities = capabilities })
 end
 --:
