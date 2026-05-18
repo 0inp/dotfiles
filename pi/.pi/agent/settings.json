@@ -1,15 +1,23 @@
 {
-  "quietStartup": true,
-  "skills": [
-    "./skills"
-  ],
-  "enableSkillCommands": true,
-  "lastChangelogVersion": "0.72.1",
-  "packages": [
-    "git:github.com/apmantza/pi-lens",
-    "npm:@leing2021/super-pi"
-  ],
+  "lastChangelogVersion": "0.74.1",
   "defaultProvider": "mistral",
-  "defaultModel": "mistral-medium-latest",
-  "defaultThinkingLevel": "medium"
+  "defaultModel": "devstral-medium-latest",
+  "defaultThinkingLevel": "medium",
+  "quietStartup": true,
+  "collapseChangelog": true,
+  "packages": [
+    "git:github.com/HazAT/pi-smart-sessions",
+    "git:github.com/pasky/chrome-cdp-skill",
+    "-git:github.com/HazAT/glimpse",
+    "git:github.com/HazAT/pi-interactive-subagents",
+    "-git:github.com/HazAT/pi-autoresearch",
+    "git:github.com/HazAT/pi-parallel",
+    "git:github.com/nicobailon/pi-mcp-adapter",
+    "git:github.com/HazAT/pi-autoresearch",
+    "npm:pi-playwright"
+  ],
+  "hideThinkingBlock": false,
+  "extensions": [
+    "+extensions/cmux/index.ts"
+  ]
 }
