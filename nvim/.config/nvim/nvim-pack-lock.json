@@ -14,11 +14,11 @@
       "src": "https://github.com/catppuccin/nvim"
     },
     "conform.nvim": {
-      "rev": "dca1a190aa85f9065979ef35802fb77131911106",
+      "rev": "18aeab3d63d350dcf44d64c462cc489a3412af40",
       "src": "https://github.com/stevearc/conform.nvim"
     },
     "gitsigns.nvim": {
-      "rev": "6d808f99bd63303646794406e270bd553ad7792e",
+      "rev": "dd3f588bacbeb041be6facf1742e42097f62165d",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
     "gruvbox": {
@@ -26,7 +26,7 @@
       "src": "https://github.com/ellisonleao/gruvbox.nvim"
     },
     "kanagawa": {
-      "rev": "8ad3b4cdcc804b332c32db8f9743667e1bb82b99",
+      "rev": "bb85e4bfc8d89b0e62c8fa53ccdd13d12e2f77b3",
       "src": "https://github.com/rebelot/kanagawa.nvim"
     },
     "lualine.nvim": {
@@ -34,11 +34,11 @@
       "src": "https://github.com/nvim-lualine/lualine.nvim"
     },
     "markdown-plus.nvim": {
-      "rev": "110f449e51b048b09f24aaf2cfb5b1dda2e01faa",
+      "rev": "ffd156b1ffab8547390bf6ca641ae42cf5f286d8",
       "src": "https://github.com/yousefhadder/markdown-plus.nvim"
     },
     "mason-lspconfig.nvim": {
-      "rev": "0c2823e0418f3d9230ff8b201c976e84de1cb401",
+      "rev": "7b01e2974a47d489bb92f47a41e4c0088ea8f86e",
       "src": "https://github.com/mason-org/mason-lspconfig.nvim"
     },
     "mason-tool-installer.nvim": {
@@ -46,15 +46,15 @@
       "src": "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim"
     },
     "mason.nvim": {
-      "rev": "cb8445f8ce85d957416c106b780efd51c6298f89",
+      "rev": "cbf8d285e1462dd24acf3507817be2bbcb035919",
       "src": "https://github.com/mason-org/mason.nvim"
     },
     "mini.nvim": {
-      "rev": "be81509b7160aa02264a59789164a2e1c4a6750a",
+      "rev": "6a8aab4b07c6caa1d0643c1c9dccd5b2d5f5e094",
       "src": "https://www.github.com/echasnovski/mini.nvim"
     },
     "monokai": {
-      "rev": "28962e5301f9de9a465abd405c5b9065dba74fc5",
+      "rev": "a68e38b8e55d69a215d0f02598900a79c356da9d",
       "src": "https://github.com/loctvl842/monokai-pro.nvim"
     },
     "nvim-bufferline.lua": {
@@ -66,7 +66,7 @@
       "src": "https://github.com/norcalli/nvim-colorizer.lua"
     },
     "nvim-lspconfig": {
-      "rev": "0e25d7445ba0d7cc0ad02a39aa843cc8b9d2525e",
+      "rev": "3de240997fc3208eb29df5e5c17ba4665961bd84",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-tmux-navigation": {
@@ -74,7 +74,7 @@
       "src": "https://github.com/alexghergh/nvim-tmux-navigation"
     },
     "nvim-tree.lua": {
-      "rev": "24cfcc94372e526fd9e1c2803ede9e0f1715e33f",
+      "rev": "07f541fcaa4a5ae019598240362449ab7e9812b3",
       "src": "https://github.com/nvim-tree/nvim-tree.lua"
     },
     "nvim-treesitter": {
@@ -82,7 +82,7 @@
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "nvim-web-devicons": {
-      "rev": "4fc505ac7bd7692824a142e96e5f529c133862f8",
+      "rev": "7d8dad2c837fcdf2e65997e68657c1a21c568074",
       "src": "https://github.com/nvim-tree/nvim-web-devicons"
     },
     "plenary.nvim": {
@@ -90,15 +90,15 @@
       "src": "https://github.com/nvim-lua/plenary.nvim"
     },
     "rose-pine": {
-      "rev": "9504524e5ed0e326534698f637f9d038ba4cd0ee",
+      "rev": "ff483051a47e27d84bdef47703538df1ed9f4a47",
       "src": "https://github.com/rose-pine/neovim"
     },
     "solarized-osaka": {
-      "rev": "a261ee90fb3e5e82660567e4874d384e996afa4f",
+      "rev": "f675d9a5c58f3b0d6158d665a623f81a62e7bdaf",
       "src": "https://github.com/craftzdog/solarized-osaka.nvim"
     },
     "telescope.nvim": {
-      "rev": "506338434fec5ad19cb1f8d45bf92d66c4917393",
+      "rev": "7d324792b7943e4aa16ad007212e6acc6f9fe335",
       "src": "https://github.com/nvim-telescope/telescope.nvim"
     },
     "tiny-inline-diagnostic.nvim": {
@@ -114,7 +114,7 @@
       "src": "https://github.com/folke/tokyonight.nvim"
     },
     "venv-selector.nvim": {
-      "rev": "bcb2f58533c59b01565285eba49693f00bc460f5",
+      "rev": "a46c77978abc1aa1b3e17918d964bd30287abb42",
       "src": "https://github.com/linux-cultist/venv-selector.nvim"
     },
     "which-key.nvim": {
