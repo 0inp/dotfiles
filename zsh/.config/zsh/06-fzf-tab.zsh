@@ -19,3 +19,4 @@ zstyle ':fzf-tab:complete:*:*' fzf-preview '
 zstyle ':fzf-tab:*' disabled-on false
 bindkey '^I' fzf-tab-complete
 
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
