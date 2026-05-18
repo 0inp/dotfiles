@@ -9,6 +9,10 @@ alias .....="cd ../../../.."
 alias -- -="cd -"
 
 alias mkdir='mkdir -p'
+alias cp='cp -i'
+alias mv='mv -i'
+
+alias ping='ping -c 5'
 
 # Brew
 alias bu="brew update; brew upgrade; brew cleanup; brew autoremove"
