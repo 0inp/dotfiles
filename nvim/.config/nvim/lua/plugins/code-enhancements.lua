@@ -2,7 +2,14 @@
 vim.pack.add({
 	{ src = "https://github.com/rachartier/tiny-inline-diagnostic.nvim" },
 })
-require("tiny-inline-diagnostic").setup()
+require("tiny-inline-diagnostic").setup({
+	options = {
+		show_source = {
+			enabled = true,
+		},
+	},
+})
+
 --- @param diagnostic? vim.Diagnostic
 --- @param bufnr integer
 local function on_jump(diagnostic, bufnr)
