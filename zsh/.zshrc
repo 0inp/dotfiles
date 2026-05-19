@@ -1,70 +1,84 @@
-# zmodload zsh/zprof
+# =========================================================
+# History
+# =========================================================
 
-ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
-[ ! -d $ZINIT_HOME ] && mkdir -p "$(dirname $ZINIT_HOME)"
-[ ! -d $ZINIT_HOME/.git ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
-source "${ZINIT_HOME}/zinit.zsh"
+HISTFILE="$XDG_STATE_HOME/zsh/history"
+HISTSIZE=100000
+SAVEHIST=100000
 
-autoload -Uz _zinit
-(( ${+_comps} )) && _comps[zinit]=_zinit
+setopt APPEND_HISTORY
+setopt SHARE_HISTORY
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_SPACE
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_FIND_NO_DUPS
 
-# Load plugins LAZILY (after prompt appears)
-zinit wait lucid for \
-  zdharma-continuum/fast-syntax-highlighting \
-  zsh-users/zsh-autosuggestions \
-  wfxr/forgit
+# =========================================================
+# Shell behaviour
+# =========================================================
 
-# Load pure prompt IMMEDIATELY (not lazy)
-zinit ice compile'(pure|async).zsh' pick'async.zsh' src'pure.zsh'
-zinit light sindresorhus/pure
+setopt AUTOCD
+setopt NOBEEP
+setopt NUMERIC_GLOB_SORT  # sort file10 after file9, not after file1
 
-# Load zsh-completions (before compinit, lazy)
-zinit ice as"completion" wait lucid
-zinit light zsh-users/zsh-completions
+# =========================================================
+# Smart directory navigation
+# =========================================================
 
-# Load zsh-colored-man-pages (lazy)
-zinit ice as'program' atload'zicompinit' wait lucid
-zinit light ael-code/zsh-colored-man-pages
+# Initialize zoxide
+eval "$(zoxide init zsh)"
 
-# Load zoxide (lazy)
-zinit ice as"command" atload"eval $(zoxide init zsh)" wait lucid
-zinit light ajeetdsouza/zoxide
+# =========================================================
+# Completion
+# =========================================================
 
-# Load fzf (lazy)
-zinit ice as"command" atload'source <(fzf --zsh)' wait lucid
-zinit light junegunn/fzf
-
-# Load your modular configs (except 06-fzf-tab.zsh)
-for config_file (${HOME}/.config/zsh/*.zsh); do
-  [[ -f ${config_file} ]] && [[ ${config_file} != "${HOME}/.config/zsh/06-fzf-tab.zsh" ]] && source ${config_file}
-done
-
-# Initialize completion system (cached)
+# Load completion system
 autoload -Uz compinit
-if [[ -n ${ZDOTDIR}/.zcompdump(#qN.mh+24) ]]; then
-  compinit -C
-else
-  compinit
-fi
 
-zinit wait lucid for \
-  atload'eval "$(command wt config shell init zsh)"' max-sixty/worktrunk
+# Initialize completion with cached metadata file
+compinit -d "$XDG_CACHE_HOME/zsh/zcompdump"
 
-# Lazy-load mise on first use
+# Enable interactive completion menu selection
+zstyle ':completion:*' menu select
+
+# Make completion case-insensitive
+# Example: "doc" can complete to "Documents"
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'  # lowercase input matches upper and lower
+
+# =========================================================
+# Fuzzy finder
+# =========================================================
+
+# MacOS (Intel)
+source /usr/local/opt/fzf/shell/key-bindings.zsh
+source /usr/local/opt/fzf/shell/completion.zsh
+
+# =========================================================
+# Worktrunk completion
+# =========================================================
+if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
+
+# =========================================================
+# Mise-en-place config
+# =========================================================
 mise() {
   if ! declare -f _mise_loaded > /dev/null; then
-    # Load mise only once
     eval "$(command mise activate zsh)" 2>/dev/null
     _mise_loaded() { :; }  # Dummy function to mark mise as loaded
   fi
   command mise "$@"
 }
 
-# Load bun completions (directly, no zinit)
+# =========================================================
+# Bun completions
+# =========================================================
 source "$(brew --prefix bun)/share/zsh/site-functions/_bun"
 
-# Load fzf-tab after compinit
-source "${HOME}/.config/zsh/06-fzf-tab.zsh"
+# =========================================================
+# Modular Config Files
+# =========================================================
 
-zinit cdreplay -q
-# zprof
+for config_file (${HOME}/.config/zsh/*.zsh); do
+  [[ -f ${config_file} ]] && source ${config_file}
+done
+

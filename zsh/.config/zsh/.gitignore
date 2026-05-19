@@ -1,0 +1,9 @@
+zcompdump
+plugins/
+.zcompdump
+.zsh_sessions
+.zsh_history
+.zcompcache
+.zcompdump-P1-5.9
+.zcompdump-P1-5.9.zwc
+secrets.zsh

@@ -1,0 +1,50 @@
+# ---------- XDG base directories ----------
+# Centralizes config/cache/data locations
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_STATE_HOME="$HOME/.local/state"
+
+# ---------- Editor ----------
+# Default editor used by git, crontab, etc.
+export EDITOR="nvim"
+export VISUAL="nvim"
+
+# ---------- GPG ----------
+export GPG_TTY=$(tty)
+
+# ---------- PATH ----------
+# Personal binaires/scripts
+export PATH="$HOME/.local/bin:$PATH"
+
+# ---------- DOTFILES ----------
+export DOTFILES="$HOME/dotfiles"
+
+# ---------- OTHER SOFTWARES ----------
+# bitwarden
+# ssh-agent
+export SSH_AUTH_SOCK=/Users/oinp/.bitwarden-ssh-agent.sock
+# session
+export BW_SESSION="pLXQmQEHjjEZrEIU5b+1nhS0CJmKUZ+xrNHgNzKxmH+uKnchV9lEItEz8e/ubJCaUEp7eANvw9sqMKDRaZNePw=="
+
+# Python startup file
+export PYTHONSTARTUP=$HOME/.pythonrc
+
+# Docker
+export DOCKER_SCAN_SUGGEST=false
+
+# Lazygit config
+export LG_CONFIG_FILE="${XDG_CONFIG_HOME}/lazygit.yaml"
+
+# Brew
+export PATH="/usr/local/sbin:$PATH"
+
+# Golang
+export PATH=$HOME/go/bin:/usr/local/go/bin:$PATH
+
+# PostgreSQL
+export PATH="/usr/local/opt/postgresql@17/bin:$PATH"
+export LDFLAGS="-L/usr/local/opt/postgresql@17/lib"
+export CPPFLAGS="-I/usr/local/opt/postgresql@17/include"
+
+#
