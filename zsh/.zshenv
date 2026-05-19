@@ -20,6 +20,9 @@ export PATH="$HOME/.local/bin:$PATH"
 # ---------- DOTFILES ----------
 export DOTFILES="$HOME/dotfiles"
 
+# ---------- LS_COLORS with vivid ----------
+export LS_COLORS="$(vivid generate molokai)"
+
 # ---------- OTHER SOFTWARES ----------
 # bitwarden
 # ssh-agent
@@ -46,5 +49,3 @@ export PATH=$HOME/go/bin:/usr/local/go/bin:$PATH
 export PATH="/usr/local/opt/postgresql@17/bin:$PATH"
 export LDFLAGS="-L/usr/local/opt/postgresql@17/lib"
 export CPPFLAGS="-I/usr/local/opt/postgresql@17/include"
-
-#

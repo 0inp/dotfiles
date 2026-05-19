@@ -2,35 +2,36 @@
 # fzf
 # =========================================================
 
-export FZF_DEFAULT_COMMAND='fd --type f --hidden --strip-cwd-prefix'  # strip-cwd-prefix removes the leading ./ from results
-
-# Ctrl-T uses fd
+# Use fd for fzf file selection
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --strip-cwd-prefix --exclude .git'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
-# UI
+# Basic fzf settings (colors only, no previews)
 export FZF_DEFAULT_OPTS='
-  --height=60%
+  --height=40%
   --layout=reverse
   --border=rounded
-  --prompt="  "
-  --pointer="  "
-  --preview-window=right:65%:wrap:border-left
 '
 
-export _FZF_PREVIEW_CMD='bat --color=always --style=plain,numbers --line-range=:500 {}'
-export FZF_CTRL_T_OPTS="--preview '$_FZF_PREVIEW_CMD'"
-
-# Ctrl+F: file picker excluding hidden files
-_fzf_file_no_hidden() {
-  local cmd result
-  cmd="${FZF_DEFAULT_COMMAND/--hidden /}"
-  result=$(eval "${cmd:-find . -type f}" | fzf --preview "$_FZF_PREVIEW_CMD") \
-    && LBUFFER+="$result"  # LBUFFER is the text left of the cursor
-  zle reset-prompt
-}
-zle -N _fzf_file_no_hidden
-
-# Enable dotfiles/dotdirs in completion
 setopt globdots
+
+# =========================================================
+# fzf-tab
+# =========================================================
+
+# Enable fzf-tab with minimal settings
+zstyle ':fzf-tab:*' fzf-flags '--ansi'
+
+# Basic completion colors
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+
+# Case-insensitive matching
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+
+# Minimal completion setup
+zstyle ':completion:*' menu no
 zstyle ':completion:*' hidden yes
-zstyle ':completion:*' matcher-list 'm:{[:lower:][:upper:]-}={[:upper:][:lower:]} r:|[._-]=* r:|=*'
+
+# Simple descriptions for options
+zstyle ':completion:*:options' verbose yes
+zstyle ':completion:*:options:*' description yes
