@@ -60,6 +60,17 @@ scripts/update.sh
 - **Skills**: Located in `.opencode/skills/`
 - **Commands**: Located in `.opencode/command/`
 
+## Agent skills
+
+### Issue tracker
+Issues are tracked in GitHub. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+Default triage labels are used. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+Multi-context layout (CONTEXT-MAP.md). See `docs/agents/domain.md`.
+
 ## Installation
 
 The main installation script for the dotfiles repository is located at `scripts/install.sh`
