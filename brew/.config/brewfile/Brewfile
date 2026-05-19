@@ -1,6 +1,5 @@
 tap "amar1729/formulae"
 tap "homebrew/bundle"
-tap "jesseduffield/lazygit"
 tap "anomalyco/tap"
 tap "dbcli/tap"
 brew "anomalyco/tap/opencode"
