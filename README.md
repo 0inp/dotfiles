@@ -18,27 +18,26 @@ brew bundle
 stow */
 ```
 
-## Update
+## Quick Start
+1. Run `scripts/install.sh` to set up dotfiles.
+2. Update with `scripts/update.sh`.
 
+## Update
 ```bash
 cd ~/dotfiles
 ./scripts/update.sh
 ```
 
-## Structure
-
-- `aerospace/` - Window management
-- `brew/` - Homebrew packages
-- `git/` - Git configuration
-- `gnupg/` - GPG setup
-- `htop/` - System monitor
-- `mise/` - Runtime manager
-- `nvim/` - Neovim editor
-- `pgcli/` - PostgreSQL CLI
-- `python/` - Python setup
-- `tmux/` - Terminal multiplexer
-- `zsh/` - Zsh shell
-- `worktrunk/` - Workspace manager
+## Directory Structure
+- `scripts/`: Installation and update scripts.
+- `opencode/`: OpenCode TUI agent configurations.
+- `pi/`: Pi agent configurations.
+- `brew/`: Homebrew configurations.
+- `git/`: Git configurations.
+- `zsh/`: Zsh shell configurations.
+- `nvim/`: Neovim editor configurations.
+- `tmux/`: Terminal multiplexer configurations.
+- `docs/agents/`: Agent skills and domain documentation.
 
 ## Misc
 

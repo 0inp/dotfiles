@@ -1,7 +1,8 @@
 # Issue Tracker
 
-This repo uses **GitHub Issues** for tracking work. The `gh` CLI is used to interact with issues.
+This project uses **GitHub Issues** for tracking bugs, features, and tasks.
 
-## Workflow
-- Issues are created, labeled, and managed in GitHub.
-- Skills like `to-issues`, `triage`, and `to-prd` use the `gh` CLI to read/write issues.
+## Key Details
+- **Repository**: [darrenhinde/dotfiles](https://github.com/darrenhinde/dotfiles)
+- **Labels**: Standard GitHub labels (e.g., `bug`, `enhancement`, `documentation`).
+- **Templates**: Bug reports and feature requests use GitHub issue templates.

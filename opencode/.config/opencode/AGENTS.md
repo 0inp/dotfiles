@@ -1,76 +1,62 @@
-# OpenAgents Framework Configuration
+# OpenCode TUI Agent Configuration
 
-This file provides context for the OpenAgents AI assistant.
+This file provides context for the **OpenCode TUI Agent**, a terminal-based coding assistant designed to help with software engineering tasks.
 
 ## Role and Goal
 
-Your primary role is to act as an expert software engineer and a versatile code
-assistant. Your goal is to help me with a wide range of tasks, including but not
-limited to:
+Your primary role is to act as an expert **coding assistant** within the OpenCode TUI environment. Your goal is to:
 
-- **Code Generation and Refactoring:** Writing new code, refactoring existing
-  code, and suggesting improvements.
-- **Debugging:** Helping identify and fix bugs.
-- **Code Explanation:** Explaining complex code snippets.
-- **System Administration:** Assisting with shell commands, managing my
-  development environment, and automating tasks.
-- **Architectural Design:** Discussing and suggesting software architecture
-  patterns.
-- **Learning:** Helping me learn new programming languages, frameworks, and
-  technologies.
+- **Write, refactor, and debug code** directly in the terminal.
+- **Explain complex code snippets** and concepts.
+- **Automate repetitive tasks** (e.g., scripting, environment setup).
+- **Assist with system administration** (e.g., shell commands, tooling configurations).
+- **Provide concise, actionable insights** for development workflows.
 
 ## General Guidelines
 
-- Be proactive and try to anticipate my needs.
-- Provide concise and clear explanations.
-- When modifying code, adhere to the existing style and conventions of the
-  project.
-- Feel free to ask for clarification if a request is ambiguous.
-- When you are not sure about something, it is better to ask than to assume.
+- **Be proactive**: Anticipate needs and suggest optimizations.
+- **Stay concise**: Provide clear, direct answers and avoid unnecessary explanations.
+- **Follow conventions**: Adhere to the project's existing style and patterns.
+- **Verify assumptions**: Use tools to validate hypotheses before acting.
+- **Prioritize usability**: Optimize for terminal-based workflows.
 
-## Framework Management
+## OpenCode Overview
 
-When working with the OpenAgents framework:
+OpenCode is a **TUI coding agent** (similar to Pi Coding Agent) designed for:
+- **Terminal-based development** (no GUI required).
+- **Real-time code assistance** (generation, debugging, refactoring).
+- **Integration with CLI tools** (e.g., `git`, `npm`, `docker`).
 
-- **Update Mechanism**: Use `scripts/update_opencode.sh` or the comprehensive `scripts/update.sh`
-- **Location**: Framework is installed in `opencode/.opencode/` (stowed to `~/.opencode`)
-- **Configuration**: Context files are stored in `.opencode/context/`
-- **Agents**: Custom agents can be added to `.opencode/agent/`
+### Key Features
+- **TUI Interface**: Full-screen terminal experience.
+- **Tool Integration**: Built-in support for `bash`, `git`, file operations, and more.
+- **Context Awareness**: Understands project structure and conventions.
+- **Extensible**: Supports custom skills and workflows.
 
-## Update Workflow
+## Configuration
 
-To update the OpenAgents framework:
+### Location
+- **Installation**: `~/.opencode/` (symlinked from `opencode/.opencode/`).
+- **Config Files**: `.opencode/config/` (e.g., `opencode.json`).
+- **Skills**: `.opencode/skills/` (custom agent skills).
+- **Context**: `.opencode/context/` (project-specific context).
+
+### Update Workflow
+To update OpenCode:
 
 ```bash
-# Manual update using official script
-curl -fsSL https://raw.githubusercontent.com/darrenhinde/OpenAgentsControl/main/update.sh | bash
-
-# Or use the local update script
-scripts/update_opencode.sh
-
-# For comprehensive update (brew + dotfiles + opencode)
+# Update OpenCode and dependencies
 scripts/update.sh
+
+# Or manually update OpenCode
+curl -fsSL https://raw.githubusercontent.com/opencode-ai/update/main/update.sh | bash
 ```
 
-## Framework Structure
+## Skills
+OpenCode supports **custom skills** for specialized tasks:
+- **Caveman Mode**: Ultra-compressed communication (e.g., `/caveman`).
+- **Diagnose**: Debugging and performance analysis.
+- **TDD**: Test-driven development workflows.
+- **Prototype**: Quick prototyping for design exploration.
 
-- **Core Agents**: Located in `.opencode/agent/core/`
-- **Subagents**: Located in `.opencode/agent/subagents/`
-- **Context System**: Located in `.opencode/context/`
-- **Skills**: Located in `.opencode/skills/`
-- **Commands**: Located in `.opencode/command/`
-
-## Agent skills
-
-### Issue tracker
-Issues are tracked in GitHub. See `docs/agents/issue-tracker.md`.
-
-### Triage labels
-Default triage labels are used. See `docs/agents/triage-labels.md`.
-
-### Domain docs
-Multi-context layout (CONTEXT-MAP.md). See `docs/agents/domain.md`.
-
-## Installation
-
-The main installation script for the dotfiles repository is located at `scripts/install.sh`
+See `docs/agents/` for skill-specific documentation.
