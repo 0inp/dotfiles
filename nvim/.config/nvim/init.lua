@@ -1,4 +1,4 @@
-require('keymaps')
-require('autocmds')
-require('options')
-require('plugins')
+require("vim._core.ui2").enable({})
+
+require("config")
+require("plugins")

@@ -26,9 +26,7 @@ export LS_COLORS="$(vivid generate molokai)"
 # ---------- OTHER SOFTWARES ----------
 # bitwarden
 # ssh-agent
-export SSH_AUTH_SOCK=/Users/oinp/.bitwarden-ssh-agent.sock
-# session
-export BW_SESSION="pLXQmQEHjjEZrEIU5b+1nhS0CJmKUZ+xrNHgNzKxmH+uKnchV9lEItEz8e/ubJCaUEp7eANvw9sqMKDRaZNePw=="
+export SSH_AUTH_SOCK=$HOME/.bitwarden-ssh-agent.sock
 
 # Python startup file
 export PYTHONSTARTUP=$HOME/.pythonrc

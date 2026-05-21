@@ -32,7 +32,6 @@ alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
 # =========================================================
 # Navigation
 # =========================================================
-
 alias cd='z'
 alias ..="cd .."
 alias ...="cd ../.."
@@ -43,22 +42,18 @@ alias -- -="cd -"
 # =========================================================
 # Editor
 # =========================================================
-
 alias vim='nvim'
 alias vi='nvim'
-
 
 # =========================================================
 # FZF
 # =========================================================
-
 alias al='alias | fzf'
 alias printenv='printenv | fzf'
 
 # =========================================================
 # Git
 # =========================================================
-
 alias g='git'
 alias gg="lazygit"
 alias ghd='gh dash'
@@ -66,8 +61,12 @@ alias glog='PAGER="less -F -X" git log'                              # -F quit i
 alias gadog='PAGER="less -F -X" git log --all --decorate --oneline --graph'
 alias wsa='wt switch --create --execute=opencode'
 
-
 # =========================================================
 # Docker
 # =========================================================
 alias lzd=lazydocker
+
+# =========================================================
+# Update dotfiles
+# =========================================================
+alias dotup='cd ${HOME}/dotfiles && ./scripts/update.sh && cd -'

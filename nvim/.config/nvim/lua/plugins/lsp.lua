@@ -1,14 +1,11 @@
--- lsp servers we want to use and their configuration
--- see `:h lspconfig-all` for available servers and their settings
 vim.pack.add({
-	"https://github.com/neovim/nvim-lspconfig", -- default configs for lsps
-	"https://github.com/mason-org/mason.nvim", -- package manager
+	"https://github.com/neovim/nvim-lspconfig",
+	"https://github.com/mason-org/mason.nvim",
 	"https://github.com/mason-org/mason-lspconfig.nvim", -- lspconfig bridge
 	"https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim", -- auto installer
-}, { confirm = false })
+})
 
 require("mason").setup()
-vim.keymap.set("n", "<leader>M", vim.cmd.Mason, { desc = "Mason" })
 require("mason-lspconfig").setup()
 
 local lsp_servers = {
@@ -37,14 +34,13 @@ local lsp_servers = {
 	},
 	pyright = {
 		python = {
-			pythonPath = vim.fn.getcwd() .. "/.venv/bin/python", -- Path to your venv's Python
+			pythonPath = vim.fn.getcwd() .. "/.venv/bin/python",
 			analysis = {
 				autoSearchPaths = true,
 				diagnosticMode = "workspace",
 				useLibraryCodeForTypes = true,
 				typeCheckingMode = "basic", -- or "strict"
 				reportMissingImports = true,
-				-- optional extraPaths = { vim.fn.getcwd() .. "/.venv/lib/python3.14/site-packages" },
 			},
 		},
 	},
@@ -98,58 +94,20 @@ local lsp_servers = {
 require("mason-tool-installer").setup({
 	ensure_installed = vim.tbl_keys(lsp_servers),
 })
+vim.keymap.set("n", "<leader>M", vim.cmd.Mason, { desc = "Mason" })
 
--- configure each lsp server on the table
--- to check what clients are attached to the current buffer, use
--- `:checkhealth vim.lsp`. to view default lsp keybindings, use `:h lsp-defaults`.
-local on_attach_keymaps = function(_, bufnr)
-	vim.keymap.set("n", "<leader>co", function()
-		vim.lsp.buf.code_action({ context = { only = { "source.organizeImports" }, diagnostics = {} }, apply = true })
-	end, { noremap = true, silent = true, desc = "[C]ode [O]rganize Imports", buffer = bufnr })
-	vim.keymap.set("n", "<leader>ca", function()
-		vim.lsp.buf.code_action({
-			filter = function(action)
-				return not action.disabled
-			end,
-		})
-	end, { noremap = true, silent = true, desc = "[C]ode [A]ctions" })
-	vim.keymap.set("n", "<leader>cr", vim.lsp.buf.rename, { noremap = true, silent = true, desc = "[C]ode [R]ename" })
-	vim.keymap.set("n", "<leader>cf", vim.lsp.buf.format, { noremap = true, silent = true, desc = "[C]ode [F]ormat" })
+vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
+vim.keymap.set("n", "<leader>f", vim.lsp.buf.format, { desc = "Format Local buffer" })
+vim.keymap.set("n", "K", vim.lsp.buf.hover, { noremap = true, silent = true, desc = "Documentation" })
 
-	vim.keymap.set("n", "gd", vim.lsp.buf.definition, { noremap = true, silent = true, desc = "[G]o to [D]efinition" })
-	vim.keymap.set("n", "K", vim.lsp.buf.hover, { noremap = true, silent = true, desc = "Documentation" })
-	vim.keymap.set("n", "[d", function()
-		vim.diagnostic.jump({ count = 1, float = true })
-	end, { noremap = true, silent = true, desc = "Go to Next Diagnostic" })
-	vim.keymap.set("n", "]d", function()
-		vim.diagnostic.jump({ count = -1, float = true })
-	end, { noremap = true, silent = true, desc = "Go to Previous Diagnostic" })
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = vim.tbl_deep_extend("force", capabilities, require("mini.completion").get_lsp_capabilities())
+
+for server, config in pairs(lsp_servers) do
+	vim.lsp.config(server, { settings = config, capabilities = capabilities })
 end
 
 -- Add custom LSP commands
 vim.api.nvim_create_user_command("LspInfo", function()
 	vim.cmd("checkhealth lsp")
 end, { desc = "Show LSP client information" })
-
--- Configure all LSP servers
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities.textDocument.completion.completionItem = {
-	snippetSupport = true,
-	preselectSupport = true,
-	insertReplaceSupport = true,
-	labelDetailsSupport = true,
-	deprecatedSupport = true,
-	commitCharactersSupport = true,
-	tagSupport = { valueSet = { 1 } },
-	resolveSupport = {
-		properties = {
-			"documentation",
-			"detail",
-			"additionalTextEdits",
-		},
-	},
-}
-for server, config in pairs(lsp_servers) do
-	vim.lsp.config(server, { settings = config, on_attach = on_attach_keymaps, capabilities = capabilities })
-end
---:
