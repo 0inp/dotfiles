@@ -32,6 +32,9 @@ eval "$(zoxide init zsh)"
 # Completion
 # =========================================================
 
+# Docker completions
+FPATH="$HOME/.docker/completions:$FPATH"
+
 # Load completion system
 autoload -Uz compinit
 

@@ -70,3 +70,9 @@ alias lzd=lazydocker
 # Update dotfiles
 # =========================================================
 alias dotup='cd ${HOME}/dotfiles && ./scripts/update.sh && cd -'
+
+# =========================================================
+# Arr Stack Management
+# =========================================================
+alias arron='docker compose -f ~/dev/arr-stack/docker-compose.yml up -d'
+alias arroff='docker compose -f ~/dev/arr-stack/docker-compose.yml down'
