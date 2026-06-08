@@ -12,6 +12,11 @@
 **/.syncthing**.tmp
 **/.DS_Store
 
+# Python
+**/.mypy_cache
+**/.ruff_cache
+**/.venv
+**/__pycache__
 **/*.pyc
 
 **/lazy-lock.json

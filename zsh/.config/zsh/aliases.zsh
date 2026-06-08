@@ -9,9 +9,9 @@ alias c='clear'
 # Reuse ls completions for eza (avoids defining a separate completion function)
 compdef eza=ls
 
-alias ls="eza --sort=name --group-directories-first --color=always --long --git --icons=always --ignore-glob='*.pyc|.git|node_modules|.venv|.ruff_cache'"
-alias la="eza -lah --sort=name --group-directories-first --color=always --long --git --icons=always --ignore-glob='*.pyc|.git|node_modules|.venv|.ruff_cache'"
-alias lt="eza -lah --tree --sort=name --group-directories-first --color=always --long --git --icons=always --ignore-glob='*.pyc|.git|node_modules|.venv|.ruff_cache'"
+alias ls="eza --sort=name --group-directories-first --color=always --long --git --icons=always --git-ignore"
+alias la="eza -lah --sort=name --group-directories-first --color=always --long --git --icons=always --git-ignore"
+alias lt="eza -lah --tree --sort=name --group-directories-first --color=always --long --git --icons=always --git-ignore"
 
 # cat -> bat
 alias cat='bat -pp'
