@@ -67,6 +67,11 @@ alias wsa='wt switch --create --execute=opencode'
 alias lzd=lazydocker
 
 # =========================================================
+# LazySql
+# =========================================================
+alias ss=lazysql
+
+# =========================================================
 # Update dotfiles
 # =========================================================
 alias dotup='cd ${HOME}/dotfiles && ./scripts/update.sh && cd -'
