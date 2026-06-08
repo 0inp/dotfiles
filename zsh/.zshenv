@@ -38,6 +38,8 @@ export DOCKER_SCAN_SUGGEST=false
 export LG_CONFIG_FILE="${XDG_CONFIG_HOME}/lazygit.yaml"
 
 # Brew
+export HOMEBREW_NO_ENV_HITNS=1
+export HOMEBREW_REQUIRE_TAP_TRUST=1
 export PATH="/usr/local/sbin:$PATH"
 
 # Golang
