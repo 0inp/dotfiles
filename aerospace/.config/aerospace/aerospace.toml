@@ -45,7 +45,7 @@ automatically-unhide-macos-hidden-apps = false
 # even when they are invisible.
 # This config version is only available since 'config-version = 2'
 # Fallback value (if you omit the key): persistent-workspaces = []
-persistent-workspaces = ["1", "2", "3", "4", "5", "B", "F", "M", "N", "T"]
+persistent-workspaces = ["1", "2", "3", "4", "5", "B", "C", "F", "M", "O", "T"]
 
 # A callback that runs every time binding mode changes
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
@@ -132,6 +132,7 @@ alt-3 = "workspace 3"
 alt-4 = "workspace 4"
 alt-5 = "workspace 5"
 alt-b = "workspace B"
+alt-c = "workspace C"
 alt-f = "workspace F"
 alt-m = "workspace M"
 alt-o = "workspace O"
@@ -144,6 +145,7 @@ alt-shift-3 = "move-node-to-workspace 3"
 alt-shift-4 = "move-node-to-workspace 4"
 alt-shift-5 = "move-node-to-workspace 5"
 alt-shift-b = "move-node-to-workspace B"
+alt-shift-c = "move-node-to-workspace C"
 alt-shift-f = "move-node-to-workspace F"
 alt-shift-m = "move-node-to-workspace M"
 alt-shift-o = "move-node-to-workspace O"
@@ -199,3 +201,19 @@ run = "move-node-to-workspace O"
 [[on-window-detected]]
 if.app-id = "ch.protonmail.desktop"
 run = "move-node-to-workspace M"
+
+[[on-window-detected]]
+if.app-id = "com.apple.mail"
+run = "move-node-to-workspace M"
+
+[[on-window-detected]]
+if.app-id = "net.whatsapp.WhatsApp"
+run = "move-node-to-workspace C"
+
+[[on-window-detected]]
+if.app-id = "com.hnc.Discord"
+run = "move-node-to-workspace C"
+
+[[on-window-detected]]
+if.app-id = "com.bitwarden.desktop"
+run = "move-node-to-workspace 1"
