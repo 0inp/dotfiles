@@ -6,7 +6,7 @@ vim.keymap.set("v", "p", '"_dp', { noremap = true, silent = true })
 
 vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]], { desc = "Delete without yanking" })
 
-vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc="Clear highlight search" })
+vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Clear highlight search" })
 
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", { desc = "Moves lines down in visual selection" })
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv", { desc = "Moves lines up in visual selection" })
@@ -22,7 +22,12 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Move up in buffer with cursor 
 vim.keymap.set("n", "n", "nzzzv", { desc = "Next search result cursor centered" })
 vim.keymap.set("n", "N", "Nzzzv", { desc = "Previous search result cursor centered" })
 
-vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = "Replace word cursor is on globally" })
+vim.keymap.set(
+	"n",
+	"<leader>s",
+	[[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
+	{ desc = "Replace word cursor is on globally" }
+)
 
 vim.keymap.set("n", "<leader>re", "<cmd>restart<cr>", { desc = "Restart config (:restart)" })
 vim.keymap.set("n", "<Leader>w", "<cmd>w!<CR>", { silent = true, desc = "Save" }) -- Save the current file
@@ -46,6 +51,6 @@ vim.keymap.set("n", "<down>", '<cmd>echo "Use j to move!!"<CR>')
 
 -- native undotree
 vim.keymap.set("n", "<leader>u", function()
-    vim.cmd.packadd("nvim.undotree")
-    require("undotree").open()
+	vim.cmd.packadd("nvim.undotree")
+	require("undotree").open()
 end, { desc = "Toggle Builtin Undotree" })
