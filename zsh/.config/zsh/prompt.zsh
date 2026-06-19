@@ -1,9 +1,9 @@
-# Pure prompt (sindresorhus/pure)
+# Pure prompt (sindresorhus/pure) — installed via brew
 # Only set prompt in interactive shells
 if [[ -o interactive ]]; then
-  fpath+=("$HOME/.config/zsh/plugins/pure")
-  # Source pure prompt - it auto-calls prompt_pure_setup
-  source "$HOME/.config/zsh/plugins/pure/pure.plugin.zsh"
+  fpath+="$(brew --prefix)/share/zsh/site-functions"
+  autoload -U promptinit; promptinit
+  prompt pure
 fi
 
 # Settings for pure prompt (can be set in non-interactive shells too)
