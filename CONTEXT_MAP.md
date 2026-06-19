@@ -12,11 +12,12 @@ This repository contains my dotfiles, organized by tool. Each directory represen
 |--------------|--------------------------------------|----------------------------------|
 | aerospace    | macOS window manager config          | `~/.config/aerospace/`           |
 | brew         | Homebrew packages and taps           | `~/.Brewfile`                    |
+| claude       | Claude Code settings                 | `~/.claude/`                      |
 | git          | Git configuration                    | `~/.gitconfig`, `~/.gitignore`   |
 | ghostty      | Ghostty terminal emulator config     | `~/.config/ghostty/`             |
+| gh-dash       | GitHub Dash configuration             | `~/.config/gh-dash/`              |
 | gnupg        | GPG configuration                    | `~/.gnupg/`                      |
 | htop         | Htop process viewer config           | `~/.config/htop/`                |
-| litecli      | LiteCLI SQL client config            | `~/.config/litecli/`             |
 | mise         | Mise version manager config          | `~/.config/mise/`                |
 | nvim         | Neovim configuration                 | `~/.config/nvim/`                |
 | pgcli        | PgCLI SQL client config              | `~/.config/pgcli/`               |
@@ -24,6 +25,8 @@ This repository contains my dotfiles, organized by tool. Each directory represen
 | scripts      | Custom scripts                       | `~/.local/bin/`                  |
 | stats        | macOS stats widget config            | `~/.config/stats/`               |
 | tmux         | Tmux terminal multiplexer config     | `~/.config/tmux/`                |
+| vibe         | Mistral Vibe CLI config               | `~/.vibe/`                        |
+| worktrunk    | Worktrunk configuration               | `~/.config/worktrunk/`            |
 | zsh          | Zsh shell configuration              | `~/.zshrc`, `~/.config/zsh/`     |
 
 ## Key Files
