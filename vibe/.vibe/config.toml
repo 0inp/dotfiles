@@ -1,0 +1,15 @@
+theme = "nord"
+default_agent = "plan"
+
+[tools.bash]
+allowlist = [
+  "/Users/oinp/dotfiles/vibe/.vibe/*",
+  "/Users/oinp/dotfiles/vibe/.vibe/plans/*",
+  "cat",
+  "find",
+  "head",
+  "ls",
+  "mkdir",
+  "touch",
+  "xargs",
+]

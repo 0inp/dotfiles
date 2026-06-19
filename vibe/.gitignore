@@ -1,0 +1,4 @@
+.env
+.vibe/logs/*
+.vibe/vibehistory
+.vibe/plans/*
