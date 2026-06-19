@@ -81,13 +81,7 @@ fi
 # =========================================================
 # Mise-en-place config
 # =========================================================
-mise() {
-  if ! declare -f _mise_loaded > /dev/null; then
-    eval "$(command mise activate zsh)" 2>/dev/null
-    _mise_loaded() { :; }  # Dummy function to mark mise as loaded
-  fi
-  command mise "$@"
-}
+eval "$(command mise activate zsh)"
 
 # =========================================================
 # Bun completions
