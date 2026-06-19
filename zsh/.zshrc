@@ -80,11 +80,17 @@ mise() {
 # =========================================================
 # Bun completions
 # =========================================================
-# Generate and source bun completions (bun is installed via its own installer, not brew)
-# Only load in interactive shells
 if [[ -o interactive ]]; then
   eval "$(bun completions zsh)"
 fi
+
+# =========================================================
+# github CLI completions
+# =========================================================
+if [[ -o interactive ]]; then
+  eval "$(gh completion -s zsh)"
+fi
+
 
 # =========================================================
 # Modular Config Files
