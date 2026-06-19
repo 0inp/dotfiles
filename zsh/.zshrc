@@ -40,6 +40,9 @@ fi
 # Completion
 # =========================================================
 
+# Homebrew completions
+FPATH="$(brew --prefix)/share/zsh/site-functions:$FPATH"
+
 # Docker completions
 FPATH="$HOME/.docker/completions:$FPATH"
 
