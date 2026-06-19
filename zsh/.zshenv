@@ -46,10 +46,3 @@ fi
 
 # Golang
 export PATH=$HOME/go/bin:/usr/local/go/bin:$PATH
-
-# PostgreSQL - use brew prefix for both Intel and Apple Silicon
-_pg_prefix="$(brew --prefix postgresql@17 2>/dev/null)"
-export PATH="$_pg_prefix/bin:$PATH"
-export LDFLAGS="-L$_pg_prefix/lib"
-export CPPFLAGS="-I$_pg_prefix/include"
-unset _pg_prefix
