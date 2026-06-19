@@ -47,6 +47,7 @@ local lsp_servers = {
 	-- TS/JS
 	ts_ls = {},
 	biome = {},
+	prettier = {},
 	-- CSS
 	tailwindcss = {},
 	-- HTML
@@ -97,7 +98,10 @@ require("mason-tool-installer").setup({
 vim.keymap.set("n", "<leader>M", vim.cmd.Mason, { desc = "Mason" })
 
 vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
-vim.keymap.set("n", "<leader>f", vim.lsp.buf.format, { desc = "Format Local buffer" })
+vim.keymap.set("n", "<leader>f", function()
+	require("conform").format()
+end, { desc = "Format Local buffer (Conform)" })
+
 vim.keymap.set("n", "K", vim.lsp.buf.hover, { noremap = true, silent = true, desc = "Documentation" })
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
