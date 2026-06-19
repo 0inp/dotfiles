@@ -2,6 +2,19 @@
 
 This repository contains my dotfiles, organized by tool. Each directory represents the configuration for a specific tool and is symlinked into `~/` (home directory) using `stow`.
 
+## Platform Support
+
+These dotfiles target **macOS on both Apple Silicon and Intel** Macs.
+
+Key architectural difference to be aware of when editing any file that references Homebrew paths:
+
+| Architecture   | Homebrew prefix       |
+|----------------|-----------------------|
+| Apple Silicon  | `/opt/homebrew`       |
+| Intel          | `/usr/local`          |
+
+Prefer `$(brew --prefix <pkg>)` over hardcoded paths. For performance-critical paths loaded on every shell start (`.zshenv`), check `[[ -d /opt/homebrew ]]` to branch without spawning a subprocess.
+
 ## Purpose
 - **Modularity**: Each tool's configuration is isolated in its own directory.
 - **AI-Navigability**: Context files (`CONTEXT.md`) in each module provide tool-specific details, reducing token usage for agents.

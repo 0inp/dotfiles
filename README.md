@@ -1,6 +1,6 @@
 # Dotfiles
 
-Here are my dotfiles. They are MacOS oriented.
+My dotfiles for macOS — supports both **Apple Silicon** (`/opt/homebrew`) and **Intel** (`/usr/local`) Macs.
 
 ## Installation
 
@@ -58,3 +58,11 @@ Fix it with following command when it's broken.
 sudo chown -R "$(whoami)" "$(brew --prefix)"/*
 brew doctor
 ```
+
+### Apple Silicon vs Intel
+
+Homebrew installs to different prefixes depending on architecture:
+- **Apple Silicon**: `/opt/homebrew`
+- **Intel**: `/usr/local`
+
+Scripts and shell configs use `$(brew --prefix)` or branch on `[[ -d /opt/homebrew ]]` to stay portable across both. The `zsh/.zshenv` already handles this for the Homebrew `sbin` PATH entry.

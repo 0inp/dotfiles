@@ -18,7 +18,12 @@ Configuration for Zsh, the default shell on macOS.
 
 ## Dependencies
 - **Zsh**: Pre-installed on macOS or install via Homebrew (`brew install zsh`).
-- **Plugins**: Managed via [zinit](https://github.com/zdharma-continuum/zinit).
+- **Plugins**: Self-managed — cloned on first load by `plugins.zsh` into `$ZPLUGINDIR`.
+
+## Platform Notes
+Supports **Apple Silicon** (`/opt/homebrew`) and **Intel** (`/usr/local`). Architecture-sensitive paths in `.zshenv` and `.zshrc`:
+- `sbin` PATH entry already branches on `[[ -d /opt/homebrew/sbin ]]`.
+- Any new references to Homebrew-installed tools must use `$(brew --prefix <pkg>)` or the same `[[ -d /opt/homebrew ]]` pattern — never hardcode `/opt/homebrew` alone.
 
 ## Key Features
 - **Aliases**: Shortcuts for common commands.

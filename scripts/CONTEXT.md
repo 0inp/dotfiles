@@ -13,6 +13,9 @@ Custom scripts for dotfiles management and system automation.
 - **Shell**: Requires `zsh` or `bash`.
 - **Stow**: Install via Homebrew (`brew install stow`).
 
+## Platform Notes
+`install.sh` targets **macOS on both Apple Silicon and Intel**. The script already checks `uname` for macOS. When adding new setup steps that reference Homebrew paths, branch on `[[ -d /opt/homebrew ]]` (Apple Silicon) vs `/usr/local` (Intel) rather than hardcoding either.
+
 ## Key Features
 - **Installation**: Automates dotfiles symlinking and dependency setup.
 - **Updates**: Orchestrates system updates (Homebrew, macOS, etc.).

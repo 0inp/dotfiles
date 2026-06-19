@@ -12,6 +12,13 @@ Configuration for Homebrew, the macOS package manager. Defines installed package
 ## Dependencies
 - **Homebrew**: Install via `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`.
 
+## Platform Notes
+Homebrew installs to different paths depending on chip:
+- **Apple Silicon**: `/opt/homebrew`
+- **Intel**: `/usr/local`
+
+The Brewfile itself is architecture-agnostic — Homebrew resolves the correct prefix at install time. However, any scripts or shell configs that reference Homebrew-installed package paths must use `$(brew --prefix <pkg>)` or branch on `[[ -d /opt/homebrew ]]`.
+
 ## Key Features
 - **Packages**: CLI tools and applications (e.g., `eza`, `ripgrep`).
 - **Taps**: Third-party repositories (e.g., `nikitabobko/aerospace`).
