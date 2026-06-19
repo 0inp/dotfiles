@@ -74,7 +74,7 @@ alias ss=lazysql
 # =========================================================
 # Update dotfiles
 # =========================================================
-alias dotup='cd ${HOME}/dotfiles && ./scripts/update.sh && cd -'
+alias dotup='(cd ${HOME}/dotfiles && ./scripts/update.sh)'
 
 # =========================================================
 # Arr Stack Management
