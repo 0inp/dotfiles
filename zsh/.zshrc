@@ -25,8 +25,10 @@ setopt NUMERIC_GLOB_SORT  # sort file10 after file9, not after file1
 # Smart directory navigation
 # =========================================================
 
-# Initialize zoxide
-eval "$(zoxide init zsh)"
+# Initialize zoxide (only in interactive shells as it uses zle)
+if [[ -o interactive ]]; then
+  eval "$(zoxide init zsh)"
+fi
 
 # =========================================================
 # Completion
@@ -49,14 +51,20 @@ zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'  # lowercase input matche
 # Fuzzy finder
 # =========================================================
 
-# MacOS (Intel)
-source /usr/local/opt/fzf/shell/key-bindings.zsh
-source /usr/local/opt/fzf/shell/completion.zsh
+# fzf (works for both Intel and Apple Silicon Macs)
+# Only load in interactive shells as key-bindings use zle
+if [[ -o interactive ]]; then
+  source "$(brew --prefix fzf)/shell/key-bindings.zsh"
+  source "$(brew --prefix fzf)/shell/completion.zsh"
+fi
 
 # =========================================================
 # Worktrunk completion
 # =========================================================
-if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
+# Only load in interactive shells as it may use zle
+if [[ -o interactive ]] && command -v wt >/dev/null 2>&1; then 
+  eval "$(command wt config shell init zsh)"
+fi
 
 # =========================================================
 # Mise-en-place config
@@ -72,7 +80,11 @@ mise() {
 # =========================================================
 # Bun completions
 # =========================================================
-source "$(brew --prefix bun)/share/zsh/site-functions/_bun"
+# Generate and source bun completions (bun is installed via its own installer, not brew)
+# Only load in interactive shells
+if [[ -o interactive ]]; then
+  eval "$(bun completions zsh)"
+fi
 
 # =========================================================
 # Modular Config Files

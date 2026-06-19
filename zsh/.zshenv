@@ -40,12 +40,17 @@ export LG_CONFIG_FILE="${XDG_CONFIG_HOME}/lazygit.yaml"
 # Brew
 export HOMEBREW_NO_ENV_HITNS=1
 export HOMEBREW_REQUIRE_TAP_TRUST=1
-export PATH="/usr/local/sbin:$PATH"
+# /usr/local/sbin is Intel Mac, /opt/homebrew/sbin is Apple Silicon
+if [[ -d /opt/homebrew/sbin ]]; then
+  export PATH="/opt/homebrew/sbin:$PATH"
+elif [[ -d /usr/local/sbin ]]; then
+  export PATH="/usr/local/sbin:$PATH"
+fi
 
 # Golang
 export PATH=$HOME/go/bin:/usr/local/go/bin:$PATH
 
-# PostgreSQL
-export PATH="/usr/local/opt/postgresql@17/bin:$PATH"
-export LDFLAGS="-L/usr/local/opt/postgresql@17/lib"
-export CPPFLAGS="-I/usr/local/opt/postgresql@17/include"
+# PostgreSQL - use brew prefix for both Intel and Apple Silicon
+export PATH="$(brew --prefix postgresql@17 2>/dev/null)/bin:$PATH"
+export LDFLAGS="-L$(brew --prefix postgresql@17 2>/dev/null)/lib"
+export CPPFLAGS="-I$(brew --prefix postgresql@17 2>/dev/null)/include"

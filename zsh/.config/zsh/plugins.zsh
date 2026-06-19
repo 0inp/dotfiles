@@ -4,16 +4,28 @@
 
 ZPLUGINDIR="$HOME/.config/zsh/plugins"
 
-_zplugin_load() {
-  local plugin_path="${ZPLUGINDIR}/${2}"
-  if [[ ! -d "$plugin_path" ]]; then
-    mkdir -p "$ZPLUGINDIR"
-    echo "Installing ${2}..."
-    git clone --depth=1 "https://github.com/${1}/${2}" "$plugin_path" \
-      || { echo "ERROR: failed to install ${2}" >&2; return 1; }
-  fi
-  source "${plugin_path}/${3:-${2}.plugin.zsh}"
-}
+# Only load plugins in interactive shells (plugins may require zle which is not available in non-interactive shells)
+if [[ -o interactive ]]; then
+  _zplugin_load() {
+    local plugin_path="${ZPLUGINDIR}/${2}"
+    if [[ ! -d "$plugin_path" ]]; then
+      mkdir -p "$ZPLUGINDIR"
+      echo "Installing ${2}..."
+      git clone --depth=1 "https://github.com/${1}/${2}" "$plugin_path" \
+        || { echo "ERROR: failed to install ${2}" >&2; return 1; }
+    fi
+    source "${plugin_path}/${3:-${2}.plugin.zsh}"
+  }
+
+  _zplugin_load Aloxaf fzf-tab
+  _zplugin_load ael-code zsh-colored-man-pages colored-man-pages.plugin.zsh
+  _zplugin_load jeffreytse zsh-vi-mode
+  _zplugin_load zdharma-continuum fast-syntax-highlighting
+  _zplugin_load zsh-users zsh-autosuggestions
+  _zplugin_load zsh-users zsh-completions
+  _zplugin_load zsh-users zsh-history-substring-search
+  unset _zplugin_load
+fi
 
 zplugin-update() {
   local dir
@@ -22,11 +34,3 @@ zplugin-update() {
     git -C "$dir" pull --ff-only
   done
 }
-
-_zplugin_load Aloxaf fzf-tab
-_zplugin_load ael-code zsh-colored-man-pages colored-man-pages.plugin.zsh
-_zplugin_load jeffreytse zsh-vi-mode
-_zplugin_load zdharma-continuum fast-syntax-highlighting
-_zplugin_load zsh-users zsh-autosuggestions
-_zplugin_load zsh-users zsh-completions
-_zplugin_load zsh-users zsh-history-substring-search
