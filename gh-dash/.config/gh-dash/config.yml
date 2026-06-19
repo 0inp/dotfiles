@@ -81,13 +81,13 @@ keybindings:
     - key: g
       name: lazygit
       command: >
-        cd {{.RepoPath}}; lazygit
+        cd {{.RepoPath}} && lazygit
   prs:
     - key: C
       name: code review
       command: >
         tmux new-window -n "PR-{{.PrNumber}}"
-        'wt switch pr:{{.PrNumber}} -x "opencode --prompt \"CodeReviewer: review-pr-for-this-branch\"" || echo "Failed to switch to PR branch"; sleep 2; read -p "Press Enter to close..."'
+        'wt switch pr:{{.PrNumber}} -x "claude \"Review this PR for bugs, correctness issues, and potential improvements\"" || echo "Failed to switch to PR branch"; sleep 2; read -p "Press Enter to close..."'
 
 theme:
   colors:
@@ -95,7 +95,7 @@ theme:
       primary: "#F7F1FF"
       secondary: "#5AD4E6"
       inverted: "#F7F1FF"
-      faint: "#3E4057"
+      faint: "#757685"
       warning: "#FC618D"
       success: "#7BD88F"
     background:
