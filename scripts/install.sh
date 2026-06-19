@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [[ "$(uname)" == "Darwin" ]]; then
-  echo "macOS deteted..."
+  echo "macOS detected..."
 
   # Install xCode cli tools
   if xcode-select -p &>/dev/null; then
@@ -39,31 +39,11 @@ if command -v wt &>/dev/null; then
   wt config shell install
 fi
 
-# Setup worktrunk
-if command -v vibe &>/dev/null; then
+# Install Mistral vibe CLI
+if ! command -v vibe &>/dev/null; then
   echo "Installing Mistral vibe cli"
   curl -LsSf https://mistral.ai/vibe/install.sh | bash
 fi
-
-# Install oh-my-zsh
-# sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-## install zsh-autosuggestions
-# git clone https://github.com/zsh-users/zsh-autosuggestions.git $ZSH_CUSTOM/plugins/zsh-autosuggestions
-## install zsh-syntax-highlighting
-# git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
-
-# ## Taps
-# echo "Tapping Brew..."
-# brew tap homebrew/cask-fonts
-# brew tap FelixKratz/formulae
-# brew install satococoa/tap/wtp
-
-### Must Have things
-# brew install zsh-autosuggestions
-# brew install zsh-syntax-highlighting
-
-## Casks
-# brew install --cask karabiner-elements
 
 ## MacOS settings
 echo "Changing macOS defaults..."
@@ -72,13 +52,6 @@ source ./resources/macos_settings.sh
 # csrutil status
 echo "Installation complete..."
 
-# export gnu coreutils to path
-# echo 'export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"' >>~/.zshrc
-
-# Navigate to dotfiles directory
-# cd $HOME/dotfiles || exit
-
-# Stow dotfiles packages
 echo "Stowing dotfiles..."
 stow -t ~ .
 
