@@ -48,3 +48,5 @@
 .tmp/
 
 **/.pi-lens
+
+**/.claude/settings.local.json
