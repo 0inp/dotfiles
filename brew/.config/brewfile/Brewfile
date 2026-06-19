@@ -1,5 +1,3 @@
-tap "amar1729/formulae"
-tap "anomalyco/tap"
 tap "dbcli/tap"
 brew "bash"
 brew "bat"
