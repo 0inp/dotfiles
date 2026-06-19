@@ -10,9 +10,6 @@ export XDG_STATE_HOME="$HOME/.local/state"
 export EDITOR="nvim"
 export VISUAL="nvim"
 
-# ---------- GPG ----------
-export GPG_TTY=$(tty)
-
 # ---------- PATH ----------
 # Personal binaires/scripts
 export PATH="$HOME/.local/bin:$PATH"
@@ -38,7 +35,7 @@ export DOCKER_SCAN_SUGGEST=false
 export LG_CONFIG_FILE="${XDG_CONFIG_HOME}/lazygit.yaml"
 
 # Brew
-export HOMEBREW_NO_ENV_HITNS=1
+export HOMEBREW_NO_ENV_HINTS=1
 export HOMEBREW_REQUIRE_TAP_TRUST=1
 # /usr/local/sbin is Intel Mac, /opt/homebrew/sbin is Apple Silicon
 if [[ -d /opt/homebrew/sbin ]]; then
