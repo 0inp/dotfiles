@@ -46,8 +46,12 @@ FPATH="$HOME/.docker/completions:$FPATH"
 # Load completion system
 autoload -Uz compinit
 
-# Initialize completion with cached metadata file
-compinit -d "$XDG_CACHE_HOME/zsh/zcompdump"
+# Only regenerate the dump when it's older than 24h; otherwise skip (-C) for speed
+if [[ -n "$XDG_CACHE_HOME/zsh/zcompdump"(#qN.mh+24) ]]; then
+  compinit -d "$XDG_CACHE_HOME/zsh/zcompdump"
+else
+  compinit -C -d "$XDG_CACHE_HOME/zsh/zcompdump"
+fi
 
 # Make completion case-insensitive
 # Example: "doc" can complete to "Documents"
@@ -60,8 +64,10 @@ zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'  # lowercase input matche
 # fzf (works for both Intel and Apple Silicon Macs)
 # Only load in interactive shells as key-bindings use zle
 if [[ -o interactive ]]; then
-  source "$(brew --prefix fzf)/shell/key-bindings.zsh"
-  source "$(brew --prefix fzf)/shell/completion.zsh"
+  _fzf_prefix="$(brew --prefix fzf)"
+  source "$_fzf_prefix/shell/key-bindings.zsh"
+  source "$_fzf_prefix/shell/completion.zsh"
+  unset _fzf_prefix
 fi
 
 # =========================================================
@@ -94,7 +100,13 @@ fi
 # github CLI completions
 # =========================================================
 if [[ -o interactive ]]; then
-  eval "$(gh completion -s zsh)"
+  _gh_comp_cache="$XDG_CACHE_HOME/zsh/gh_completion.zsh"
+  if [[ ! -f "$_gh_comp_cache" ]] || [[ -n "$_gh_comp_cache"(#qN.mh+168) ]]; then
+    mkdir -p "${_gh_comp_cache:h}"
+    gh completion -s zsh > "$_gh_comp_cache"
+  fi
+  source "$_gh_comp_cache"
+  unset _gh_comp_cache
 fi
 
 
