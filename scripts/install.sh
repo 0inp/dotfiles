@@ -39,6 +39,12 @@ if command -v wt &>/dev/null; then
   wt config shell install
 fi
 
+# Setup worktrunk
+if command -v vibe &>/dev/null; then
+  echo "Installing Mistral vibe cli"
+  curl -LsSf https://mistral.ai/vibe/install.sh | bash
+fi
+
 # Install oh-my-zsh
 # sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 ## install zsh-autosuggestions
