@@ -1,8 +1,7 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
-vim.keymap.set("x", "p", [["_dp]], { desc = "Paste over selection without losing yanked text" })
-vim.keymap.set("v", "p", '"_dp', { noremap = true, silent = true })
+vim.keymap.set("v", "p", '"_dp', { noremap = true, silent = true, desc = "Paste over selection without losing yanked text" })
 
 vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]], { desc = "Delete without yanking" })
 
@@ -32,10 +31,6 @@ vim.keymap.set(
 vim.keymap.set("n", "<leader>re", "<cmd>restart<cr>", { desc = "Restart config (:restart)" })
 vim.keymap.set("n", "<Leader>w", "<cmd>w!<CR>", { silent = true, desc = "Save" }) -- Save the current file
 vim.keymap.set("n", "<Leader>q", "<cmd>q<CR>", { silent = true, desc = "Quit Neovim" }) -- Quit Neovim
-
--- Move the current window to the far left/right
-vim.keymap.set("n", "<C-h>", "<C-W>H", { desc = "Move window to far left", noremap = true, silent = true })
-vim.keymap.set("n", "<C-l>", "<C-W>L", { desc = "Move window to far right", noremap = true, silent = true })
 
 -- Move to window using the <ctrl> hjkl keys
 vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Go to Left Window", remap = true })
