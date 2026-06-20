@@ -21,7 +21,6 @@ require("lualine").setup({
 				-- Display the LSP name
 				show_name = true,
 			},
-			{ "venv-selector" },
 			{ "filetype" },
 		},
 	},
