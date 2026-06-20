@@ -1,3 +1,4 @@
 [tools]
-node = "latest"
-python = "latest"
+node = "26"
+python = "3.14"
+go = "1.26"
