@@ -41,7 +41,7 @@ fi
 # =========================================================
 
 # Homebrew completions
-FPATH="$(brew --prefix)/share/zsh/site-functions:$FPATH"
+FPATH="$HOMEBREW_PREFIX/share/zsh/site-functions:$FPATH"
 
 # Docker completions
 FPATH="$HOME/.docker/completions:$FPATH"
@@ -67,10 +67,8 @@ zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'  # lowercase input matche
 # fzf (works for both Intel and Apple Silicon Macs)
 # Only load in interactive shells as key-bindings use zle
 if [[ -o interactive ]]; then
-  _fzf_prefix="$(brew --prefix fzf)"
-  source "$_fzf_prefix/shell/key-bindings.zsh"
-  source "$_fzf_prefix/shell/completion.zsh"
-  unset _fzf_prefix
+  source "$HOMEBREW_PREFIX/opt/fzf/shell/key-bindings.zsh"
+  source "$HOMEBREW_PREFIX/opt/fzf/shell/completion.zsh"
 fi
 
 # =========================================================

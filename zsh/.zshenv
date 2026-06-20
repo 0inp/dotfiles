@@ -43,12 +43,12 @@ export LG_CONFIG_FILE="${XDG_CONFIG_HOME}/lazygit.yaml"
 # Brew
 export HOMEBREW_NO_ENV_HINTS=1
 export HOMEBREW_REQUIRE_TAP_TRUST=1
-# /usr/local/sbin is Intel Mac, /opt/homebrew/sbin is Apple Silicon
-if [[ -d /opt/homebrew/sbin ]]; then
-  export PATH="/opt/homebrew/sbin:$PATH"
-elif [[ -d /usr/local/sbin ]]; then
-  export PATH="/usr/local/sbin:$PATH"
+if [[ -d /opt/homebrew ]]; then
+  export HOMEBREW_PREFIX="/opt/homebrew"
+else
+  export HOMEBREW_PREFIX="/usr/local"
 fi
+[[ -d "$HOMEBREW_PREFIX/sbin" ]] && export PATH="$HOMEBREW_PREFIX/sbin:$PATH"
 
 # Golang
 export PATH=$HOME/go/bin:/usr/local/go/bin:$PATH
