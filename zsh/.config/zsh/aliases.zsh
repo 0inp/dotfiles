@@ -32,7 +32,9 @@ alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
 # =========================================================
 # Navigation
 # =========================================================
-alias cd='z'
+if [[ -o interactive ]]; then
+  alias cd='z'
+fi
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
