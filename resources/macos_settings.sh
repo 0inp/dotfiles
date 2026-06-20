@@ -14,7 +14,7 @@ echo "Finder: show all filename extensions"
 defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 
 echo "show hidden files by default"
-defaults write com.apple.Finder AppleShowAllFiles -bool false
+defaults write com.apple.Finder AppleShowAllFiles -bool true
 
 echo "only use UTF-8 in Terminal.app"
 defaults write com.apple.terminal StringEncodings -array 4
@@ -57,20 +57,6 @@ mkdir -p ~/Pictures/Screenshots
 defaults write com.apple.screencapture location ~/Pictures/Screenshots
 killall SystemUIServer
 
-# SSD specifics
-# Remove the sleep image file to save disk space
-sudo rm /private/var/vm/sleepimage
-
-# Create a zero-byte file instead…
-sudo touch /private/var/vm/sleepimage
-
-# …and make sure it can’t be rewritten
-sudo chflags uchg /private/var/vm/sleepimage
-echo "SSD optimized."
-
-# Disable the sudden motion sensor as it’s not useful for SSDs
-sudo pmset -a sms 0
-echo "Sudden motion sensor disabled (SSDs not needed)."
 
 echo "Kill affected applications"
 for app in Safari Finder Dock Mail SystemUIServer; do killall "$app" >/dev/null 2>&1; done
