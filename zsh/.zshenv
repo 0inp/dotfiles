@@ -18,7 +18,13 @@ export PATH="$HOME/.local/bin:$PATH"
 export DOTFILES="$HOME/dotfiles"
 
 # ---------- LS_COLORS with vivid ----------
-export LS_COLORS="$(vivid generate molokai)"
+_vivid_cache="${XDG_CACHE_HOME}/zsh/ls_colors"
+if [[ ! -f "$_vivid_cache" ]] && command -v vivid >/dev/null 2>&1; then
+  mkdir -p "${_vivid_cache:h}"
+  vivid generate molokai > "$_vivid_cache"
+fi
+[[ -f "$_vivid_cache" ]] && export LS_COLORS="$(< "$_vivid_cache")"
+unset _vivid_cache
 
 # ---------- OTHER SOFTWARES ----------
 # bitwarden

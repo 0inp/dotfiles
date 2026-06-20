@@ -89,8 +89,14 @@ eval "$(command mise activate zsh)"
 # =========================================================
 # Bun completions
 # =========================================================
-if [[ -o interactive ]]; then
-  eval "$(bun completions zsh)"
+if [[ -o interactive ]] && command -v bun >/dev/null 2>&1; then
+  _bun_comp_cache="$XDG_CACHE_HOME/zsh/bun_completion.zsh"
+  if [[ ! -f "$_bun_comp_cache" ]]; then
+    mkdir -p "${_bun_comp_cache:h}"
+    bun completions zsh > "$_bun_comp_cache"
+  fi
+  source "$_bun_comp_cache"
+  unset _bun_comp_cache
 fi
 
 # =========================================================
