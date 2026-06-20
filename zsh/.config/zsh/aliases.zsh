@@ -19,7 +19,9 @@ alias less='bat --paging=always'
 # override MANPAGER
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
-alias grep="rg --color=auto --smart-case --hidden --glob '!.git'"
+if [[ -o interactive ]]; then
+  alias grep="rg --color=auto --smart-case --hidden --glob '!.git'"
+fi
 alias diff='diff --color=auto'
 alias df='df -h'
 
@@ -39,7 +41,7 @@ alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
-alias -- -="cd -"
+alias -- -="builtin cd -"
 
 # =========================================================
 # Editor
