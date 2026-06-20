@@ -46,17 +46,3 @@ vim.api.nvim_create_user_command("PackCheck", function()
 	end
 end, { nargs = "*", desc = "Clean unused plugins" })
 
-vim.api.nvim_create_autocmd("BufWinEnter", {
-	pattern = "*.jsx,*.tsx",
-	callback = function()
-		vim.cmd([[set filetype=typescriptreact]])
-	end,
-})
-
--- Format on save
-vim.api.nvim_create_autocmd("BufWritePre", {
-	pattern = "*", -- You can specify file types here, e.g., "*.lua"
-	callback = function()
-		vim.lsp.buf.format({ async = false }) -- Format the buffer
-	end,
-})

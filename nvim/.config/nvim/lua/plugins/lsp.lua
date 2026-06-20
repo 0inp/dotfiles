@@ -8,18 +8,29 @@ vim.pack.add({
 require("mason").setup()
 require("mason-lspconfig").setup()
 
+-- Formatter/linter tools for Mason that are NOT LSP servers
+local mason_tools = {
+	"stylua",
+	"shfmt",
+	"markdownlint",
+	"prettier",
+	"biome",
+	"jq",
+	"tombi",
+}
+
+-- Each entry is passed directly to vim.lsp.config — keys are top-level lsp config fields
 local lsp_servers = {
 	-- Lua
 	lua_ls = {
-		Lua = {
-			diagnostics = {
-				globals = { "vim" },
+		settings = {
+			Lua = {
+				diagnostics = { globals = { "vim" } },
+				workspace = { library = vim.api.nvim_get_runtime_file("lua", true) },
+				telemetry = { enable = false },
 			},
-			workspace = { library = vim.api.nvim_get_runtime_file("lua", true) },
-			telemetry = { enable = false },
 		},
 	},
-	stylua = {},
 	-- Python
 	ruff = {
 		init_options = {
@@ -33,40 +44,32 @@ local lsp_servers = {
 		},
 	},
 	pyright = {
-		python = {
-			pythonPath = vim.fn.getcwd() .. "/.venv/bin/python",
-			analysis = {
-				autoSearchPaths = true,
-				diagnosticMode = "workspace",
-				useLibraryCodeForTypes = true,
-				typeCheckingMode = "basic", -- or "strict"
-				reportMissingImports = true,
+		settings = {
+			python = {
+				analysis = {
+					autoSearchPaths = true,
+					diagnosticMode = "workspace",
+					useLibraryCodeForTypes = true,
+					typeCheckingMode = "basic",
+					reportMissingImports = true,
+				},
 			},
 		},
 	},
 	-- TS/JS
 	ts_ls = {},
-	biome = {},
-	prettier = {},
 	-- CSS
 	tailwindcss = {},
-	-- HTML
-	prettier = {},
 	-- Markdown
 	marksman = {},
-	markdownlint = {},
 	-- XML/YAML
 	yamlls = {},
 	-- JSON
 	jsonls = {},
-	jq = {},
-	-- TOML
-	tombi = {},
 	-- bash
 	bashls = {
 		filetypes = { "sh", "zsh" },
 	},
-	shfmt = {},
 	-- Go
 	gopls = {
 		settings = {
@@ -93,7 +96,7 @@ local lsp_servers = {
 }
 
 require("mason-tool-installer").setup({
-	ensure_installed = vim.tbl_keys(lsp_servers),
+	ensure_installed = vim.list_extend(vim.tbl_keys(lsp_servers), mason_tools),
 })
 vim.keymap.set("n", "<leader>M", vim.cmd.Mason, { desc = "Mason" })
 
@@ -108,7 +111,7 @@ local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = vim.tbl_deep_extend("force", capabilities, require("mini.completion").get_lsp_capabilities())
 
 for server, config in pairs(lsp_servers) do
-	vim.lsp.config(server, { settings = config, capabilities = capabilities })
+	vim.lsp.config(server, vim.tbl_extend("keep", { capabilities = capabilities }, config))
 end
 
 -- Add custom LSP commands
