@@ -82,7 +82,9 @@ fi
 # =========================================================
 # Mise-en-place config
 # =========================================================
-eval "$(command mise activate zsh)"
+if [[ -o interactive ]]; then
+  eval "$(command mise activate zsh)"
+fi
 
 # =========================================================
 # Bun completions
