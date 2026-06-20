@@ -23,9 +23,6 @@ zstyle ':fzf-tab:*' fzf-flags '--ansi'
 # Basic completion colors
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 
-# Case-insensitive matching
-zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
-
 # Minimal completion setup
 zstyle ':completion:*' menu no
 zstyle ':completion:*' hidden yes
