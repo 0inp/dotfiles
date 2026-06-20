@@ -19,8 +19,6 @@
 **/__pycache__
 **/*.pyc
 
-**/lazy-lock.json
-
 # ───── Eclipse / JDT Language Server ────────
 # Eclipse workspace metadata & project files
 .metadata/
