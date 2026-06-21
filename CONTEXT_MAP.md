@@ -27,6 +27,7 @@ Prefer `$(brew --prefix <pkg>)` over hardcoded paths. For performance-critical p
 | brew         | Homebrew packages and taps           | `~/.Brewfile`                    |
 | claude       | Claude Code settings                 | `~/.claude/`                      |
 | git          | Git configuration                    | `~/.gitconfig`, `~/.gitignore`   |
+| launchd      | macOS LaunchAgents for automation    | `~/Library/LaunchAgents/`        |
 | ghostty      | Ghostty terminal emulator config     | `~/.config/ghostty/`             |
 | gh-dash       | GitHub Dash configuration             | `~/.config/gh-dash/`              |
 | gnupg        | GPG configuration                    | `~/.gnupg/`                      |
