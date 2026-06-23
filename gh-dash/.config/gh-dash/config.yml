@@ -84,10 +84,15 @@ keybindings:
         cd {{.RepoPath}} && lazygit
   prs:
     - key: C
-      name: code review
+      name: address my pr comments
+      command: >
+        tmux new-window -n "PR-{{.PrNumber}}-comments"
+        'BRANCH=$(gh pr view {{.PrNumber}} --json headRefName --jq ".headRefName") && wt -C "{{.RepoPath}}" switch pr:{{.PrNumber}} -x "claude \"/pr-comments {{.PrNumber}}\"" ; wt -C "{{.RepoPath}}" remove "$BRANCH" --force --no-delete-branch 2>/dev/null ; echo "✅ Worktree removed, branch kept" ; read -p "Press Enter to close..."'
+    - key: R
+      name: pr-review + cleanup
       command: >
         tmux new-window -n "PR-{{.PrNumber}}"
-        'wt switch pr:{{.PrNumber}} -x "claude \"Review this PR for bugs, correctness issues, and potential improvements\"" || echo "Failed to switch to PR branch"; sleep 2; read -p "Press Enter to close..."'
+        'BRANCH=$(gh pr view {{.PrNumber}} --json headRefName --jq ".headRefName") && wt -C "{{.RepoPath}}" switch pr:{{.PrNumber}} -x "claude \"/pr-review $BRANCH main\"" ; wt -C "{{.RepoPath}}" remove "$BRANCH" --force-delete --force 2>/dev/null ; echo "✅ Worktree for $BRANCH removed" ; read -p "Press Enter to close..."'
 
 theme:
   colors:
