@@ -1,5 +1,7 @@
 theme = "nord"
 default_agent = "plan"
+# Shared skills with Claude Code — see ~/.claude/skills (symlinked from ~/dotfiles/claude/.claude/skills)
+skill_paths = ["/Users/oinp/.claude/skills"]
 
 [tools.bash]
 allowlist = [
