@@ -13,3 +13,9 @@ allowlist = [
   "touch",
   "xargs",
 ]
+
+[[models]]
+name = "mistral-large-latest"
+provider = "mistral"
+alias = "mistral-large"
+thinking = "off"
