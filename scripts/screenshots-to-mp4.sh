@@ -1,5 +1,17 @@
 #!/bin/bash
 
+# Detect Homebrew prefix (works on Intel + Apple Silicon)
+if command -v brew &>/dev/null; then
+    HOMEBREW_PREFIX=$(brew --prefix)
+else
+    # Fallback detection
+    if [[ $(uname -m) == "arm64" ]]; then
+        HOMEBREW_PREFIX="/opt/homebrew"
+    else
+        HOMEBREW_PREFIX="/usr/local"
+    fi
+fi
+
 WATCH_DIR="$HOME/Pictures/Screenshots"
 FFMPEG="$HOMEBREW_PREFIX/bin/ffmpeg"
 FSWATCH="$HOMEBREW_PREFIX/bin/fswatch"
