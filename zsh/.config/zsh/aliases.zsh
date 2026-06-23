@@ -64,6 +64,7 @@ alias ghd='gh dash'
 alias glog='PAGER="less -F -X" git log'                              # -F quit if one screen, -X no clear on exit
 alias gadog='PAGER="less -F -X" git log --all --decorate --oneline --graph'
 alias wsa='wt switch --create --execute=opencode'
+alias agl='bash ~/dotfiles/scripts/agent-loop.sh'
 
 # =========================================================
 # Docker
