@@ -57,6 +57,9 @@ mkdir -p ~/Pictures/Screenshots
 defaults write com.apple.screencapture location ~/Pictures/Screenshots
 killall SystemUIServer
 
+echo "Group windows by application in Mission Control (fixes tiny window previews with AeroSpace, see nikitabobko/AeroSpace#315)"
+defaults write com.apple.dock expose-group-apps -bool true
+
 
 echo "Kill affected applications"
 for app in Safari Finder Dock Mail SystemUIServer; do killall "$app" >/dev/null 2>&1; done
