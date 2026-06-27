@@ -86,12 +86,12 @@ keybindings:
     - key: C
       name: address my pr comments
       command: >
-        tmux new-window -n "PR-{{.PrNumber}}-comments"
+        mux-new-window "PR-{{.PrNumber}}-comments"
         'BRANCH=$(gh pr view {{.PrNumber}} --json headRefName --jq ".headRefName") && wt -C "{{.RepoPath}}" switch pr:{{.PrNumber}} -x "claude \"/pr-comments {{.PrNumber}}\"" ; wt -C "{{.RepoPath}}" remove "$BRANCH" --force --no-delete-branch 2>/dev/null ; echo "✅ Worktree removed, branch kept" ; read -p "Press Enter to close..."'
     - key: R
       name: pr-review + cleanup
       command: >
-        tmux new-window -n "PR-{{.PrNumber}}"
+        mux-new-window "PR-{{.PrNumber}}"
         'BRANCH=$(gh pr view {{.PrNumber}} --json headRefName --jq ".headRefName") && wt -C "{{.RepoPath}}" switch pr:{{.PrNumber}} -x "claude \"/pr-review $BRANCH main\"" ; wt -C "{{.RepoPath}}" remove "$BRANCH" --force-delete --force 2>/dev/null ; echo "✅ Worktree for $BRANCH removed" ; read -p "Press Enter to close..."'
 
 theme:

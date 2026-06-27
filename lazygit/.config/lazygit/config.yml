@@ -2,5 +2,5 @@ customCommands:
   - key: '<c-p>'
     context: 'localBranches'
     description: 'Publish PR via Claude (/pr-publish)'
-    command: 'tmux new-window -n "pr-publish" "claude \"/pr-publish\""'
+    command: 'mux-new-window "pr-publish" "claude \"/pr-publish\""'
     subprocess: false

@@ -47,13 +47,15 @@ if ! command -v vibe &>/dev/null; then
   curl -LsSf https://mistral.ai/vibe/install.sh | bash
 fi
 
-# Install TPM (Tmux Plugin Manager)
-TPM_DIR="$HOME/.config/tmux/.tmux/plugins/tpm"
-if [[ -d "$TPM_DIR" ]]; then
-  echo "TPM already installed"
-else
-  echo "Installing TPM..."
-  git clone https://github.com/tmux-plugins/tpm "$TPM_DIR"
+# Install TPM (Tmux Plugin Manager) only when tmux is present
+if command -v tmux >/dev/null; then
+  TPM_DIR="$HOME/.config/tmux/.tmux/plugins/tpm"
+  if [[ -d "$TPM_DIR" ]]; then
+    echo "TPM already installed"
+  else
+    echo "Installing TPM..."
+    git clone https://github.com/tmux-plugins/tpm "$TPM_DIR"
+  fi
 fi
 
 ## MacOS settings

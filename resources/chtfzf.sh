@@ -4,7 +4,7 @@
 # license: wtfpl
 # Requirements: curl, fzf
 
-# Docs: use -t flag to launch in a new tmux window
+# Docs: use -t flag to launch in a new multiplexer window (herdr or tmux)
 #   - ``chtfzf sync`` to cache main list for faster access
 
 set -euf -o pipefail
@@ -15,7 +15,7 @@ function main {
     # Read Command Line Arguments
     for i in "$@"; do
         case "$i" in
-            -t) openMode="tmux"; shift;;
+            -t) openMode="mux"; shift;;
             sync) syncSheetList;;
             query) shift; query $*;;
             preview) shift; cachePreview "$*";;
@@ -61,9 +61,9 @@ function getPath {
 function openSheet {
     if [[ "$1" == "" ]]; then exit; fi # Exit if empty string
     case "$openMode" in
-        tmux) tmux neww bash -c "curl -sg "cht.sh/$*" | less -R";;
+        mux) mux-new-window "chtfzf" "curl -sg 'cht.sh/$*' | less -R";;
         bash) curl -sg "cht.sh/$*" | less -R;;
-        *) echo "Unknown openMode, set -t to use tmux, or no args to use bash directly"
+        *) echo "Unknown openMode, set -t to use mux-new-window, or no args to use bash directly"
     esac
 }
 

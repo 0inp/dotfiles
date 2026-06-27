@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Usage: mux-new-window <name> <command>
+# Opens a new window/tab in herdr or tmux, depending on the active multiplexer.
+name="$1"
+cmd="$2"
+
+if [ -n "${HERDR_ENV}" ]; then
+  herdr agent start "$name" --focus -- bash -c "$cmd"
+elif [ -n "${TMUX}" ]; then
+  tmux new-window -n "$name" "$cmd"
+else
+  bash -c "$cmd"
+fi
