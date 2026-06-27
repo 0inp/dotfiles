@@ -1,0 +1,72 @@
+[terminal]
+new_cwd = "follow"
+
+[theme]
+name = "kanagawa"
+
+[ui]
+mouse_capture = true
+confirm_close = false
+pane_borders = true
+
+agent_panel_sort = "spaces"
+[ui.toast]
+# change to "system" for macOS notifications when away from the terminal
+delivery = "herdr"
+delay_seconds = 1
+
+[ui.sound]
+enabled = true
+
+[ui.sound.agents]
+claude = "off"
+
+[session]
+resume_agents_on_restore = true
+onboarding = false
+
+[keys]
+prefix = "ctrl+b"
+
+# Tabs (windows in tmux terms)
+new_tab = "prefix+c"
+next_tab = "prefix+n"
+previous_tab = "prefix+p"
+switch_tab = "prefix+1..9"
+
+# Workspaces (sessions in tmux terms)
+workspace_picker = "prefix+shift+t"
+new_workspace = "prefix+shift+n"
+rename_workspace = "prefix+shift+r"
+close_workspace = "prefix+shift+d"
+switch_workspace = "prefix+shift+1..9"
+goto = "prefix+g"
+
+# Pane splits — new_cwd = "follow" handles the -c "#{pane_current_path}" equivalent
+split_vertical = "prefix+|"  # side-by-side (same as prefix+| in tmux; fallback: "prefix+v")
+split_horizontal = "prefix+minus"  # top-bottom (was prefix+- in tmux, same)
+close_pane = "prefix+x"
+zoom = "prefix+z"
+
+# Pane focus (same as tmux defaults, replaces vim-tmux-navigator for cross-pane jumps)
+focus_pane_left = "prefix+h"
+focus_pane_right = "prefix+l"
+focus_pane_up = "prefix+k"
+focus_pane_down = "prefix+j"
+
+# Pane swap
+swap_pane_left = "prefix+shift+h"
+swap_pane_right = "prefix+shift+l"
+swap_pane_up = "prefix+shift+k"
+swap_pane_down = "prefix+shift+j"
+
+# Resize mode — press prefix+r, then h/j/k/l to resize, esc to exit
+resize_mode = "prefix+a"
+
+# Copy mode — vi bindings (v to select, y to yank, q/esc to exit)
+copy_mode = "prefix+v"
+
+# Misc
+toggle_sidebar = "prefix+b"
+detach = "prefix+q"
+# focus_agent = "prefix+alt+1..9"

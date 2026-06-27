@@ -44,6 +44,9 @@ source ~/.zshrc
 # Tmux: inside a tmux session
 tmux source-file ~/.config/tmux/tmux.conf
 
+# Herdr:
+herdr server reload-config
+
 # Aerospace:
 aerospace reload-config
 
