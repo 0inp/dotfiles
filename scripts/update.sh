@@ -6,7 +6,7 @@ echo "🚀 Starting update..."
 echo "🍺 Updating Homebrew..."
 if command -v brew &>/dev/null; then
   brew update
-  brew -y upgrade
+  brew upgrade -y
   brew cleanup
   brew autoremove
   echo "✅ Homebrew updated successfully"
