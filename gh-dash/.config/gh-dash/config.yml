@@ -94,7 +94,7 @@ keybindings:
       name: pr-review + cleanup
       command: >
         mux-new-window "PR-{{.PrNumber}}"
-        'BRANCH=$(cd "{{.RepoPath}}" && gh pr view {{.PrNumber}} --json headRefName --jq ".headRefName") && wt -C "{{.RepoPath}}" switch pr:{{.PrNumber}} -x "claude \"/review {{.PrNumber}}\"" ; wt -C "{{.RepoPath}}" remove "$BRANCH" --force-delete --force 2>/dev/null ; echo "✅ Worktree for $BRANCH removed" ; printf "Press Enter to close...\n" ; read'
+        'BRANCH=$(cd "{{.RepoPath}}" && gh pr view {{.PrNumber}} --json headRefName --jq ".headRefName") && wt -C "{{.RepoPath}}" switch pr:{{.PrNumber}} -x "claude \"First switch to caveman lite mode. Then run a /pr-review session for PR $BRANCH against main. Write every posted PR comment in French. Post inline comments only, anchored to changed lines, no summary body. Before posting, check existing reviews on this PR from coworkers and Copilot and skip any finding already raised. If nothing else needs addressing, approve the PR; otherwise post the review per the pr-review Step 6.\"" ; wt -C "{{.RepoPath}}" remove "$BRANCH" --force-delete --force 2>/dev/null ; echo "✅ Worktree for $BRANCH removed" ; printf "Press Enter to close...\n" ; read'
     - key: E
       command: gh enhance -R {{.RepoName}} {{.PrNumber}}
 
