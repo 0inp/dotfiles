@@ -1,3 +1,4 @@
+.claude.json
 .claude/backups/*
 .claude/.last-cleanup
 .claude/cache/*
