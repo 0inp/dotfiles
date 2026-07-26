@@ -1,19 +1,82 @@
-theme = "nord"
+theme = "ansi-dark"
 default_agent = "plan"
-# Shared skills with Claude Code — see ~/.claude/skills (symlinked from ~/dotfiles/claude/.claude/skills)
-skill_paths = ["/Users/oinp/.claude/skills"]
+skill_paths = [
+    "/Users/oinp/.claude/skills",
+]
+applied_migrations = [
+    "bash_read_only_defaults_v1",
+]
 
 [tools.bash]
 allowlist = [
-  "/Users/oinp/dotfiles/vibe/.vibe/*",
-  "/Users/oinp/dotfiles/vibe/.vibe/plans/*",
-  "cat",
-  "find",
-  "head",
-  "ls",
-  "mkdir",
-  "touch",
-  "xargs",
+    "/Users/oinp/dotfiles/vibe/.vibe/*",
+    "/Users/oinp/dotfiles/vibe/.vibe/plans/*",
+    "aws --version",
+    "aws cloudtrail lookup-events",
+    "aws ec2 describe-instance-attribute",
+    "aws ec2 describe-instances",
+    "aws ec2 describe-security-groups",
+    "aws ec2 get-console-output",
+    "aws logs describe-log-groups",
+    "aws logs describe-log-streams",
+    "aws ssm describe-instance-information",
+    "aws ssm send-command",
+    "base64",
+    "basename",
+    "cat",
+    "cd",
+    "comm",
+    "cut",
+    "date",
+    "diff",
+    "dirname",
+    "du",
+    "echo",
+    "file",
+    "find",
+    "fmt",
+    "fold",
+    "git branch",
+    "git checkout",
+    "git diff",
+    "git fetch",
+    "git log",
+    "git remote -v",
+    "git show",
+    "grep",
+    "head",
+    "join",
+    "less",
+    "ls",
+    "md5sum",
+    "mkdir",
+    "more",
+    "nl",
+    "od",
+    "paste",
+    "pwd",
+    "readlink",
+    "sha1sum",
+    "sha256sum",
+    "shasum",
+    "sort",
+    "stat",
+    "sum",
+    "tac",
+    "tail",
+    "touch",
+    "tr",
+    "uname",
+    "uniq",
+    "wc",
+    "which",
+    "xargs",
+]
+
+[tools.read_file]
+allowlist = [
+    "/Users/oinp/.vibe/plans/*",
+    "/Users/oinp/dotfiles/vibe/.vibe/plans/*",
 ]
 
 [[models]]
