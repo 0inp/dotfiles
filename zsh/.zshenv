@@ -48,6 +48,7 @@ if [[ -d /opt/homebrew ]]; then
 else
   export HOMEBREW_PREFIX="/usr/local"
 fi
+[[ -d "$HOMEBREW_PREFIX/bin" ]] && export PATH="$HOMEBREW_PREFIX/bin:$PATH"
 [[ -d "$HOMEBREW_PREFIX/sbin" ]] && export PATH="$HOMEBREW_PREFIX/sbin:$PATH"
 
 # Golang
