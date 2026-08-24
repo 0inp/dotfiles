@@ -19,9 +19,9 @@ alias less='bat --paging=always'
 # override MANPAGER
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
-if [[ -o interactive ]]; then
-  alias grep="rg --color=auto --smart-case --hidden --glob '!.git'"
-fi
+# NOTE: `grep` is deliberately NOT aliased to rg — their flags diverge (-E, -r,
+# -w) and the alias broke pasted commands. rg's defaults live in
+# ~/.config/ripgrep/ripgreprc instead (see the ripgrep module).
 alias diff='diff --color=auto'
 alias df='df -h'
 

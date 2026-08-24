@@ -47,6 +47,9 @@ export DOCKER_SCAN_SUGGEST=false
 # Lazygit config
 export LG_CONFIG_FILE="${XDG_CONFIG_HOME}/lazygit.yaml"
 
+# ripgrep — default flags for every `rg` invocation
+export RIPGREP_CONFIG_PATH="${XDG_CONFIG_HOME}/ripgrep/ripgreprc"
+
 # Brew
 export HOMEBREW_NO_ENV_HINTS=1
 export HOMEBREW_REQUIRE_TAP_TRUST=1

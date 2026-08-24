@@ -72,7 +72,8 @@ Each module directory mirrors the target filesystem structure relative to `~`. F
 ### Zsh configuration
 `.zshenv` (all shells) → `.zprofile` (login shells) → `.zshrc` (interactive shells).
 `.zshrc` sources all `~/.config/zsh/*.zsh` files at startup. Modules:
-- `aliases.zsh` — shell aliases (tools: eza, bat, ripgrep, zoxide)
+- `aliases.zsh` — shell aliases (tools: eza, bat, zoxide). Note: `grep` is **not**
+  aliased to `rg`; rg's defaults live in the `ripgrep` module instead.
 - `plugins.zsh` — self-managed plugins (auto-cloned with `_zplugin_load` on first run)
 - `functions.zsh` — reusable shell functions (`rfv`, `timezsh`, `colormap`)
 - `bindings.zsh` — vi-mode key bindings

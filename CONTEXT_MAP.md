@@ -38,6 +38,7 @@ Prefer `$(brew --prefix <pkg>)` over hardcoded paths. For performance-critical p
 | nvim         | Neovim configuration                 | `~/.config/nvim/`                |
 | pgcli        | PgCLI SQL client config              | `~/.config/pgcli/`               |
 | python       | Python environment config            | `~/.config/python/`              |
+| ripgrep      | Default flags for `rg`               | `~/.config/ripgrep/ripgreprc`    |
 | scripts      | Custom scripts                       | `~/.local/bin/`                  |
 | stats        | macOS stats widget config            | `~/.config/stats/`               |
 | tmux         | Tmux terminal multiplexer config     | `~/.config/tmux/`                |

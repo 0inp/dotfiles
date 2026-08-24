@@ -1,0 +1,17 @@
+# ripgrep defaults, applied to every `rg` invocation via $RIPGREP_CONFIG_PATH.
+#
+# These replace the old `alias grep="rg ..."`, which broke on grep's flags
+# (-E, -r, -w) and silently changed behaviour inside scripts.
+#
+# Deliberately limited to SEARCH BEHAVIOUR only. Nothing here changes rg's
+# output format: editor integrations (telescope, fzf-lua) parse rg's stdout and
+# break if a config file injects --pretty, --color or --context.
+
+# Case-insensitive unless the pattern contains an uppercase character.
+--smart-case
+
+# Search dotfiles too — this is a dotfiles machine.
+--hidden
+
+# ...but never descend into .git.
+--glob=!.git/
