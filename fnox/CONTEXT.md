@@ -96,6 +96,12 @@ Both secrets are ambient by design: the GitHub MCP server interpolates
 `${GITHUB_PERSONAL_ACCESS_TOKEN}` from the environment when Claude Code starts.
 To scope a secret to `fnox exec` only, add `env = "exec"` to its entry.
 
+`FNOX_SHELL_OUTPUT=none` is exported there to silence the cosmetic
+`fnox: +2 KEY1, KEY2` notice the hook prints on every new shell. It does **not**
+suppress real diagnostics — a missing secret still logs `WARN ... not found`,
+which is verified behaviour, not an assumption. Do not replace it with a blanket
+`2>/dev/null` on the hook: that would hide those warnings too.
+
 ## On a new machine
 `brew bundle` installs `fnox` and `bitwarden-cli`, and `stow` links this config,
 but the keychain is empty — values do not travel with the repo. Until it is

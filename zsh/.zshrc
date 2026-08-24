@@ -107,7 +107,12 @@ fi
 # Interactive-only: `activate` installs precmd/chpwd hooks, and the tokens are
 # only needed by things launched from an interactive shell (the GitHub MCP
 # server interpolates ${GITHUB_PERSONAL_ACCESS_TOKEN} when Claude Code starts).
+#
+# FNOX_SHELL_OUTPUT=none silences the cosmetic "fnox: +2 KEY1, KEY2" notice the
+# hook prints on every new shell. Verified that it does NOT suppress real
+# diagnostics: a missing secret still logs "WARN ... not found".
 if [[ -o interactive ]] && command -v fnox >/dev/null 2>&1; then
+  export FNOX_SHELL_OUTPUT=none
   eval "$(command fnox activate zsh)"
 fi
 
