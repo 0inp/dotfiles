@@ -1,5 +1,5 @@
 {
-  "model": "sonnet",
+  "model": "opus[1m]",
   "statusLine": {
     "type": "command",
     "command": "sh /Users/oinp/.claude/statusline-command.sh"
@@ -31,5 +31,6 @@
     "aws-core@claude-plugins-official": true,
     "aws-dev-toolkit@claude-plugins-official": true
   },
+  "effortLevel": "high",
   "theme": "dark"
 }
