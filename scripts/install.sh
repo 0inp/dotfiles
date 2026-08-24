@@ -1,4 +1,10 @@
 #!/bin/bash
+# Bootstrap a fresh macOS machine from this repo.
+#
+# -e  abort on the first failing step rather than stowing a half-built system
+# -u  treat unset variables as errors
+# -o pipefail  a failure anywhere in a pipeline fails the pipeline
+set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
@@ -32,13 +38,14 @@ fi
 # Install gh-dash extension
 if command -v gh &>/dev/null; then
   echo "Installing GH-Dash extension..."
-  gh extension install dlvhdr/gh-dash
+  # Not idempotent: exits non-zero when the extension is already installed.
+  gh extension install dlvhdr/gh-dash || true
 fi
 
 # Setup worktrunk
 if command -v wt &>/dev/null; then
   echo "Setting up worktrunk"
-  wt config shell install
+  wt config shell install || true
 fi
 
 # Install Mistral vibe CLI
@@ -60,12 +67,18 @@ fi
 
 ## MacOS settings
 echo "Changing macOS defaults..."
-source ./resources/macos_settings.sh
+# Run in a subshell, not `source`: this script has unguarded `killall` calls
+# that exit non-zero when the target app isn't running, which would abort the
+# whole install under `set -e`.
+bash ./resources/macos_settings.sh || echo "⚠️  Some macOS defaults failed to apply" >&2
 
 # csrutil status
 echo "Installation complete..."
 
 echo "Stowing dotfiles..."
-stow -t ~ .
+# One package per module directory. NOT `stow -t ~ .` — that names the repo
+# root itself as the package, which would symlink aerospace/, brew/, CLAUDE.md
+# and .github/ directly into $HOME, and would ignore every .stow-local-ignore.
+stow -t ~ */
 
 echo "Dotfiles setup complete!"

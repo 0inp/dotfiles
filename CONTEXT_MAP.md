@@ -24,10 +24,11 @@ Prefer `$(brew --prefix <pkg>)` over hardcoded paths. For performance-critical p
 | Module       | Description                          | Symlink Target(s)               |
 |--------------|--------------------------------------|----------------------------------|
 | aerospace    | macOS window manager config          | `~/.config/aerospace/`           |
-| brew         | Homebrew packages and taps           | `~/.Brewfile`                    |
+| brew         | Homebrew packages and taps           | `~/.config/brewfile/Brewfile`    |
 | claude       | Claude Code settings                 | `~/.claude/`                      |
 | git          | Git configuration                    | `~/.gitconfig`, `~/.gitignore`   |
 | launchd      | macOS LaunchAgents for automation    | `~/Library/LaunchAgents/`        |
+| lazygit      | Lazygit TUI config                   | `~/.config/lazygit.yaml`         |
 | ghostty      | Ghostty terminal emulator config     | `~/.config/ghostty/`             |
 | gh-dash       | GitHub Dash configuration             | `~/.config/gh-dash/`              |
 | gnupg        | GPG configuration                    | `~/.gnupg/`                      |
@@ -48,6 +49,8 @@ Prefer `$(brew --prefix <pkg>)` over hardcoded paths. For performance-critical p
 - **`CONTEXT_MAP.md`**: This file. High-level overview of the repository.
 
 ## Usage
-1. **Symlinking**: Use `stow` to symlink configurations to `~/`.
+1. **Symlinking**: Run `stow -t ~ */` from the repo root — one package per module
+   directory. Never `stow -t ~ .`, which would treat the repo root as a single
+   package and symlink module directories straight into `$HOME`.
 2. **AI Agents**: Refer to `CONTEXT.md` in each module for tool-specific details.
 3. **Updates**: Edit files in this repo, then re-run `stow` to update symlinks.

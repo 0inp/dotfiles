@@ -12,10 +12,15 @@ Each module has a `CONTEXT.md` with tool-specific details. `CONTEXT_MAP.md` at t
 
 **Stow (apply/remove symlinks):**
 ```bash
-stow -t ~ .          # symlink all packages
-stow -t ~ <module>   # symlink a single module
-stow -D -t ~ .       # remove all symlinks
+stow -t ~ */          # symlink all packages (one package per module directory)
+stow -t ~ <module>    # symlink a single module
+stow -R -t ~ <module> # restow a module after adding/removing files in it
+stow -D -t ~ */       # remove all symlinks
 ```
+
+Never use `stow -t ~ .`. That names the repo root itself as a single package,
+which symlinks `aerospace/`, `brew/`, `CLAUDE.md`, `.github/` and friends
+straight into `$HOME`, and bypasses every `.stow-local-ignore`.
 
 **Install (first time):**
 ```bash
