@@ -1,4 +1,19 @@
+# Allowlist, not a denylist — same rationale as claude/.gitignore.
+#
+# ~/.vibe is stowed from here, so the Vibe CLI writes its runtime state into
+# this directory: update caches, connector bootstrap payloads, experiment
+# flags and shell-tool session logs. New state files land with every release.
+#
+# NOTE: `.vibe/*` (single star) is deliberate — git cannot re-include a path
+# whose PARENT directory is excluded, so `.vibe/**` would make the `!` lines
+# below silently inert.
+
 .env
-.vibe/logs/*
-.vibe/vibehistory
-.vibe/plans/*
+
+# Ignore everything under .vibe/ ...
+.vibe/*
+
+# ... then re-include only real configuration and deliberate declarations.
+!.vibe/config.toml
+!.vibe/skills/
+!.vibe/trusted_folders.toml

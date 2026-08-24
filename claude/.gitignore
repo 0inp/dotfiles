@@ -1,19 +1,26 @@
+# Allowlist, not a denylist.
+#
+# ~/.claude is stowed from this directory, so Claude Code writes ALL of its
+# runtime state in here — currently ~1.5 GB across plugins/, security/ and
+# projects/. New state directories appear with every release, so enumerating
+# what to EXCLUDE is a losing game. Instead: ignore everything, then re-include
+# the handful of files that are actually configuration.
+#
+# NOTE: `.claude/*` (single star) is deliberate. Git cannot re-include a path
+# whose PARENT directory is excluded, so `.claude/**` would make the `!` lines
+# below silently inert. Excluding only the direct children keeps them workable.
+
+# Machine-local Claude Code state, never versioned.
 .claude.json
-.claude/backups/*
-.claude/.last-cleanup
-.claude/cache/*
-.claude/daemon/*
-.claude/daemon.log
-.claude/file-history/*
-.claude/history.jsonl
-.claude/jobs/*
-.claude/mcp-needs-auth-cache.json
-.claude/paste-cache/*
-.claude/plans/*
-.claude/plugins/*
-.claude/projects/*
-.claude/security/*
-.claude/sessions/*
-.claude/shell-snapshots/*
-.claude/tasks/*
-.claude/telemetry/*
+.claude.json.backup
+
+# Ignore everything under .claude/ ...
+.claude/*
+
+# ... then re-include only real configuration.
+!.claude/settings.json
+!.claude/statusline-command.sh
+!.claude/skills/
+
+# Local per-machine overrides stay out even though settings.json is in.
+.claude/settings.local.json
