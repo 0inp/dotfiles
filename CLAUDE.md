@@ -88,26 +88,38 @@ Each module directory mirrors the target filesystem structure relative to `~`. F
 
 Environment variables are set in `.zshenv` (loaded for all shells, including non-interactive).
 
-### Secrets (fnox)
-Secrets are **not** stored in the repo. They live in the macOS login keychain and
-are resolved by [fnox](https://fnox.jdx.dev/), activated from `.zshrc`.
+### Secrets (fnox + Bitwarden)
+Secrets are **not** stored in the repo. Two tiers:
 
+- **Bitwarden vault** — source of truth. Where you add and rotate secrets.
+- **macOS login keychain** — local cache, read by every shell via
+  [fnox](https://fnox.jdx.dev/) (activated from `.zshrc`).
+
+`scripts/.local/bin/secrets-pull` moves vault → keychain.
 `fnox/.config/fnox/config.toml` is committed on purpose: it holds only
 *references* (`{ provider = "keychain", value = "KEY_NAME" }`), never values.
 
 ```bash
+secrets-pull               # refresh keychain from the vault (-n for dry run)
 fnox list                  # what is defined
 fnox get <KEY>             # print one value
-fnox set -g <KEY>          # store/update (reads stdin or prompts)
 fnox doctor                # diagnose resolution
 ```
 
-Two gotchas:
+Bitwarden is deliberately **not** wired into shell startup: `bw` costs ~1.2s per
+call, and per `bw unlock --help` *"after unlocking, any previous session keys
+will no longer be valid"* — so one agent unlocking would break every other tab.
+Unattended agents also cannot answer a master-password prompt. See
+`fnox/CONTEXT.md` for the full reasoning.
+
+Three gotchas:
 - The `value` field is the **provider-side key name**. Omit it and lookups fail
   *silently* (a warning, not an error). Prefer `fnox set` over hand-editing.
 - `activate` registers a `precmd` hook rather than exporting eagerly, so
   `zsh -i -c '...'` (which never draws a prompt) will not see the secrets.
   Real interactive shells are unaffected.
+- `fnox sync` cannot target the keychain (encryption providers only), which is
+  why `secrets-pull` exists instead.
 
 **PATH is built in `zsh/.config/zsh/lib/path.zsh`**, which is sourced twice: from
 `.zshenv` (so non-login, non-interactive shells get a usable PATH) and again from

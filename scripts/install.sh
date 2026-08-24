@@ -48,6 +48,15 @@ if command -v wt &>/dev/null; then
   wt config shell install || true
 fi
 
+# Point the Bitwarden CLI at the EU region — it defaults to the US server and
+# `bw login` fails with a confusing "Invalid master password" otherwise. This
+# setting lives in the CLI's own data.json, not in this repo, so a fresh machine
+# needs it. Fails harmlessly (|| true) if an account is already logged in.
+if command -v bw &>/dev/null; then
+  echo "Pointing Bitwarden CLI at the EU region..."
+  bw config server https://vault.bitwarden.eu >/dev/null || true
+fi
+
 # Install Mistral vibe CLI
 if ! command -v vibe &>/dev/null; then
   echo "Installing Mistral vibe cli"

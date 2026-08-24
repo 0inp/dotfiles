@@ -4,10 +4,15 @@
 Custom scripts for dotfiles management and system automation.
 
 ## Key Files
+`.stow-local-ignore` excludes `*.sh` and `CONTEXT.md`, so the top-level scripts
+are **not** symlinked — they are run from the repo. Only `.local/bin/` is stowed.
+
 | File                     | Description                          | Symlink Target                     |
 |--------------------------|--------------------------------------|------------------------------------|
-| `install.sh`             | Dotfiles installation script         | `~/.local/bin/install-dotfiles`    |
-| `update.sh`              | System update script                 | `~/.local/bin/update-system`       |
+| `install.sh`             | Bootstrap a fresh machine            | *(not stowed; run from repo)*      |
+| `update.sh`              | Update brew/mise/plugins/extensions  | *(not stowed; run from repo)*      |
+| `.local/bin/secrets-pull`| Bitwarden vault -> macOS keychain    | `~/.local/bin/secrets-pull`        |
+| `.local/bin/mux-new-window`| Open a window in herdr             | `~/.local/bin/mux-new-window`      |
 
 ## Dependencies
 - **Shell**: Requires `zsh` or `bash`.
@@ -19,6 +24,7 @@ Custom scripts for dotfiles management and system automation.
 ## Key Features
 - **Installation**: Automates dotfiles symlinking and dependency setup.
 - **Updates**: Orchestrates system updates (Homebrew, macOS, etc.).
+- **Secrets**: `secrets-pull` refreshes the keychain from the Bitwarden vault (see the `fnox` module).
 
 ## AI Notes
 - Focus on `install.sh` for dotfiles setup.
