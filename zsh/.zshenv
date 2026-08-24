@@ -53,3 +53,7 @@ export RIPGREP_CONFIG_PATH="${XDG_CONFIG_HOME}/ripgrep/ripgreprc"
 # Brew
 export HOMEBREW_NO_ENV_HINTS=1
 export HOMEBREW_REQUIRE_TAP_TRUST=1
+# Makes `brew bundle --global` find this repo's Brewfile. Deliberately the
+# _GLOBAL variant: plain HOMEBREW_BUNDLE_FILE would override a project's own
+# ./Brewfile, whereas this one only applies when --global is passed.
+export HOMEBREW_BUNDLE_FILE_GLOBAL="${XDG_CONFIG_HOME}/brewfile/Brewfile"

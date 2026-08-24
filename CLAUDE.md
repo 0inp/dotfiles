@@ -35,11 +35,19 @@ dotup
 ```
 
 **Homebrew package management:**
+
+`HOMEBREW_BUNDLE_FILE_GLOBAL` (set in `.zshenv`) points at this repo's Brewfile,
+so `--global` works from anywhere. It's the `_GLOBAL` variant on purpose — plain
+`HOMEBREW_BUNDLE_FILE` would hijack a project's own `./Brewfile`.
+
 ```bash
-brew bundle --file=./brew/.config/brewfile/Brewfile   # install all packages
-brew bundle check --file=./brew/.config/brewfile/Brewfile  # verify installed
-brew bundle dump --force --file=./brew/.config/brewfile/Brewfile  # regenerate lockfile
+brew bundle --global               # install all packages
+brew bundle check --global         # verify installed
+brew bundle dump --force --global  # regenerate the Brewfile
 ```
+
+`Brewfile.lock.json` is gitignored: it's a machine-specific build artifact, and
+the Brewfile is the source of truth.
 
 **Reload configs after changes:**
 ```bash
