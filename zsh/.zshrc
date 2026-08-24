@@ -2,7 +2,7 @@
 # GPG
 # =========================================================
 
-export GPG_TTY=$(tty)
+export GPG_TTY=$TTY
 
 # =========================================================
 # History
@@ -46,15 +46,26 @@ FPATH="$HOMEBREW_PREFIX/share/zsh/site-functions:$FPATH"
 # Docker completions
 FPATH="$HOME/.docker/completions:$FPATH"
 
+# zsh-completions ships ~150 completion functions as plain _* files. They must
+# be on FPATH *before* compinit — plugins.zsh loads at the very end of this
+# file, which is far too late for compinit to ever see them.
+[[ -d "$ZPLUGINDIR/zsh-completions/src" ]] && FPATH="$ZPLUGINDIR/zsh-completions/src:$FPATH"
+
 # Load completion system
 autoload -Uz compinit
 
-# Only regenerate the dump when it's older than 24h; otherwise skip (-C) for speed
-if [[ -n "$XDG_CACHE_HOME/zsh/zcompdump"(#qN.mh+24) ]]; then
-  compinit -d "$XDG_CACHE_HOME/zsh/zcompdump"
+# Skip the security/rescan pass (-C) for speed, but do a full compinit when the
+# dump is missing, older than 24h, or predates the zsh-completions checkout
+# (which is the case on the first shell after plugins are cloned).
+_zcompdump="$XDG_CACHE_HOME/zsh/zcompdump"
+if [[ ! -f "$_zcompdump" ]] \
+  || [[ -n "$_zcompdump"(#qN.mh+24) ]] \
+  || [[ -d "$ZPLUGINDIR/zsh-completions/src" && "$_zcompdump" -ot "$ZPLUGINDIR/zsh-completions/src" ]]; then
+  compinit -d "$_zcompdump"
 else
-  compinit -C -d "$XDG_CACHE_HOME/zsh/zcompdump"
+  compinit -C -d "$_zcompdump"
 fi
+unset _zcompdump
 
 # Make completion case-insensitive
 # Example: "doc" can complete to "Documents"

@@ -2,7 +2,9 @@
 # Plugins
 # =========================================================
 
-ZPLUGINDIR="$HOME/.config/zsh/plugins"
+# Canonically set in .zshenv, because .zshrc needs it on FPATH before compinit.
+# The fallback keeps this file usable if sourced standalone.
+: ${ZPLUGINDIR:="$HOME/.config/zsh/plugins"}
 
 # Only load plugins in interactive shells (plugins may require zle which is not available in non-interactive shells)
 if [[ -o interactive ]]; then

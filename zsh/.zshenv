@@ -11,6 +11,11 @@ export XDG_STATE_HOME="$HOME/.local/state"
 # Homebrew-installed binary (vivid below, for instance).
 source "$XDG_CONFIG_HOME/zsh/lib/path.zsh"
 
+# ---------- Plugins ----------
+# Defined here (not in plugins.zsh) because .zshrc needs it on FPATH before
+# `compinit` runs — see the completion section in .zshrc.
+export ZPLUGINDIR="$XDG_CONFIG_HOME/zsh/plugins"
+
 # ---------- Editor ----------
 # Default editor used by git, crontab, etc.
 export EDITOR="nvim"
