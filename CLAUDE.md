@@ -84,10 +84,30 @@ Each module directory mirrors the target filesystem structure relative to `~`. F
 - `bindings.zsh` — vi-mode key bindings
 - `fzf.zsh` — fzf configuration and keybindings
 - `prompt.zsh` — prompt via `pure`
-- `secrets.zsh` — not tracked in git (sensitive env vars)
 - `lib/path.zsh` — PATH construction; in `lib/` so the `*.zsh` glob above skips it
 
 Environment variables are set in `.zshenv` (loaded for all shells, including non-interactive).
+
+### Secrets (fnox)
+Secrets are **not** stored in the repo. They live in the macOS login keychain and
+are resolved by [fnox](https://fnox.jdx.dev/), activated from `.zshrc`.
+
+`fnox/.config/fnox/config.toml` is committed on purpose: it holds only
+*references* (`{ provider = "keychain", value = "KEY_NAME" }`), never values.
+
+```bash
+fnox list                  # what is defined
+fnox get <KEY>             # print one value
+fnox set -g <KEY>          # store/update (reads stdin or prompts)
+fnox doctor                # diagnose resolution
+```
+
+Two gotchas:
+- The `value` field is the **provider-side key name**. Omit it and lookups fail
+  *silently* (a warning, not an error). Prefer `fnox set` over hand-editing.
+- `activate` registers a `precmd` hook rather than exporting eagerly, so
+  `zsh -i -c '...'` (which never draws a prompt) will not see the secrets.
+  Real interactive shells are unaffected.
 
 **PATH is built in `zsh/.config/zsh/lib/path.zsh`**, which is sourced twice: from
 `.zshenv` (so non-login, non-interactive shells get a usable PATH) and again from

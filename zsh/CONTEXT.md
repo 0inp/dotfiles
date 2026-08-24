@@ -14,7 +14,7 @@ Configuration for Zsh, the default shell on macOS.
 | `fzf.zsh`                | FZF integration                      | `~/.config/zsh/fzf.zsh`            |
 | `plugins.zsh`            | Plugin management                    | `~/.config/zsh/plugins.zsh`        |
 | `prompt.zsh`             | Prompt customization                 | `~/.config/zsh/prompt.zsh`         |
-| `secrets.zsh`            | Sensitive environment variables      | `~/.config/zsh/secrets.zsh`        |
+| `lib/path.zsh`           | PATH construction (skipped by glob)  | `~/.config/zsh/lib/path.zsh`       |
 
 ## Dependencies
 - **Zsh**: Pre-installed on macOS or install via Homebrew (`brew install zsh`).
@@ -32,6 +32,7 @@ Supports **Apple Silicon** (`/opt/homebrew`) and **Intel** (`/usr/local`). Archi
 - **FZF**: Fuzzy-finder integration.
 - **Plugins**: Extensions for productivity.
 - **Prompt**: Custom shell prompt.
+- **Secrets**: resolved from the macOS keychain by `fnox` (see the `fnox` module); there is no `secrets.zsh` any more.
 
 ## AI Notes
 - Focus on `.zshrc` for startup configuration.

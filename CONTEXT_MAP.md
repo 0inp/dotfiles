@@ -27,6 +27,7 @@ Prefer `$(brew --prefix <pkg>)` over hardcoded paths. For performance-critical p
 | agents       | Cross-tool agent skills (shared)     | `~/.agents/`                     |
 | brew         | Homebrew packages and taps           | `~/.config/brewfile/Brewfile`    |
 | claude       | Claude Code settings                 | `~/.claude/`                      |
+| fnox         | Secret refs (values in the keychain) | `~/.config/fnox/`                |
 | git          | Git configuration                    | `~/.gitconfig`, `~/.gitignore`   |
 | launchd      | macOS LaunchAgents for automation    | `~/Library/LaunchAgents/`        |
 | lazygit      | Lazygit TUI config                   | `~/.config/lazygit.yaml`         |

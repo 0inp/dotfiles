@@ -98,6 +98,20 @@ if [[ -o interactive ]]; then
 fi
 
 # =========================================================
+# Secrets (fnox)
+# =========================================================
+# Resolves secrets out of the macOS login keychain into the environment, using
+# ~/.config/fnox/config.toml. That file holds only *references* — the values
+# live in the keychain, which is why it is safe to commit.
+#
+# Interactive-only: `activate` installs precmd/chpwd hooks, and the tokens are
+# only needed by things launched from an interactive shell (the GitHub MCP
+# server interpolates ${GITHUB_PERSONAL_ACCESS_TOKEN} when Claude Code starts).
+if [[ -o interactive ]] && command -v fnox >/dev/null 2>&1; then
+  eval "$(command fnox activate zsh)"
+fi
+
+# =========================================================
 # Bun completions
 # =========================================================
 if [[ -o interactive ]] && command -v bun >/dev/null 2>&1; then
