@@ -65,7 +65,8 @@ zplugin-update   # defined in zsh/.config/zsh/plugins.zsh
 Each module directory mirrors the target filesystem structure relative to `~`. For example, `zsh/.zshrc` symlinks to `~/.zshrc` and `zsh/.config/zsh/aliases.zsh` symlinks to `~/.config/zsh/aliases.zsh`. Files listed in `.stow-local-ignore` inside a module are excluded from symlinking.
 
 ### Zsh configuration
-`.zshrc` is the entry point; it sources all `~/.config/zsh/*.zsh` files at startup. Modules:
+`.zshenv` (all shells) → `.zprofile` (login shells) → `.zshrc` (interactive shells).
+`.zshrc` sources all `~/.config/zsh/*.zsh` files at startup. Modules:
 - `aliases.zsh` — shell aliases (tools: eza, bat, ripgrep, zoxide)
 - `plugins.zsh` — self-managed plugins (auto-cloned with `_zplugin_load` on first run)
 - `functions.zsh` — reusable shell functions (`rfv`, `timezsh`, `colormap`)
@@ -73,8 +74,18 @@ Each module directory mirrors the target filesystem structure relative to `~`. F
 - `fzf.zsh` — fzf configuration and keybindings
 - `prompt.zsh` — prompt via `pure`
 - `secrets.zsh` — not tracked in git (sensitive env vars)
+- `lib/path.zsh` — PATH construction; in `lib/` so the `*.zsh` glob above skips it
 
-Environment variables and PATH are set in `.zshenv` (loaded for all shells, including non-interactive).
+Environment variables are set in `.zshenv` (loaded for all shells, including non-interactive).
+
+**PATH is built in `zsh/.config/zsh/lib/path.zsh`**, which is sourced twice: from
+`.zshenv` (so non-login, non-interactive shells get a usable PATH) and again from
+`.zprofile`. The second pass is not redundant — macOS's `/etc/zprofile` runs
+`path_helper`, which rebuilds PATH with the system directories first and would
+otherwise demote Homebrew below `/usr/local/bin`. `typeset -U path` keeps the
+re-assertion idempotent. Do not move this file to `~/.config/zsh/*.zsh`: `.zshrc`
+globs that directory *after* `mise activate`, and re-running it there would hoist
+Homebrew above the mise shims.
 
 ### Runtime versions (mise)
 `mise/.config/mise/config.toml` pins global versions: Node 26, Python 3.14, Go 1.26. Mise is activated only in interactive shells.

@@ -5,14 +5,16 @@ export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_STATE_HOME="$HOME/.local/state"
 
+# ---------- PATH ----------
+# Shared with ~/.zprofile, which re-sources it to survive macOS `path_helper`.
+# Also sets HOMEBREW_PREFIX, so it must run before anything that resolves a
+# Homebrew-installed binary (vivid below, for instance).
+source "$XDG_CONFIG_HOME/zsh/lib/path.zsh"
+
 # ---------- Editor ----------
 # Default editor used by git, crontab, etc.
 export EDITOR="nvim"
 export VISUAL="nvim"
-
-# ---------- PATH ----------
-# Personal binaires/scripts
-export PATH="$HOME/.local/bin:$PATH"
 
 # ---------- DOTFILES ----------
 export DOTFILES="$HOME/dotfiles"
@@ -43,13 +45,3 @@ export LG_CONFIG_FILE="${XDG_CONFIG_HOME}/lazygit.yaml"
 # Brew
 export HOMEBREW_NO_ENV_HINTS=1
 export HOMEBREW_REQUIRE_TAP_TRUST=1
-if [[ -d /opt/homebrew ]]; then
-  export HOMEBREW_PREFIX="/opt/homebrew"
-else
-  export HOMEBREW_PREFIX="/usr/local"
-fi
-[[ -d "$HOMEBREW_PREFIX/bin" ]] && export PATH="$HOMEBREW_PREFIX/bin:$PATH"
-[[ -d "$HOMEBREW_PREFIX/sbin" ]] && export PATH="$HOMEBREW_PREFIX/sbin:$PATH"
-
-# Golang
-export PATH=$HOME/go/bin:/usr/local/go/bin:$PATH
