@@ -54,9 +54,6 @@ the Brewfile is the source of truth.
 # Zsh: open a new shell or source directly
 source ~/.zshrc
 
-# Tmux: inside a tmux session
-tmux source-file ~/.config/tmux/tmux.conf
-
 # Herdr:
 herdr server reload-config
 

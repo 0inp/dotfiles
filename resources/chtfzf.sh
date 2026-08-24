@@ -4,7 +4,7 @@
 # license: wtfpl
 # Requirements: curl, fzf
 
-# Docs: use -t flag to launch in a new multiplexer window (herdr or tmux)
+# Docs: use -t flag to launch in a new multiplexer window (herdr)
 #   - ``chtfzf sync`` to cache main list for faster access
 
 set -euf -o pipefail

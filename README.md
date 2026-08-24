@@ -36,7 +36,6 @@ cd ~/dotfiles
 - `git/`: Git configurations.
 - `zsh/`: Zsh shell configurations.
 - `nvim/`: Neovim editor configurations.
-- `tmux/`: Terminal multiplexer configurations.
 - `docs/agents/`: Agent skills and domain documentation.
 
 ## Misc

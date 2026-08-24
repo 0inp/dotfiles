@@ -1,6 +1,6 @@
 #!/bin/bash
-# Update everything this repo installs: Homebrew, runtimes, shell plugins,
-# gh extensions and tmux plugins.
+# Update everything this repo installs: Homebrew, runtimes, shell plugins
+# and gh extensions.
 #
 # No `set -e` here on purpose — one component being offline or broken should
 # not stop the rest from updating. Each step reports its own outcome.
@@ -53,15 +53,6 @@ if command -v gh &>/dev/null; then
   gh extension upgrade --all && echo "✅ gh extensions updated"
 else
   echo "⚠️  gh not installed, skipping"
-fi
-
-# ---------- tmux plugins (TPM) ----------
-echo "🖥️  Updating tmux plugins..."
-TPM_UPDATE="$HOME/.config/tmux/.tmux/plugins/tpm/bin/update_plugins"
-if [[ -x "$TPM_UPDATE" ]]; then
-  "$TPM_UPDATE" all && echo "✅ tmux plugins updated"
-else
-  echo "⚠️  TPM not installed, skipping"
 fi
 
 echo "🎉 Update process completed!"

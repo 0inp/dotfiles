@@ -5,7 +5,7 @@ How the engineering skills should consume this repo's domain documentation when 
 ## Before exploring, read these
 
 - **`CONTEXT_MAP.md`** at the repo root — maps every stow module to its symlink target and its `CONTEXT.md`.
-- **`<module>/CONTEXT.md`** — each top-level stow module (e.g. `zsh/`, `tmux/`, `git/`) has its own `CONTEXT.md` with tool-specific details. Read the ones relevant to the module you're touching.
+- **`<module>/CONTEXT.md`** — each top-level stow module (e.g. `zsh/`, `herdr/`, `git/`) has its own `CONTEXT.md` with tool-specific details. Read the ones relevant to the module you're touching.
 - **`docs/adr/`** — repo has none today. If one gets added, read ADRs that touch the area you're about to work in.
 
 If any of these files don't exist, **proceed silently**. Don't flag their absence; don't suggest creating them upfront.
@@ -20,9 +20,6 @@ This repo is multi-context by stow module — one `CONTEXT.md` per top-level pac
 ├── zsh/
 │   ├── CONTEXT.md
 │   └── .config/zsh/...
-├── tmux/
-│   ├── CONTEXT.md
-│   └── .config/tmux/...
 ├── git/
 │   ├── CONTEXT.md
 │   └── .gitconfig

@@ -41,7 +41,6 @@ Prefer `$(brew --prefix <pkg>)` over hardcoded paths. For performance-critical p
 | ripgrep      | Default flags for `rg`               | `~/.config/ripgrep/ripgreprc`    |
 | scripts      | Custom scripts                       | `~/.local/bin/`                  |
 | stats        | macOS stats widget config            | `~/.config/stats/`               |
-| tmux         | Tmux terminal multiplexer config     | `~/.config/tmux/`                |
 | vibe         | Mistral Vibe CLI config               | `~/.vibe/`                        |
 | worktrunk    | Worktrunk configuration               | `~/.config/worktrunk/`            |
 | zsh          | Zsh shell configuration              | `~/.zshrc`, `~/.config/zsh/`     |

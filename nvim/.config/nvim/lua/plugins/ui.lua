@@ -55,19 +55,13 @@ vim.pack.add({
 require("gitsigns").setup()
 --:
 
---: nvim-tmux-navigation
-vim.pack.add({
-	"https://github.com/alexghergh/nvim-tmux-navigation", -- tmux/nvim navigation
-}, { confirm = false })
-require("nvim-tmux-navigation").setup({
-	disable_when_zoomed = true, -- defaults to false
-	keybindings = {
-		left = "<C-h>",
-		down = "<C-j>",
-		up = "<C-k>",
-		right = "<C-l>",
-		last_active = "<C-\\>",
-		next = "<C-Space>",
-	},
-})
+--: window navigation
+-- Replaces nvim-tmux-navigation, which existed only to hand these keys off to
+-- tmux. Same bindings, now plain window commands.
+vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Go to left window" })
+vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Go to lower window" })
+vim.keymap.set("n", "<C-k>", "<C-w>k", { desc = "Go to upper window" })
+vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Go to right window" })
+vim.keymap.set("n", "<C-\\>", "<C-w>p", { desc = "Go to last active window" })
+vim.keymap.set("n", "<C-Space>", "<C-w>w", { desc = "Cycle to next window" })
 --:
