@@ -27,8 +27,8 @@ gui:
     defaultFgColor:
       - "#c0caf5"
 git:
-  pagers:
-    - pager: delta --dark --paging=never
+  diffRenderers:
+    - command: delta --dark --paging=never
       colorArg: always
   overrideGpg: true
 customCommands:
