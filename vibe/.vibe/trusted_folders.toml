@@ -1,4 +1,6 @@
 trusted = [
     "/Users/oinp/dev/sillant",
+    "/Users/oinp/dev/cine-uio",
+    "/Users/oinp/dev/infra-home",
 ]
 untrusted = []

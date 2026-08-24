@@ -6,11 +6,44 @@ skill_paths = [
 applied_migrations = [
     "bash_read_only_defaults_v1",
 ]
+active_model = "mistral-large"
+connectors = [
+    { name = "github_app", disabled = false },
+]
 
 [tools.bash]
 allowlist = [
+    "'quantity'",
+    "'unitPrice'",
+    "*",
+    "-",
+    "//",
+    "/System/Volumes/Data/*",
+    "/Users/oinp/*",
+    "/Users/oinp/OrbStack/*",
+    "/Users/oinp/dev/sillant/*",
+    "/Users/oinp/dev/sillant/Table-pr-915/*",
+    "/Users/oinp/dev/sillant/Table/*",
+    "/Users/oinp/dev/sillant/sillant-context/*",
+    "/Users/oinp/dev/sillant/sillant-context/rules/*",
+    "/Users/oinp/dotfiles/*",
+    "/Users/oinp/dotfiles/claude/*",
+    "/Users/oinp/dotfiles/claude/.agents/skills/*",
     "/Users/oinp/dotfiles/vibe/.vibe/*",
     "/Users/oinp/dotfiles/vibe/.vibe/plans/*",
+    "/private/tmp/*",
+    "??",
+    "ALB",
+    "AlertFocus",
+    "COUNT",
+    "CandidateColumn.tsx",
+    "OAB",
+    "RuntimeError",
+    "T",
+    "\\n\\n**Once",
+    "\\n\\n//",
+    "_drop_prix_chiffrage_value",
+    "awk",
     "aws --version",
     "aws cloudtrail lookup-events",
     "aws ec2 describe-instance-attribute",
@@ -26,36 +59,136 @@ allowlist = [
     "cat",
     "cd",
     "comm",
+    "const",
+    "cp",
+    "curl",
     "cut",
     "date",
+    "df",
     "diff",
     "dirname",
     "du",
     "echo",
     "file",
     "find",
+    "find . -name \"*.md\" -exec grep -l -i \"code.*rule\\|sillant.*context\\|style.*guide\" {} \\;",
+    "find . -name \"*.py\" -type f -exec grep -l \"class ImportJobStatus\" {} \\;",
+    "find . -name \"*.py\" -type f -exec grep -l \"class PipelinePhase\" {} \\;",
+    "find . -type f -name \"*.md\" -exec grep -l \"1097\" {} \\;",
+    "find . -type f \\( -name \"*.md\" -o -name \"*.txt\" -o -name \"*.json\" \\) -exec grep -l \"DEV-1097\\|price.*db.*bug\\|bible.*pu.*cliquer\" {} \\;",
+    "find /Users/oinp/dev/sillant/sillant-context -name \"*.md\" -exec grep -l \"language\\|français\\|French\" {} \\; <redirect>",
+    "find price-bible/src/lib/i18n/locales -name \"*.json\" -exec grep -l \"spaceType\" {} \\;",
+    "find price_bible/alembic/versions -name \"*.py\" -exec grep -l \"scalar()\" {} \\;",
     "fmt",
+    "focus",
+    "focus.bidId",
+    "focus.lineId",
+    "focus?.lineId",
     "fold",
+    "gh --version",
+    "gh api --help",
+    "gh api -X",
+    "gh api /repos/Sillant/Table/pulls/904/comments",
+    "gh api /repos/Sillant/Table/pulls/904/comments/3661821137",
+    "gh api /repos/Sillant/Table/pulls/904/reviews",
+    "gh api /repos/Sillant/Table/pulls/904/reviews/4792511562",
+    "gh api /repos/Sillant/Table/pulls/904/reviews/4792569221",
+    "gh api /repos/Sillant/Table/pulls/904/reviews/4792569221/comments",
+    "gh api repos/Sillant/Table/pulls/889/comments",
+    "gh api repos/Sillant/Table/pulls/905/comments",
+    "gh api repos/Sillant/Table/pulls/comments/3674810886",
+    "gh api repos/Sillant/vicat/actions/jobs/91729558825/logs",
+    "gh api repos/Sillant/vicat/actions/jobs/91752454454/logs",
+    "gh api repos/Sillant/vicat/actions/jobs/91755445787",
+    "gh api repos/Sillant/vicat/actions/jobs/91755445787/logs",
+    "gh api repos/Sillant/vicat/actions/runs",
+    "gh api repos/Sillant/vicat/actions/runs/30826551847",
+    "gh api repos/Sillant/vicat/actions/runs/30826551847/job/91729558825",
+    "gh api repos/Sillant/vicat/actions/runs/30826551847/jobs",
+    "gh api repos/Sillant/vicat/actions/runs/30826568416",
+    "gh api repos/Sillant/vicat/actions/runs/30826568416/jobs",
+    "gh api repos/Sillant/vicat/branches/staging/protection",
+    "gh api repos/Sillant/vicat/commits/4805949282fb579358a2d532644df0b33c75693b/check-runs",
+    "gh api repos/Sillant/vicat/pulls/629/comments",
+    "gh api repos/Sillant/vicat/pulls/629/comments/3661405102",
+    "gh api repos/Sillant/vicat/pulls/629/comments/3661405102/replies",
+    "gh api repos/Sillant/vicat/pulls/629/reviews",
+    "gh api repos/Sillant/vicat/pulls/646",
+    "gh auth status",
+    "gh pr checkout",
+    "gh pr comment",
+    "gh pr diff",
+    "gh pr list",
+    "gh pr review",
+    "gh pr view",
+    "git -C",
+    "git add",
     "git branch",
     "git checkout",
+    "git cherry-pick",
+    "git clean",
+    "git commit",
+    "git config --get",
+    "git config --get-all",
     "git diff",
     "git fetch",
+    "git grep",
     "git log",
+    "git ls-files",
+    "git ls-remote",
+    "git ls-tree",
+    "git merge-base",
+    "git pull",
+    "git push",
+    "git rebase",
     "git remote -v",
+    "git reset",
+    "git rev-parse",
     "git show",
+    "git show-branch",
+    "git stash",
+    "git status",
+    "git switch",
+    "git worktree",
     "grep",
     "head",
+    "internal",
+    "item.totalPrice",
     "join",
+    "jq",
     "less",
     "ls",
     "md5sum",
+    "mise",
     "mkdir",
+    "mode",
     "more",
     "nl",
+    "npm run",
+    "npm test",
+    "npx",
+    "null",
     "od",
+    "parseNumericOrNull",
     "paste",
+    "pip install",
+    "poetry run",
+    "previousQuantity",
+    "previousUnitPrice",
     "pwd",
+    "python -c",
+    "python -m",
+    "python /tmp/test_changes.py",
+    "python /tmp/test_estimation_changes.py",
+    "python3",
+    "qty",
+    "read",
     "readlink",
+    "return",
+    "rm",
+    "roundToCents",
+    "ruff",
+    "sed",
     "sha1sum",
     "sha256sum",
     "shasum",
@@ -64,20 +197,71 @@ allowlist = [
     "sum",
     "tac",
     "tail",
+    "timeout",
     "touch",
     "tr",
+    "typescript",
+    "typescript\\n//",
     "uname",
+    "undefined",
     "uniq",
     "wc",
     "which",
     "xargs",
+    "→",
 ]
 
 [tools.read_file]
 allowlist = [
     "/Users/oinp/.vibe/plans/*",
     "/Users/oinp/dotfiles/vibe/.vibe/plans/*",
+    "/private/var/folders/55/x5ssy4ps1vj7n5z4_3w4n1cr0000gn/T/vibe-scratchpad-4dddfe6f-inx13u5w/*",
 ]
+
+[tools.web_fetch]
+allowlist = [
+    "api.github.com",
+    "github.com",
+    "linear.app",
+]
+
+[tools.grep]
+allowlist = [
+    "/Users/oinp/dev/sillant/*",
+    "/Users/oinp/dev/sillant/sillant-context/*",
+]
+
+[tools.web_search]
+permission = "always"
+
+[tools.edit]
+allowlist = [
+    "/Users/oinp/dev/sillant/sillant-context/repos/table/*",
+]
+
+[tools.write_file]
+allowlist = [
+    "/Users/oinp/dotfiles/vibe/.vibe/plans/*",
+    "/private/tmp/*",
+]
+
+[tools.connector_github_app_pull_request_read]
+permission = "always"
+
+[tools.connector_github_app_get_file_contents]
+permission = "always"
+
+[tools.connector_github_app_search_pull_requests]
+permission = "always"
+
+[tools.connector_github_app_list_pull_requests]
+permission = "always"
+
+[tools.connector_github_app_list_commits]
+permission = "always"
+
+[tools.connector_github_app_search_repositories]
+permission = "always"
 
 [[models]]
 name = "mistral-large-latest"
