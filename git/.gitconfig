@@ -17,9 +17,6 @@
   wync = "!git stash && git purr && git stash pop && git push"
   cwip = "!git add . && git commit --no-verify -m 'WIP'"
 
-[add "interactive"]
-  useBuiltin = false
-
 [color]
   ui = true
 
@@ -44,6 +41,9 @@
   plus-style                    = bold green
   plus-non-emph-style           = bold green
   plus-emph-style               = bold reverse green
+
+[diff]
+  algorithm = histogram
 
 [delta "interactive"]
   keep-plus-minus-markers = false
@@ -77,6 +77,7 @@
 
 [merge]
   tool = nvimdiff
+  conflictStyle = zdiff3
 
 [pull]
   rebase = merges
@@ -86,6 +87,10 @@
 
 [rebase]
   autosquash = true
+
+[rerere]
+  enabled = true
+  autoupdate = true
 
 [user]
 	signingkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJ6bYKA/jEjXIWVgUY+tMO6Nqv0EAN2LsRwR+FpxLKk5 point-stephane@proton.me"
