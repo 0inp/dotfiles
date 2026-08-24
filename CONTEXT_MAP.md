@@ -24,6 +24,7 @@ Prefer `$(brew --prefix <pkg>)` over hardcoded paths. For performance-critical p
 | Module       | Description                          | Symlink Target(s)               |
 |--------------|--------------------------------------|----------------------------------|
 | aerospace    | macOS window manager config          | `~/.config/aerospace/`           |
+| agents       | Cross-tool agent skills (shared)     | `~/.agents/`                     |
 | brew         | Homebrew packages and taps           | `~/.config/brewfile/Brewfile`    |
 | claude       | Claude Code settings                 | `~/.claude/`                      |
 | git          | Git configuration                    | `~/.gitconfig`, `~/.gitignore`   |
