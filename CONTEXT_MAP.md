@@ -46,13 +46,17 @@ symlinks in `~`, not against intent.
 | python       | Python REPL startup file             | `~/.pythonrc`                                   |
 | ripgrep      | Default flags for `rg`               | `~/.config/ripgrep/`                            |
 | scripts      | Custom scripts                       | `~/.local/bin/`                                 |
-| stats        | macOS stats widget config            | *(not stowed — `.stow-local-ignore` is `^.*$`)* |
 | vibe         | Mistral Vibe CLI config              | `~/.vibe/`                                      |
 | worktrunk    | Worktrunk configuration              | `~/.config/worktrunk/`                          |
 | zsh          | Zsh shell configuration              | `~/.zshrc`, `~/.zshenv`, `~/.zprofile`, `~/.config/zsh/` |
 
 Not stow packages: `docs/` (agent + domain documentation) and `resources/`
 (helper scripts the installer runs), both excluded via `.stow-local-ignore`.
+
+No module for Vorssaint: it has no config file, only UserDefaults. Its settings
+are declared in `scripts/.local/bin/vorssaint-apply` and pushed with `defaults
+write`. It replaced Raycast (launcher, quick links) and Stats (menu bar
+metrics); the old `stats/` module and its plist are in git history.
 
 ### Known overlap: lazygit is split across two modules
 `git/` owns `~/.config/lazygit.yaml` (theme and GUI settings; `.zshenv` points

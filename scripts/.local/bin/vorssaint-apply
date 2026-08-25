@@ -41,24 +41,30 @@ RECORDINGS_DIR="~/Pictures/Screenshots"
 # (`registeredDefaults`); anything absent here is deliberately left alone.
 SETTINGS=(
   # ---------- screen recorder ----------
-  # The whole point of this setup: stop recording and get a file, no editor.
-  # `deliver()` in ScreenRecorderService.swift takes the saveDirect() branch
-  # when this is off. There is no timed "click Edit within N seconds" mode —
-  # it is this boolean or nothing.
-  "recorderOpenEditor	bool	false"
+  # NOTE: `recorderOpenEditor` is ON, captured from the live app. That means a
+  # finished recording opens in the editor instead of taking the saveDirect()
+  # branch in ScreenRecorderService.deliver(), so no .mov lands in the folder
+  # below until it is saved out of the editor — and the editor exports .mp4,
+  # which screenshots-to-mp4.sh ignores (it only converts *.mov). Set this to
+  # false to put the fswatch -> ffmpeg pipeline back in play.
+  "recorderOpenEditor	bool	true"
+
+  # Declared with a tilde on purpose. The app stores whatever the folder panel
+  # returned, which is absolute (/Users/oinp/...); that would not survive a
+  # different machine or user. `saveDestination()` runs expandingTildeInPath on
+  # this value, so the short form is equivalent and portable.
+  # Kept in step with WATCH_DIR in scripts/screenshots-to-mp4.sh.
   "recorderSaveFolder	string	$RECORDINGS_DIR"
 
-  # NOTE: with the editor off, `recorderQuality` sets the encoder bitrate
-  # ceiling only. Its `outputScale` (0.5 / 0.67 / 1.0) is applied by
-  # RecorderExporter, which the direct-save path never reaches — so the file
-  # lands at full native Retina pixel size regardless of this value.
-  # Downscaling still belongs to ffmpeg.
-  "recorderQuality	string	balanced"
+  # With the editor ON, `small` also halves the exported frame (outputScale
+  # 0.5). On the direct-save path it would only cap the bitrate — the capture
+  # engine always sizes the stream from region.pixelRect.
+  "recorderQuality	string	small"
   "recorderFrameRate	int	30"
   "recorderCountdown	int	3"
   "recorderSystemAudio	bool	true"
-  "recorderMicrophone	bool	false"
-  # Recording only; zooms are an editor flourish and this setup has no editor.
+  "recorderMicrophone	bool	true"
+  # Recording only; zooms can still be added in the editor.
   "recorderAutomaticZoom	bool	false"
 
   # ---------- command bar (the Raycast replacement) ----------
@@ -78,28 +84,57 @@ $RECORDINGS_DIR"
 
   # ---------- features ----------
   # Vorssaint is modular: an unavailable feature registers no taps and no
-  # timers. AeroSpace owns every window on this Mac, so everything that would
-  # move, resize or intercept a window is switched off. This is the whole
-  # reason Vorssaint can sit next to a tiling WM.
+  # timers. The two that would move or resize a window stay off — AeroSpace
+  # owns window frames on this Mac. The switcher and dock click only *raise*
+  # windows, so they coexist with a tiling WM and are left on.
   "featureAvailable.windowLayout	bool	false"
   "featureAvailable.windowMaximizer	bool	false"
-  "featureAvailable.switcher	bool	false"
   "featureAvailable.dockPreview	bool	false"
-  "featureAvailable.dockClick	bool	false"
+  "featureAvailable.switcher	bool	true"
+  "featureAvailable.dockClick	bool	true"
 
-  # Kept.
   "featureAvailable.commandBar	bool	true"
   "featureAvailable.screenRecorder	bool	true"
   "featureAvailable.screenshot	bool	true"
   "featureAvailable.mixer	bool	true"
   "featureAvailable.finderCutPaste	bool	true"
   "featureAvailable.shelf	bool	true"
-  "featureAvailable.clipboardHistory	bool	true"
+  # Off: the shelf covers the parking use, and clipboard history is the one
+  # feature here that keeps a record of everything typed.
+  "featureAvailable.clipboardHistory	bool	false"
 
   # These two have no registered default: absent means "built-in behaviour",
   # which is not the same as on. They are set explicitly.
   "finderCutPasteEnabled	bool	true"
   "shelfEnabled	bool	true"
+
+  # ---------- menu bar metrics (what Stats used to show) ----------
+  # Stats ran five status items — CPU mini, RAM mini, Disk mini, Network speed
+  # and Battery. Vorssaint covers all five; the readouts actually enabled are
+  # network, disk usage and battery. Like `finderCutPasteEnabled` these keys
+  # have no registered default, so every one is stated rather than only the
+  # ones being turned on.
+  "featureAvailable.monitorCPU	bool	true"
+  "featureAvailable.monitorMemory	bool	true"
+  "featureAvailable.monitorNetwork	bool	true"
+  "featureAvailable.monitorDisk	bool	true"
+  "featureAvailable.monitorPower	bool	true"
+  "featureAvailable.monitorGPU	bool	true"
+
+  "menuBarNetwork	bool	true"
+  "menuBarDiskUsage	bool	true"
+  "menuBarBattery	bool	true"
+  "menuBarCPU	bool	false"
+  "menuBarMemory	bool	false"
+  "menuBarGPU	bool	false"
+  "menuBarPower	bool	false"
+  "menuBarDiskActivity	bool	false"
+
+  # Left-to-right order of the combined menu bar item. Metrics that are off
+  # keep their place, so turning one on later lands it where it belongs.
+  "menuBarMetricOrder	string	diskUsage,network,battery,batteryTime,cpu,cpuTemperature,gpu,gpuTemperature,memory,batteryTemperature,peripheralBattery,diskActivity,power,fanSpeed"
+  "menuBarMetricSpacing	string	compact"
+  "menuBarMemoryStyle	string	both"
 )
 
 # Saved Command Bar shortcuts — Raycast's Quicklinks. Stored as one JSON blob
