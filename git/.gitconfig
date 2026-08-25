@@ -12,19 +12,32 @@
   lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit -10
   purr = pull --rebase
   ready = rebase -i @{u}
-  upush = "!git push -u origin `git rev-parse --abbrev-ref HEAD`"
   sweep = "!git remote update -p && git purr && git branch --merged | grep -Ev '^\\*|master|main' | xargs -I{} git branch -d {}"
   wync = "!git stash && git purr && git stash pop && git push"
   cwip = "!git add . && git commit --no-verify -m 'WIP'"
 
+[branch]
+  # Most-recently-committed-to first; far more useful than alphabetical once a
+  # repo has more than a handful of branches.
+  sort = -committerdate
+
 [color]
   ui = true
+
+[column]
+  # Multi-column output for `git branch`, `git tag`, `git status` when it fits.
+  ui = auto
 
 [commit]
 	gpgsign = true
 
 [core]
   editor = nvim
+  # Builtin FSMonitor daemon + untracked cache: `git status` stops stat()-ing
+  # the whole worktree on large repos. Verified working on macOS with
+  # `git fsmonitor--daemon status` and `git update-index --test-untracked-cache`.
+  fsmonitor = true
+  untrackedCache = true
   autocrlf = input
   ignorecase = false
   excludesfile = ~/.gitignore
@@ -84,6 +97,9 @@
 
 [push]
   default = current
+  # `git push` on a brand-new branch now sets the upstream itself, which is
+  # what the removed `upush` alias used to do by hand.
+  autoSetupRemote = true
 
 [rebase]
   autosquash = true
