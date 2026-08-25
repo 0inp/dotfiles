@@ -178,4 +178,17 @@ documented in `CONTEXT.md` and listed in `CONTEXT_MAP.md` while never being
 stowed — `worktrunk` was inert for months this way. `stow -n -v -t ~ <module>`
 prints a `LINK:` line for anything not yet linked; no output means it is stowed.
 
+**Relative symlinks inside `~/.claude` resolve from the repo, not from `~`.**
+Stow tree-folds `~/.claude` into a single link to `dotfiles/claude/.claude`, so the
+kernel resolves anything under it against the *physical* path. Every skill in
+`claude/.claude/skills/` pointed at `../../.agents/skills/<name>` — correct if
+`~/.claude` were a real directory, but it lands on
+`dotfiles/claude/.agents/skills/<name>`, which does not exist. All 42 personal
+skills were invisible to Claude Code this way, and the sessions that asked for one
+silently fell back to a plugin skill. Count the `..` from
+`dotfiles/claude/.claude/skills/`, not from `~/.claude/skills/`: the correct target
+is `../../../agents/.agents/skills/<name>`, which also keeps the link inside the
+repo. Verify with `test -e ~/.claude/skills/<name>/SKILL.md`, never with
+`readlink` — a broken link still prints a plausible target.
+
 **Interactive-only guards:** Any zsh code that uses `zle`, `compinit`, or external evals (fzf, mise, zoxide, wt) must be wrapped in `[[ -o interactive ]]`. Sourcing these in non-interactive shells will break scripts and subshells.
