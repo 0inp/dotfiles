@@ -1,9 +1,12 @@
 {
-  "effortLevel": "high",
+  "model": "opus[1m]",
+  "statusLine": {
+    "type": "command",
+    "command": "bash ~/.claude/statusline-command.sh"
+  },
   "enabledPlugins": {
     "atomic-agents@claude-plugins-official": true,
     "aws-core@claude-plugins-official": true,
-    "aws-dev-toolkit@claude-plugins-official": true,
     "chrome-devtools-mcp@claude-plugins-official": true,
     "claude-code-setup@claude-plugins-official": true,
     "claude-md-management@claude-plugins-official": true,
@@ -31,15 +34,11 @@
   "extraKnownMarketplaces": {
     "worktrunk": {
       "source": {
-        "repo": "max-sixty/worktrunk",
-        "source": "github"
+        "source": "github",
+        "repo": "max-sixty/worktrunk"
       }
     }
   },
-  "model": "opus[1m]",
-  "statusLine": {
-    "type": "command",
-    "command": "sh /Users/oinp/.claude/statusline-command.sh"
-  },
+  "effortLevel": "high",
   "theme": "dark"
 }
