@@ -38,7 +38,6 @@ symlinks in `~`, not against intent.
 | git          | Git config **and** `lazygit.yaml`    | `~/.gitconfig`, `~/.gitignore`, `~/.config/lazygit.yaml` |
 | gnupg        | GPG configuration                    | *(nothing stowed — see its CONTEXT.md)*         |
 | herdr        | Agent-aware multiplexer (ex-tmux)    | `~/.config/herdr/`                              |
-| launchd      | macOS LaunchAgents for automation    | `~/Library/LaunchAgents/`                       |
 | lazygit      | Lazygit `customCommands` only        | `~/.config/lazygit/config.yml`                  |
 | mise         | Runtime versions + global npm tools  | `~/.config/mise/`                               |
 | nvim         | Neovim configuration                 | `~/.config/nvim/`                               |
@@ -57,6 +56,11 @@ No module for Vorssaint: it has no config file, only UserDefaults. Its settings
 are declared in `scripts/.local/bin/vorssaint-apply` and pushed with `defaults
 write`. It replaced Raycast (launcher, quick links) and Stats (menu bar
 metrics); the old `stats/` module and its plist are in git history.
+
+Its recorder also replaced the `launchd/` module, whose only LaunchAgent watched
+for `.mov` recordings and re-encoded them. The editor now saves `.mp4` directly,
+so both the agent and `scripts/screenshots-to-mp4.sh` are gone — also in
+history, if a watcher is ever wanted again.
 
 ### Known overlap: lazygit is split across two modules
 `git/` owns `~/.config/lazygit.yaml` (theme and GUI settings; `.zshenv` points

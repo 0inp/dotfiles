@@ -67,7 +67,7 @@ package whose contents are symlinked into `~`. See
 **System**
 - `brew/`: The Brewfile (packages and casks).
 - `fnox/`: Secret *references* — values live in the macOS keychain.
-- `gnupg/`, `launchd/`: GPG and LaunchAgents.
+- `gnupg/`: GPG configuration.
 - `scripts/`: Custom scripts, symlinked into `~/.local/bin`.
 - `resources/`: Helper scripts run by the installer (not stowed).
 

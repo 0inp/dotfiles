@@ -29,9 +29,9 @@ set -euo pipefail
 
 DOMAIN="com.vorssaint.utils"
 
-# Where recordings land. Kept in step with WATCH_DIR in
-# scripts/screenshots-to-mp4.sh — the LaunchAgent watches this folder for the
-# .mov Vorssaint drops and turns it into an .mp4.
+# Where recordings land. The recorder's editor writes the .mp4 here on Save —
+# `saveVideo()` calls saveDestination(fileExtension: "mp4"), the same folder and
+# the same dated name the direct-save path would have used.
 RECORDINGS_DIR="~/Pictures/Screenshots"
 
 # key <tab> type <tab> value        type: bool | int | string | json
@@ -41,24 +41,25 @@ RECORDINGS_DIR="~/Pictures/Screenshots"
 # (`registeredDefaults`); anything absent here is deliberately left alone.
 SETTINGS=(
   # ---------- screen recorder ----------
-  # NOTE: `recorderOpenEditor` is ON, captured from the live app. That means a
-  # finished recording opens in the editor instead of taking the saveDirect()
-  # branch in ScreenRecorderService.deliver(), so no .mov lands in the folder
-  # below until it is saved out of the editor — and the editor exports .mp4,
-  # which screenshots-to-mp4.sh ignores (it only converts *.mov). Set this to
-  # false to put the fswatch -> ffmpeg pipeline back in play.
+  # On, deliberately: the editor is where the .mp4 comes from. The direct-save
+  # branch of ScreenRecorderService.deliver() can only write .mov — the
+  # extension is hardcoded — so getting an .mp4 out of it took an fswatch +
+  # ffmpeg LaunchAgent. Saving from the editor writes the .mp4 itself, which is
+  # why that agent no longer exists. Trim and mute come along for free.
   "recorderOpenEditor	bool	true"
 
   # Declared with a tilde on purpose. The app stores whatever the folder panel
   # returned, which is absolute (/Users/oinp/...); that would not survive a
   # different machine or user. `saveDestination()` runs expandingTildeInPath on
-  # this value, so the short form is equivalent and portable.
-  # Kept in step with WATCH_DIR in scripts/screenshots-to-mp4.sh.
+  # this value, so the short form is equivalent and portable. Note the editor's
+  # own "choose folder" button writes an absolute path back over this key.
   "recorderSaveFolder	string	$RECORDINGS_DIR"
 
-  # With the editor ON, `small` also halves the exported frame (outputScale
-  # 0.5). On the direct-save path it would only cap the bitrate — the capture
-  # engine always sizes the stream from region.pixelRect.
+  # `small` halves the exported frame (outputScale 0.5), which on a Retina
+  # display lands the .mp4 back at logical resolution — near enough the 1080p
+  # the old ffmpeg step produced. This only works because the export runs
+  # through RecorderExporter; the direct-save path ignores outputScale and
+  # writes full native pixels.
   "recorderQuality	string	small"
   "recorderFrameRate	int	30"
   "recorderCountdown	int	3"
