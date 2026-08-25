@@ -26,7 +26,7 @@ require("conform").setup({
 	},
 	notify_on_missing_formatters = true,
 	formatters_by_ft = {
-		bash = { " shfmt" },
+		sh = { "shfmt" },
 		css = { "prettier" },
 		go = { "gofmt", "goimports" },
 		html = { "prettier" },
@@ -43,5 +43,12 @@ require("conform").setup({
 		typescript = prettier_or_biome,
 		typescriptreact = prettier_or_biome,
 	},
+	-- Match scripts/checks.sh and lefthook.yml. Without this, shfmt
+	-- formats with its default tab indent on save while the pre-commit
+	-- hook rewrites the same file to 2 spaces, and the two fight.
+	formatters = {
+		shfmt = {
+			prepend_args = { "-i", "2", "-ci", "-bn" },
+		},
+	},
 })
-
