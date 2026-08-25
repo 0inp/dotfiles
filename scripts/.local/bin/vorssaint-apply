@@ -1,0 +1,248 @@
+#!/bin/bash
+# Apply the Vorssaint settings this repo declares.
+#
+# Why this exists rather than a symlinked config file:
+#   Vorssaint has no config file. Every setting is a SwiftUI @AppStorage
+#   property, which is plain UserDefaults in the `com.vorssaint.utils` domain
+#   (Sources/Vorssaint/Core/Defaults.swift). There is nothing to stow, so the
+#   config lives here as a declaration plus an applier — the same shape as
+#   `secrets-pull`, which pushes declared values into another macOS store.
+#
+#   The app also has an in-app settings export/import (a JSON file carrying
+#   `vorssaintBackupVersion`), but importing is UI-driven and the file mixes in
+#   onboarding state. Writing the keys is the reproducible half.
+#
+# Why Vorssaint must be quit first:
+#   cfprefsd caches a running app's preferences in memory and flushes them on
+#   quit. Writing under a live Vorssaint gets silently overwritten seconds
+#   later. This script quits it, writes, and offers to start it again.
+#
+# Order on a fresh machine:
+#   1. Launch Vorssaint once and walk through onboarding — it is what grants
+#      Screen Recording and Accessibility, which no script can grant.
+#   2. Run this.
+#
+# Usage:
+#   vorssaint-apply         apply every setting below
+#   vorssaint-apply -n      dry run: report what would change, write nothing
+set -euo pipefail
+
+DOMAIN="com.vorssaint.utils"
+
+# Where recordings land. Kept in step with WATCH_DIR in
+# scripts/screenshots-to-mp4.sh — the LaunchAgent watches this folder for the
+# .mov Vorssaint drops and turns it into an .mp4.
+RECORDINGS_DIR="~/Pictures/Screenshots"
+
+# key <tab> type <tab> value        type: bool | int | string | json
+#
+# Only settings that differ from Vorssaint's own defaults, or that would be
+# ambiguous to a reader, are listed. Defaults live in `Defaults.swift`
+# (`registeredDefaults`); anything absent here is deliberately left alone.
+SETTINGS=(
+  # ---------- screen recorder ----------
+  # The whole point of this setup: stop recording and get a file, no editor.
+  # `deliver()` in ScreenRecorderService.swift takes the saveDirect() branch
+  # when this is off. There is no timed "click Edit within N seconds" mode —
+  # it is this boolean or nothing.
+  "recorderOpenEditor	bool	false"
+  "recorderSaveFolder	string	$RECORDINGS_DIR"
+
+  # NOTE: with the editor off, `recorderQuality` sets the encoder bitrate
+  # ceiling only. Its `outputScale` (0.5 / 0.67 / 1.0) is applied by
+  # RecorderExporter, which the direct-save path never reaches — so the file
+  # lands at full native Retina pixel size regardless of this value.
+  # Downscaling still belongs to ffmpeg.
+  "recorderQuality	string	balanced"
+  "recorderFrameRate	int	30"
+  "recorderCountdown	int	3"
+  "recorderSystemAudio	bool	true"
+  "recorderMicrophone	bool	false"
+  # Recording only; zooms are an editor flourish and this setup has no editor.
+  "recorderAutomaticZoom	bool	false"
+
+  # ---------- command bar (the Raycast replacement) ----------
+  # Ships disabled — the bar is unreachable until this is on.
+  "commandBarShortcutEnabled	bool	true"
+  # Format is `modifier+modifier:keyCode` (GlobalShortcut.storageValue).
+  # 49 is Space, so this is ⌘Space — what Raycast was bound to
+  # (`raycastGlobalHotkey = "Command-49"`). Needs Spotlight's own ⌘Space to
+  # stay disabled in System Settings › Keyboard › Keyboard Shortcuts.
+  "commandBarShortcut	string	command:49"
+  # Folders the bar searches files inside, newline-separated.
+  # Downloads/Documents/Desktop/Movies/Pictures/Music/Home/Applications are
+  # already offered as rows by CommandBarExtras.standardFolders(), so they do
+  # not need to be listed anywhere.
+  "commandBarFileScopes	string	~/Downloads
+$RECORDINGS_DIR"
+
+  # ---------- features ----------
+  # Vorssaint is modular: an unavailable feature registers no taps and no
+  # timers. AeroSpace owns every window on this Mac, so everything that would
+  # move, resize or intercept a window is switched off. This is the whole
+  # reason Vorssaint can sit next to a tiling WM.
+  "featureAvailable.windowLayout	bool	false"
+  "featureAvailable.windowMaximizer	bool	false"
+  "featureAvailable.switcher	bool	false"
+  "featureAvailable.dockPreview	bool	false"
+  "featureAvailable.dockClick	bool	false"
+
+  # Kept.
+  "featureAvailable.commandBar	bool	true"
+  "featureAvailable.screenRecorder	bool	true"
+  "featureAvailable.screenshot	bool	true"
+  "featureAvailable.mixer	bool	true"
+  "featureAvailable.finderCutPaste	bool	true"
+  "featureAvailable.shelf	bool	true"
+  "featureAvailable.clipboardHistory	bool	true"
+
+  # These two have no registered default: absent means "built-in behaviour",
+  # which is not the same as on. They are set explicitly.
+  "finderCutPasteEnabled	bool	true"
+  "shelfEnabled	bool	true"
+)
+
+# Saved Command Bar shortcuts — Raycast's Quicklinks. Stored as one JSON blob
+# under `commandBarLinks`, so the whole list is declared here and written at
+# once. `kind` is link | place | script; `place` takes a path and opens it in
+# Finder. Tildes are expanded by the app and must NOT be expanded here: a saved
+# path has to survive a different $HOME.
+#
+# `id` is a UUID the app round-trips. They are pinned so re-applying does not
+# churn the list.
+read -r -d '' LINKS_JSON <<'JSON' || true
+[
+  {
+    "id": "6E4A1C2E-0B7F-4C3A-9E51-2D8F0A1B3C4D",
+    "name": "shots",
+    "kind": "place",
+    "destination": "~/Pictures/Screenshots",
+    "runsWithoutArgument": false
+  }
+]
+JSON
+
+DRY_RUN=0
+[[ "${1:-}" == "-n" || "${1:-}" == "--dry-run" ]] && DRY_RUN=1
+
+command -v python3 >/dev/null || { echo "❌ python3 not found" >&2; exit 1; }
+[[ -d /Applications/Vorssaint.app ]] || {
+  echo "❌ Vorssaint is not installed (brew install --cask vorssaint)" >&2
+  exit 1
+}
+
+# ---------- stop the app so cfprefsd does not overwrite the writes ----------
+WAS_RUNNING=0
+if pgrep -qx Vorssaint; then
+  WAS_RUNNING=1
+  if (( DRY_RUN )); then
+    echo "⚠️  Vorssaint is running — a real run would quit it first."
+  else
+    echo "⏹  Quitting Vorssaint (its cached preferences would overwrite these writes)."
+    osascript -e 'quit app "Vorssaint"' 2>/dev/null || true
+    for _ in {1..20}; do
+      pgrep -qx Vorssaint || break
+      sleep 0.25
+    done
+    pgrep -qx Vorssaint && { echo "❌ Vorssaint would not quit; aborting." >&2; exit 1; }
+  fi
+fi
+
+# ---------- helpers ----------
+# What `defaults read` would print for a value we are about to write, so the
+# comparison is like-for-like and an unchanged key stays quiet.
+normalized() {
+  case "$1" in
+    bool) [[ "$2" == "true" ]] && echo 1 || echo 0 ;;
+    *)    printf '%s' "$2" ;;
+  esac
+}
+
+changed=0
+
+apply() {
+  local key="$1" type="$2" value="$3"
+  local current want
+  current="$(defaults read "$DOMAIN" "$key" 2>/dev/null || printf '<unset>')"
+  want="$(normalized "$type" "$value")"
+
+  if [[ "$current" == "$want" ]]; then
+    echo "✓ $key unchanged"
+    return
+  fi
+
+  changed=1
+  if (( DRY_RUN )); then
+    echo "→ $key WOULD change: $current -> $want"
+    return
+  fi
+
+  case "$type" in
+    bool)   defaults write "$DOMAIN" "$key" -bool "$value" ;;
+    int)    defaults write "$DOMAIN" "$key" -int "$value" ;;
+    string) defaults write "$DOMAIN" "$key" -string "$value" ;;
+    *)      echo "❌ unknown type '$type' for $key" >&2; exit 1 ;;
+  esac
+  echo "✓ $key set to $want"
+}
+
+# A Data-typed key. It is NOT read back with `defaults read`: that prints data
+# as `{length = 144, bytes = 0x5b7b... ... ...7d5d}`, eliding the middle of
+# anything long, so two different lists compare equal. The domain is exported
+# as a plist and the value decoded properly instead.
+apply_json() {
+  local key="$1" json="$2" hex current
+  hex="$(printf '%s' "$json" | python3 -c 'import sys; print(sys.stdin.read().encode().hex())')"
+  current="$(defaults export "$DOMAIN" - 2>/dev/null | python3 -c '
+import plistlib, sys
+value = plistlib.loads(sys.stdin.buffer.read()).get(sys.argv[1])
+print(value.hex() if isinstance(value, bytes) else "")
+' "$key" || true)"
+
+  if [[ "$current" == "$hex" ]]; then
+    echo "✓ $key unchanged"
+    return
+  fi
+
+  changed=1
+  if (( DRY_RUN )); then
+    echo "→ $key WOULD change ($(printf '%s' "$json" | python3 -c 'import json,sys; print(len(json.load(sys.stdin)))') entries)"
+    return
+  fi
+
+  defaults write "$DOMAIN" "$key" -data "$hex"
+  echo "✓ $key set"
+}
+
+# ---------- apply ----------
+for entry in "${SETTINGS[@]}"; do
+  key="${entry%%$'\t'*}"
+  rest="${entry#*$'\t'}"
+  type="${rest%%$'\t'*}"
+  value="${rest#*$'\t'}"
+  apply "$key" "$type" "$value"
+done
+
+# Written compactly: the app re-encodes on its first save anyway, and a stable
+# encoding here keeps the unchanged check meaningful.
+apply_json commandBarLinks \
+  "$(printf '%s' "$LINKS_JSON" | python3 -c 'import json,sys; print(json.dumps(json.load(sys.stdin), separators=(",", ":")))')"
+
+# ---------- finish ----------
+if (( DRY_RUN )); then
+  echo "🔍 Dry run — nothing written."
+  exit 0
+fi
+
+if (( changed )); then
+  echo "🎉 Settings applied."
+else
+  echo "🎉 Nothing to do — Vorssaint already matches this repo."
+fi
+
+if (( WAS_RUNNING )); then
+  echo "▶️  Starting Vorssaint again."
+  open -ga Vorssaint
+else
+  echo "ℹ️  Vorssaint was not running; start it when you want the new settings live."
+fi

@@ -11,6 +11,9 @@ macOS LaunchAgents for background automation tasks.
 ## Dependencies
 - `scripts/screenshots-to-mp4.sh` — the watcher script invoked by the agent
 - `fswatch` and `ffmpeg` via Homebrew
+- **Vorssaint** produces the `.mov` files. Its `recorderSaveFolder` must match
+  `WATCH_DIR` in the script (`~/Pictures/Screenshots`); both are declared in
+  `scripts/.local/bin/vorssaint-apply`. Change one, change the other.
 
 ## Setup
 ```bash

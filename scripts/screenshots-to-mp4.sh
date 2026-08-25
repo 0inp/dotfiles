@@ -1,4 +1,15 @@
 #!/bin/bash
+#
+# Watches the recordings folder and turns every new .mov into a 1080p .mp4.
+#
+# Vorssaint is what drops the .mov here: its recorder saves directly (the
+# "open the editor after recording" toggle is off) into the folder declared by
+# `recorderSaveFolder`, which vorssaint-apply keeps in step with WATCH_DIR
+# below. Vorssaint always writes .mov on that path, and its quality preset only
+# caps the bitrate — the file lands at full native Retina size — so the
+# downscale and the re-encode below are still doing real work.
+#
+# Run by ~/Library/LaunchAgents/com.oinp.screenshots-to-mp4.plist.
 
 # Detect Homebrew prefix (works on Intel + Apple Silicon)
 if command -v brew &>/dev/null; then

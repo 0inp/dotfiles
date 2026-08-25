@@ -13,6 +13,8 @@ are **not** symlinked — they are run from the repo. Only `.local/bin/` is stow
 | `update.sh`              | Update brew/mise/plugins/extensions  | *(not stowed; run from repo)*      |
 | `.local/bin/secrets-pull`| Bitwarden vault -> macOS keychain    | `~/.local/bin/secrets-pull`        |
 | `.local/bin/mux-new-window`| Open a window in herdr             | `~/.local/bin/mux-new-window`      |
+| `.local/bin/vorssaint-apply`| Declared Vorssaint settings -> UserDefaults | `~/.local/bin/vorssaint-apply` |
+| `screenshots-to-mp4.sh`  | Watches the recordings folder, makes mp4 | *(not stowed; run by a LaunchAgent)* |
 
 ## Dependencies
 - **Shell**: Requires `zsh` or `bash`.
@@ -25,6 +27,12 @@ are **not** symlinked — they are run from the repo. Only `.local/bin/` is stow
 - **Installation**: Automates dotfiles symlinking and dependency setup.
 - **Updates**: Orchestrates system updates (Homebrew, macOS, etc.).
 - **Secrets**: `secrets-pull` refreshes the keychain from the Bitwarden vault (see the `fnox` module).
+- **Vorssaint**: `vorssaint-apply` is this repo's Vorssaint config. The app has
+  no config file — every setting is UserDefaults in `com.vorssaint.utils` — so
+  the settings are *declared* in that script and pushed with `defaults write`.
+  It quits Vorssaint first: cfprefsd would otherwise flush the running app's
+  cached preferences over the writes. Run it **after** the first launch, which
+  is what grants Screen Recording and Accessibility. `-n` dry-runs.
 
 ## AI Notes
 - Focus on `install.sh` for dotfiles setup.
