@@ -1,9 +1,25 @@
 name: gitleaks
+
 on:
   push:
+  schedule:
+    # Mondays 06:00 UTC. Until this existed, nothing audited full history.
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
 jobs:
-  scan:
-    name: gitleaks
+  # Per-push backstop for the local pre-commit hook.
+  #
+  # This scans the LAST COMMIT ONLY: gitleaks-action invokes gitleaks with
+  # `--log-opts=-1`, so `fetch-depth: 0` below buys nothing and the job goes
+  # green in ~10s regardless of what is in history. Useful as a net for
+  # commits made with --no-verify, useless as an audit — hence the job below.
+  push-scan:
+    name: last commit
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -12,3 +28,32 @@ jobs:
       - uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # The actual audit: every commit, every blob, once a week.
+  #
+  # Runs the gitleaks binary directly instead of gitleaks-action, because the
+  # action's scan scope varies by event type and is not documented — and a
+  # guaranteed whole-history scan is the entire point of this job.
+  #
+  # Pinned to the version the Brewfile installs so any finding reproduces
+  # locally with `gitleaks git .`. Bump both together.
+  #
+  # Both jobs read .gitleaks.toml from the repo root, so CI and the local
+  # hooks agree on what is a finding and what is triaged.
+  full-history:
+    name: full history
+    if: github.event_name != 'push'
+    runs-on: ubuntu-latest
+    env:
+      GITLEAKS_VERSION: "8.30.1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install gitleaks
+        run: |
+          curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" \
+            | sudo tar -xz -C /usr/local/bin gitleaks
+          gitleaks version
+      - name: Scan full history
+        run: gitleaks git --redact --no-banner .

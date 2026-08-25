@@ -1,0 +1,40 @@
+# gitleaks configuration.
+#
+# Picked up automatically by every scan: the pre-commit hook, the per-push
+# GitHub Action, and the weekly full-history job. One source of truth, so a
+# finding cannot be green locally and red in CI.
+#
+# Everything below is a TRIAGED finding, not a silenced one. A full-history
+# scan of this repo reports 47 findings; without this file that job is red
+# forever, which trains you to ignore it. Each allowlist entry records what
+# was checked and why it is accepted. Add to it only after actually looking
+# at the finding.
+
+[extend]
+useDefault = true
+
+# ── GPG signing key fingerprints ──────────────────────────────────────────
+# A signing key fingerprint is 40 hex chars, which trips `generic-api-key`.
+# It is a PUBLIC identifier — it is what you publish so others can verify
+# your commits. Two of these are in git/.gitconfig, which is still in HEAD.
+[[allowlists]]
+description = "GPG signing key fingerprints are public identifiers, not secrets"
+regexTarget = "line"
+regexes = ['''(?i)signingkey\s*=\s*[0-9A-Fa-f]{16,40}''']
+
+# ── the pre-2023 `symlinks/` layout ───────────────────────────────────────
+# `symlinks/` was this repo's original layout, removed years ago and absent
+# from HEAD. It holds two classes of finding:
+#
+#   * vendored Raycast extension bundles (.js / .js.map) whose minified blobs
+#     trip the `private-key` rule — 39 findings, all false positives.
+#   * two REAL leaked credentials: PACKAGECLOUD_TOKEN and PACKAGECLOUD_NPM_TOKEN,
+#     committed 2020-12-10 (symlinks/zshrc) and 2022-07-07 (symlinks/localrc).
+#
+# The packagecloud tokens are knowingly accepted, not overlooked: the account
+# is not in use, and the values have been public on GitHub since 2020, so
+# rewriting history would not un-publish them. If that ever changes, revoke
+# at packagecloud.io rather than deleting this entry.
+[[allowlists]]
+description = "legacy symlinks/ tree: vendored bundles + triaged 2020/2022 packagecloud tokens"
+paths = ['''^symlinks/''']

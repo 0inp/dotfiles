@@ -69,6 +69,18 @@ mise current   # verify active versions
 zplugin-update   # defined in zsh/.config/zsh/plugins.zsh
 ```
 
+**Git hooks (lefthook):**
+```bash
+lefthook install                # write .git/hooks (idempotent; install.sh runs it)
+lefthook run pre-commit         # run the fast, staged-file checks by hand
+lefthook run pre-push --force   # run the whole-repo checks with nothing to push
+bash scripts/checks.sh all      # just the repo invariants, no lefthook
+LEFTHOOK=0 git commit ...       # bypass for one command
+```
+`lefthook.yml` at the repo root is the config. pre-commit sees only staged
+files (gitleaks, syntax, shellcheck, then shfmt/stylua which auto-restage);
+pre-push runs the whole-repo invariants in `scripts/checks.sh`.
+
 ## Architecture
 
 ### Stow layout
@@ -151,6 +163,29 @@ re-applied from `zvm_after_init_commands` — see the constraint below.
 All commits and tags are GPG-signed using an SSH key (`gpg.format = ssh`). The `gpg "ssh"` section points to `~/.ssh/allowed_signers`.
 
 ## Constraints
+
+**Hooks are inert until `lefthook install` runs.** `lefthook.yml` is committed,
+but `.git/hooks/` is never tracked — so a fresh clone has the config and zero
+enforcement, looking fully protected the whole time. `scripts/install.sh` runs
+it. Verify with `test -x .git/hooks/pre-commit`, not by reading `lefthook.yml`.
+Same class of trap as a stow module that is committed, documented and never
+stowed.
+
+**The gitleaks Action's push job scans one commit, not history.**
+gitleaks-action invokes gitleaks with `--log-opts=-1` — the last commit only —
+so `fetch-depth: 0` buys nothing there. It stayed green in ~10s for months
+while 47 findings, including real credentials from 2020 and 2022, sat in
+older history. The separate weekly `full-history` job exists because of that,
+and runs the gitleaks binary directly rather than the action, whose scan
+scope varies by event type and is undocumented.
+
+**`.gitleaks.toml` is triage, not suppression.** Every allowlist entry records
+a finding that was looked at and accepted — GPG signing-key fingerprints are
+public identifiers, and the legacy `symlinks/` tree holds vendored Raycast
+bundles plus two knowingly-accepted packagecloud tokens that have been public
+since 2020. It also makes the full scan fast: skipping those vendored bundles
+takes a whole-history scan from ~95s to ~0.6s. One config serves the hooks and
+both CI jobs, so a finding cannot be green locally and red in CI.
 
 **Homebrew paths — never hardcode:** Always use `$(brew --prefix <pkg>)` in scripts. For performance-critical startup paths (`.zshenv`, `.zshrc`), use the branch pattern instead of spawning a subprocess:
 ```bash

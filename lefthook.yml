@@ -1,0 +1,137 @@
+# Local enforcement for a PUBLIC repo with no PR stage.
+#
+# Work lands on main and is pushed straight to github.com/0inp/dotfiles, so
+# these hooks are the only gate between a mistake and the internet.
+#
+# The gitleaks GitHub Action is not that gate. It fires AFTER the push, so it
+# can only detect what is already published — and it scans the last commit
+# only (`--log-opts=-1`), which is why it stays green in 10s while real
+# credentials sit in older history. That is the gap this file closes.
+#
+# Split by cost. pre-commit sees only the staged files and must stay fast
+# enough that committing never feels gated. pre-push does the whole-repo work.
+#
+# GOTCHA: hooks live in .git/hooks, which is never tracked. A fresh clone has
+# this file and NO enforcement until `lefthook install` runs — scripts/install.sh
+# does it. Same trap as a stow module that is committed but never stowed.
+#
+# Escape hatch: `git commit --no-verify` / `git push --no-verify`, or prefix a
+# single command with LEFTHOOK=0.
+
+min_version: 2.1.0
+
+pre-commit:
+  # Sequential on purpose. The formatters below use `stage_fixed`, which writes
+  # to .git/index, while `gitleaks --staged` reads that same index; run in
+  # parallel they race on index.lock. Ordering the formatters last means every
+  # reader sees a stable index. On a staged set these jobs take milliseconds,
+  # so parallelism would buy nothing here anyway.
+  parallel: false
+
+  jobs:
+    - name: gitleaks
+      run: gitleaks git --staged --redact --no-banner
+      fail_text: secret detected in staged changes — this repo is PUBLIC
+
+    # gitleaks matches secret *content*. This matches whole files whose mere
+    # presence is the mistake, which entropy rules can miss. A job whose glob
+    # matches no staged file is skipped, so this only fires when it should.
+    #
+    # ── extend this list to taste ──────────────────────────────────────────
+    - name: forbidden-files
+      glob:
+        - "*.pem"
+        - "*.key"
+        - "*.p12"
+        - "*.pfx"
+        - "*.keychain"
+        - "id_rsa"
+        - "id_ed25519"
+        - "id_ecdsa"
+        - ".env"
+        - ".env.*"
+      run: |
+        echo "refusing to commit private-key / environment material:"
+        for f in {staged_files}; do echo "  $f"; done
+        exit 1
+      fail_text: remove these from the index, then re-commit
+
+    - name: syntax-bash
+      glob: "*.sh"
+      run: for f in {staged_files}; do bash -n "$f" || exit 1; done
+
+    # .zshrc / .zshenv / .zprofile carry no .zsh extension, so they need
+    # naming explicitly — a bare "*.zsh" glob silently skips all three.
+    - name: syntax-zsh
+      glob:
+        - "*.zsh"
+        - ".zshrc"
+        - ".zshenv"
+        - ".zprofile"
+      run: for f in {staged_files}; do zsh -n "$f" || exit 1; done
+
+    - name: shellcheck
+      glob: "*.sh"
+      exclude:
+        # Vendored, not ours to restyle: skill packs ship *.template.sh files
+        # full of placeholders, and chtfzf.sh is an upstream cheat.sh wrapper.
+        - "agents/.agents/skills/**"
+        - "resources/chtfzf.sh"
+      run: shellcheck --severity=warning {staged_files}
+
+    - name: json
+      glob: "*.json"
+      run: jq empty {staged_files}
+
+    # ---- formatters last: everything above reads the index, these write it ----
+
+    # These flags are not a preference, they are this repo's existing style:
+    # with them shfmt reports zero changes across install.sh, update.sh,
+    # agent-loop.sh and checks.sh. shfmt's own defaults (tabs) rewrite all
+    # four. -bn additionally permits `|` and `&&` at the start of a
+    # continuation line, which is how the pipelines here are already written.
+    - name: shfmt
+      glob: "*.sh"
+      exclude:
+        - "agents/.agents/skills/**"
+        - "resources/chtfzf.sh"
+        # Deliberately column-aligned colour assignments that shfmt would
+        # explode onto one line each. The alignment is the point.
+        - "claude/.claude/statusline-command.sh"
+      run: shfmt -i 2 -ci -bn -w {staged_files}
+      stage_fixed: true
+
+    # stylua's defaults already pass on all 17 nvim lua files unchanged, so
+    # this adds enforcement without a reformatting commit.
+    - name: stylua
+      glob: "*.lua"
+      run: stylua {staged_files}
+      stage_fixed: true
+
+pre-push:
+  # Safe to parallelise: every job here is read-only.
+  parallel: true
+
+  jobs:
+    # Scans the commits about to be pushed, which also covers anything that
+    # slipped in via `commit --no-verify`.
+    #
+    # Scoped to the push range so a failure always names something you are
+    # about to publish. History is audited weekly in CI instead — the
+    # per-push Action scans the LAST COMMIT only (`--log-opts=-1`).
+    - name: secrets
+      run: bash scripts/checks.sh secrets
+      fail_text: secret in the commits being pushed — rewrite before pushing
+
+    # Repo invariants. Each encodes a documented past breakage; see the header
+    # of scripts/checks.sh for what and why.
+    - name: stow
+      run: bash scripts/checks.sh stow
+    - name: symlinks
+      run: bash scripts/checks.sh symlinks
+    - name: zvm
+      run: bash scripts/checks.sh zvm
+    - name: fnox
+      run: bash scripts/checks.sh fnox
+    - name: brewfile
+      run: bash scripts/checks.sh brewfile

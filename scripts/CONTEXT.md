@@ -12,6 +12,7 @@ are **not** symlinked — they are run from the repo. Only `.local/bin/` is stow
 | `install.sh`             | Bootstrap a fresh machine            | *(not stowed; run from repo)*      |
 | `update.sh`              | Update brew/mise/plugins/extensions  | *(not stowed; run from repo)*      |
 | `changelog.sh`           | Changelog digest sourced by `update.sh` | *(not stowed; sourced, not run)* |
+| `checks.sh`              | Repo invariants run by lefthook pre-push | *(not stowed; run from repo)*     |
 | `.local/bin/secrets-pull`| Bitwarden vault -> macOS keychain    | `~/.local/bin/secrets-pull`        |
 | `.local/bin/mux-new-window`| Open a window in herdr             | `~/.local/bin/mux-new-window`      |
 | `.local/bin/vorssaint-apply`| Declared Vorssaint settings -> UserDefaults | `~/.local/bin/vorssaint-apply` |
@@ -54,6 +55,30 @@ are **not** symlinked — they are run from the repo. Only `.local/bin/` is stow
   - **It may never break the run.** `update.sh` omits `set -e` on purpose; every
     function here returns 0 and every failed lookup degrades to a bare
     `old → new` line. Missing `jq` or `gh` costs sections, not the digest.
+- **Repo invariants**: `checks.sh` holds the tests lefthook runs before a push.
+  They are not linters — each encodes a way this repo has actually broken, so
+  the failure message names the fix. Run any subset by hand:
+  `bash scripts/checks.sh symlinks`, or `all` for everything. Exit status is
+  the number of failed checks.
+
+  | Check      | Catches                                                    |
+  |------------|------------------------------------------------------------|
+  | `secrets`  | gitleaks over the commits about to be pushed                |
+  | `stow`     | a module committed and documented but never stowed          |
+  | `symlinks` | a relative skill link with the wrong `..` depth             |
+  | `zvm`      | the uppercase `ZVM_AFTER_INIT_COMMANDS`, which nothing reads |
+  | `fnox`     | a literal value where a keychain reference belongs          |
+  | `brewfile` | installed packages drifting from the manifest               |
+
+  Two constraints worth knowing before editing it:
+  - **`symlinks` reads the git index, not the working tree.** It resolves each
+    link relative to its path *in the repo*, which is where the kernel
+    resolves it once stow tree-folds the parent. Fixing a link in the working
+    tree without staging it leaves the check red, correctly.
+  - **`secrets` scans the push range, not history.** A full-history scan is
+    ~95s here. Nothing currently audits full history — see the note in
+    `checks.sh`; the GitHub Action scans the last commit only.
+
 - **Vorssaint**: `vorssaint-apply` is this repo's Vorssaint config. The app has
   no config file — every setting is UserDefaults in `com.vorssaint.utils` — so
   the settings are *declared* in that script and pushed with `defaults write`.

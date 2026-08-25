@@ -48,6 +48,14 @@ if command -v wt &>/dev/null; then
   wt config shell install || true
 fi
 
+# Install the git hooks. lefthook.yml is committed, but the hooks it drives
+# live in .git/hooks, which git never tracks — so a fresh clone has the config
+# and zero enforcement until this runs. See lefthook.yml.
+if command -v lefthook &>/dev/null; then
+  echo "Installing git hooks..."
+  lefthook install
+fi
+
 # Point the Bitwarden CLI at the EU region — it defaults to the US server and
 # `bw login` fails with a confusing "Invalid master password" otherwise. This
 # setting lives in the CLI's own data.json, not in this repo, so a fresh machine
