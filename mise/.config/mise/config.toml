@@ -2,3 +2,10 @@
 node = "26"
 python = "3.14"
 go = "1.26"
+
+# TypeScript 7 (the Go rewrite) ships the language server used by Neovim via
+# nvim-lspconfig's `tsc` server: `tsc --lsp --stdio`. lspconfig prefers a
+# project's own node_modules/.bin/tsc, but SKIPS it when that binary predates
+# 7.0 and falls back to $PATH — so a global TS 7 here is what keeps the LSP
+# attaching in repos still pinned to TypeScript 5/6.
+"npm:typescript" = "7"

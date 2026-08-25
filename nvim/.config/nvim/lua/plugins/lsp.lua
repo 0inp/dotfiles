@@ -56,8 +56,11 @@ local lsp_servers = {
 			},
 		},
 	},
-	-- TS/JS
-	ts_ls = {},
+	-- TS/JS — TypeScript 7's native (Go) language server, `tsc --lsp --stdio`.
+	-- Not a Mason package: Mason has no `typescript` registry entry, so the
+	-- binary comes from mise (`"npm:typescript" = "7"`) instead. See
+	-- `non_mason_servers` below.
+	tsc = {},
 	-- CSS
 	tailwindcss = {},
 	-- Markdown
@@ -95,8 +98,20 @@ local lsp_servers = {
 	},
 }
 
+-- Servers whose binary does NOT come from Mason. They must be excluded from
+-- `ensure_installed` (mason-tool-installer errors on unknown registry names)
+-- and enabled by hand, because mason-lspconfig's `automatic_enable` only fires
+-- for servers Mason itself installed.
+local non_mason_servers = {
+	tsc = true, -- from mise: "npm:typescript" = "7"
+}
+
+local mason_servers = vim.tbl_filter(function(name)
+	return not non_mason_servers[name]
+end, vim.tbl_keys(lsp_servers))
+
 require("mason-tool-installer").setup({
-	ensure_installed = vim.list_extend(vim.tbl_keys(lsp_servers), mason_tools),
+	ensure_installed = vim.list_extend(mason_servers, mason_tools),
 })
 vim.keymap.set("n", "<leader>M", vim.cmd.Mason, { desc = "Mason" })
 
@@ -113,6 +128,9 @@ capabilities = vim.tbl_deep_extend("force", capabilities, require("mini.completi
 for server, config in pairs(lsp_servers) do
 	vim.lsp.config(server, vim.tbl_extend("keep", { capabilities = capabilities }, config))
 end
+
+-- Mason-installed servers are enabled by mason-lspconfig; these are not.
+vim.lsp.enable(vim.tbl_keys(non_mason_servers))
 
 -- Add custom LSP commands
 vim.api.nvim_create_user_command("LspInfo", function()
