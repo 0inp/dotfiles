@@ -1,8 +1,6 @@
 [list]
 summary = true
-
-[commit.generation]
-command = "opencode run -m mistral/devstral-medium-latest --variant fast"
+json-schema = 2
 
 [post-start]
 copy = "wt step copy-ignored"
