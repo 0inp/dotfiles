@@ -19,4 +19,4 @@ function rfv() {
 	--bind 'enter:become(nvim {1} +{2})'
 }
 zle -N rfv{,}
-ZVM_AFTER_INIT_COMMANDS+=("bindkey '^g' rfv")
+zvm_after_init_commands+=("bindkey '^g' rfv")
