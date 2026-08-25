@@ -98,6 +98,29 @@ if [[ -o interactive ]]; then
 fi
 
 # =========================================================
+# Shell history (atuin)
+# =========================================================
+# SQLite-backed history recording cwd, exit code, duration and session, with
+# fuzzy search over the lot. Replaces Ctrl-R only — see the flags below.
+#
+# Interactive-only: `init` registers precmd/preexec/zshaddhistory hooks and zle
+# widgets, neither of which exist in a non-interactive shell.
+#
+# Flags, all deliberate:
+#   --disable-up-arrow  Up/Down stay on zsh-history-substring-search (prefix
+#                       matching), which is bound in bindings.zsh and is a
+#                       different, complementary interaction to fuzzy search.
+#   --disable-ai        Stops atuin binding `?` to its AI prompt. `?` is a
+#                       motion in vi normal mode and hijacking it breaks
+#                       zsh-vi-mode.
+#
+# NOTE: the keybindings atuin sets here do NOT survive zsh-vi-mode's keymap
+# reset, so they are re-applied from zvm_after_init_commands in bindings.zsh.
+if [[ -o interactive ]] && command -v atuin >/dev/null 2>&1; then
+  eval "$(command atuin init zsh --disable-up-arrow --disable-ai)"
+fi
+
+# =========================================================
 # Secrets (fnox)
 # =========================================================
 # Resolves secrets out of the macOS login keychain into the environment, using

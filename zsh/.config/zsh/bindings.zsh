@@ -28,4 +28,15 @@ zvm_after_init_commands+=(
   "bindkey '^[[B' history-substring-search-down"
 )
 
+# Same treatment for atuin: `atuin init` runs from .zshrc, well before
+# zsh-vi-mode loads from plugins.zsh, so ZVM wipes its bindings. Re-apply them
+# afterwards. Up/Down are deliberately absent — those belong to
+# history-substring-search (see --disable-up-arrow in .zshrc).
+if command -v atuin >/dev/null 2>&1; then
+  zvm_after_init_commands+=(
+    "bindkey -M emacs '^r' atuin-search"
+    "bindkey -M viins '^r' atuin-search-viins"
+    "bindkey -M vicmd '/' atuin-search"
+  )
+fi
 
