@@ -25,8 +25,11 @@ export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 alias diff='diff --color=auto'
 alias df='df -h'
 
-# ssh
-alias ssh='TERM=xterm ssh'
+# NOTE: `ssh` is deliberately NOT aliased to `TERM=xterm ssh` any more. Ghostty
+# now handles this itself via `shell-integration-features = ...,ssh-env,
+# ssh-terminfo` (see the ghostty module): it propagates TERM and installs its
+# own terminfo on the remote host. Downgrading to plain `xterm` would throw
+# away colours and features the remote can otherwise use.
 
 # IP address
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
