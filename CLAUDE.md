@@ -81,7 +81,8 @@ Each module directory mirrors the target filesystem structure relative to `~`. F
   aliased to `rg`; rg's defaults live in the `ripgrep` module instead.
 - `plugins.zsh` — self-managed plugins (auto-cloned with `_zplugin_load` on first run)
 - `functions.zsh` — reusable shell functions (`rfv`, `timezsh`, `colormap`)
-- `bindings.zsh` — vi-mode key bindings
+- `bindings.zsh` — vi-mode key bindings, plus the `zvm_after_init_commands`
+  entries that re-apply bindings zsh-vi-mode would otherwise wipe
 - `fzf.zsh` — fzf configuration and keybindings
 - `prompt.zsh` — prompt via `pure`
 - `lib/path.zsh` — PATH construction; in `lib/` so the `*.zsh` glob above skips it
@@ -131,7 +132,20 @@ globs that directory *after* `mise activate`, and re-running it there would hois
 Homebrew above the mise shims.
 
 ### Runtime versions (mise)
-`mise/.config/mise/config.toml` pins global versions: Node 26, Python 3.14, Go 1.26. Mise is activated only in interactive shells.
+`mise/.config/mise/config.toml` pins global versions: Node 26, Python 3.14,
+Go 1.26. Mise is activated only in interactive shells.
+
+It also carries `"npm:typescript" = "7"`. That is not a runtime pin — Neovim's
+`tsc` language server needs a TypeScript 7 binary on `$PATH` as a fallback for
+repos still on TS 5/6, and Mason has no `typescript` package. See
+`nvim/CONTEXT.md`.
+
+### Shell history (atuin)
+`atuin` replaces Ctrl-R with fuzzy search over a SQLite history that records
+cwd, exit code and duration. Initialised interactive-only in `.zshrc` with
+`--disable-up-arrow` (Up/Down stay on zsh-history-substring-search) and
+`--disable-ai` (it would otherwise bind `?`, a vi motion). Its bindings are
+re-applied from `zvm_after_init_commands` — see the constraint below.
 
 ### Git signing
 All commits and tags are GPG-signed using an SSH key (`gpg.format = ssh`). The `gpg "ssh"` section points to `~/.ssh/allowed_signers`.
@@ -146,5 +160,22 @@ else
   # Intel
 fi
 ```
+
+**zsh-vi-mode keybindings — the array name is lowercase:** any `bindkey` that
+must outlive zsh-vi-mode's keymap rebuild goes in **`zvm_after_init_commands`**.
+The uppercase `ZVM_AFTER_INIT_COMMANDS` is read by nothing and fails silently;
+three bindings (`^g`→rfv, Up/Down→history-substring-search) were dead this way.
+The `ZVM_*_MODE_CURSOR` / `ZVM_VI_HIGHLIGHT_*` settings *are* uppercase — only
+the command arrays are lowercase.
+
+**Verify keybindings in a real pty.** `zsh -i -c '...'` never draws a prompt, so
+zsh-vi-mode's deferred init never runs and every `zvm_after_init_commands` entry
+appears broken (or, worse, appears fine). Same trap as the `fnox activate`
+precmd hook. Drive a real `pty.fork()` and assert on `bindkey '<key>'` output.
+
+**Check the symlink before debugging the syntax.** A module can be committed,
+documented in `CONTEXT.md` and listed in `CONTEXT_MAP.md` while never being
+stowed — `worktrunk` was inert for months this way. `stow -n -v -t ~ <module>`
+prints a `LINK:` line for anything not yet linked; no output means it is stowed.
 
 **Interactive-only guards:** Any zsh code that uses `zle`, `compinit`, or external evals (fzf, mise, zoxide, wt) must be wrapped in `[[ -o interactive ]]`. Sourcing these in non-interactive shells will break scripts and subshells.

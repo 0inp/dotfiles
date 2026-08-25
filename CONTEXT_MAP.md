@@ -21,30 +21,46 @@ Prefer `$(brew --prefix <pkg>)` over hardcoded paths. For performance-critical p
 - **Symlink Targets**: Configurations are symlinked to their expected locations in `~/`.
 
 ## Structure
-| Module       | Description                          | Symlink Target(s)               |
-|--------------|--------------------------------------|----------------------------------|
-| aerospace    | macOS window manager config          | `~/.config/aerospace/`           |
-| agents       | Cross-tool agent skills (shared)     | `~/.agents/`                     |
-| brew         | Homebrew packages and taps           | `~/.config/brewfile/Brewfile`    |
-| claude       | Claude Code settings                 | `~/.claude/`                      |
-| fnox         | Secret refs (values in the keychain) | `~/.config/fnox/`                |
-| git          | Git configuration                    | `~/.gitconfig`, `~/.gitignore`   |
-| launchd      | macOS LaunchAgents for automation    | `~/Library/LaunchAgents/`        |
-| lazygit      | Lazygit TUI config                   | `~/.config/lazygit.yaml`         |
-| ghostty      | Ghostty terminal emulator config     | `~/.config/ghostty/`             |
-| gh-dash       | GitHub Dash configuration             | `~/.config/gh-dash/`              |
-| gnupg        | GPG configuration                    | `~/.gnupg/`                      |
-| htop         | Htop process viewer config           | `~/.config/htop/`                |
-| mise         | Mise version manager config          | `~/.config/mise/`                |
-| nvim         | Neovim configuration                 | `~/.config/nvim/`                |
-| pgcli        | PgCLI SQL client config              | `~/.config/pgcli/`               |
-| python       | Python environment config            | `~/.config/python/`              |
-| ripgrep      | Default flags for `rg`               | `~/.config/ripgrep/ripgreprc`    |
-| scripts      | Custom scripts                       | `~/.local/bin/`                  |
-| stats        | macOS stats widget config            | `~/.config/stats/`               |
-| vibe         | Mistral Vibe CLI config               | `~/.vibe/`                        |
-| worktrunk    | Worktrunk configuration               | `~/.config/worktrunk/`            |
-| zsh          | Zsh shell configuration              | `~/.zshrc`, `~/.config/zsh/`     |
+
+Every row is a stow package. Targets below were verified against the actual
+symlinks in `~`, not against intent.
+
+| Module       | Description                          | Symlink Target(s)                               |
+|--------------|--------------------------------------|-------------------------------------------------|
+| aerospace    | macOS window manager config          | `~/.config/aerospace/`                          |
+| agents       | Cross-tool agent skills (shared)     | `~/.agents/`                                    |
+| brew         | Homebrew packages and taps           | `~/.config/brewfile/`                           |
+| btop         | Resource monitor (replaced htop)     | `~/.config/btop/`                               |
+| claude       | Claude Code settings                 | `~/.claude/`, `~/.claude.json`                  |
+| fnox         | Secret refs (values in the keychain) | `~/.config/fnox/`                               |
+| gh-dash      | GitHub Dash configuration            | `~/.config/gh-dash/`                            |
+| ghostty      | Ghostty terminal emulator config     | `~/.config/ghostty/`                            |
+| git          | Git config **and** `lazygit.yaml`    | `~/.gitconfig`, `~/.gitignore`, `~/.config/lazygit.yaml` |
+| gnupg        | GPG configuration                    | *(nothing stowed — see its CONTEXT.md)*         |
+| herdr        | Agent-aware multiplexer (ex-tmux)    | `~/.config/herdr/`                              |
+| launchd      | macOS LaunchAgents for automation    | `~/Library/LaunchAgents/`                       |
+| lazygit      | Lazygit `customCommands` only        | `~/.config/lazygit/config.yml`                  |
+| mise         | Runtime versions + global npm tools  | `~/.config/mise/`                               |
+| nvim         | Neovim configuration                 | `~/.config/nvim/`                               |
+| pgcli        | PgCLI SQL client config              | `~/.config/pgcli/`                              |
+| python       | Python REPL startup file             | `~/.pythonrc`                                   |
+| ripgrep      | Default flags for `rg`               | `~/.config/ripgrep/`                            |
+| scripts      | Custom scripts                       | `~/.local/bin/`                                 |
+| stats        | macOS stats widget config            | *(not stowed — `.stow-local-ignore` is `^.*$`)* |
+| vibe         | Mistral Vibe CLI config              | `~/.vibe/`                                      |
+| worktrunk    | Worktrunk configuration              | `~/.config/worktrunk/`                          |
+| zsh          | Zsh shell configuration              | `~/.zshrc`, `~/.zshenv`, `~/.zprofile`, `~/.config/zsh/` |
+
+Not stow packages: `docs/` (agent + domain documentation) and `resources/`
+(helper scripts the installer runs), both excluded via `.stow-local-ignore`.
+
+### Known overlap: lazygit is split across two modules
+`git/` owns `~/.config/lazygit.yaml` (theme and GUI settings; `.zshenv` points
+`LG_CONFIG_FILE` at it) while `lazygit/` owns `~/.config/lazygit/config.yml`
+(only `customCommands`). Because `LG_CONFIG_FILE` **replaces** lazygit's default
+config path rather than adding to it, the `customCommands` in the `lazygit/`
+module are probably never loaded. Unverified — press `<c-p>` on a local branch
+in lazygit to find out.
 
 ## Key Files
 - **`CONTEXT.md`**: Tool-specific context (purpose, key files, dependencies) in each module.
