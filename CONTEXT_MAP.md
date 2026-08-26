@@ -38,6 +38,7 @@ symlinks in `~`, not against intent.
 | git          | Git config **and** `lazygit.yaml`    | `~/.gitconfig`, `~/.gitignore`, `~/.config/lazygit.yaml` |
 | gnupg        | GPG configuration                    | *(nothing stowed — see its CONTEXT.md)*         |
 | herdr        | Agent-aware multiplexer (ex-tmux)    | `~/.config/herdr/`                              |
+| launchd      | LaunchAgents (screen-recording shrink) | `~/Library/LaunchAgents/`                     |
 | lazygit      | Lazygit `customCommands` only        | `~/.config/lazygit/config.yml`                  |
 | mise         | Runtime versions + global npm tools  | `~/.config/mise/`                               |
 | nvim         | Neovim configuration                 | `~/.config/nvim/`                               |
@@ -57,10 +58,15 @@ are declared in `scripts/.local/bin/vorssaint-apply` and pushed with `defaults
 write`. It replaced Raycast (launcher, quick links) and Stats (menu bar
 metrics); the old `stats/` module and its plist are in git history.
 
-Its recorder also replaced the `launchd/` module, whose only LaunchAgent watched
-for `.mov` recordings and re-encoded them. The editor now saves `.mp4` directly,
-so both the agent and `scripts/screenshots-to-mp4.sh` are gone — also in
-history, if a watcher is ever wanted again.
+Its recorder made the old `launchd/` agent redundant — that one watched for
+`.mov` and converted to `.mp4`, and the editor now saves `.mp4` directly. The
+module came back for a different reason: Vorssaint cannot be configured down to
+a *shareable* size. Its presets scale resolution, never bitrate, and
+`recorderFrameRate` is ignored outright by the export path (declared 30, reads
+back 30, every file is 60fps — verify with `ffprobe`, not `defaults read`). So
+`com.oinp.screenshots-compress` re-encodes anything over 20 MB for Discord. The
+original `.mov`-to-`.mp4` agent and `scripts/screenshots-to-mp4.sh` are still in
+history at `46fb86e^`.
 
 ### Known overlap: lazygit is split across two modules
 `git/` owns `~/.config/lazygit.yaml` (theme and GUI settings; `.zshenv` points

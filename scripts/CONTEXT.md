@@ -16,6 +16,7 @@ are **not** symlinked — they are run from the repo. Only `.local/bin/` is stow
 | `.local/bin/secrets-pull`| Bitwarden vault -> macOS keychain    | `~/.local/bin/secrets-pull`        |
 | `.local/bin/mux-new-window`| Open a window in herdr             | `~/.local/bin/mux-new-window`      |
 | `.local/bin/vorssaint-apply`| Declared Vorssaint settings -> UserDefaults | `~/.local/bin/vorssaint-apply` |
+| `.local/bin/screenshots-compress`| Shrink screen recordings under 20 MB | `~/.local/bin/screenshots-compress` |
 
 ## Dependencies
 - **Shell**: Requires `zsh` or `bash`.

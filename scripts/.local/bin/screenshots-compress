@@ -1,0 +1,253 @@
+#!/bin/bash
+# Shrink oversized screen recordings in ~/Pictures/Screenshots so they can be
+# dropped straight into a Discord message.
+#
+# Why this exists rather than a Vorssaint setting:
+#   Vorssaint's recorder exposes only coarse quality presets, and they scale
+#   resolution, not bitrate. Worse, `recorderFrameRate` is declared 30 in
+#   vorssaint-apply, reads back as 30, and is still ignored — every file the
+#   editor exports is 60fps. Its output lands at 4.7-9.8 Mbps; a 6-minute
+#   recording is 211 MB. Getting under 20 MB needs roughly a 10x cut, which no
+#   preset in the app can express. So the reduction happens here instead.
+#
+# This is the successor to com.oinp.screenshots-to-mp4 (deleted in 46fb86e),
+# which watched for .mov and re-encoded to .mp4. Vorssaint writes .mp4 itself
+# now, so the format conversion is gone and only the size problem is left.
+#
+# Run by ~/Library/LaunchAgents/com.oinp.screenshots-compress.plist, which fires
+# it via WatchPaths whenever the folder changes. It scans, works, and exits.
+#
+# Usage:
+#   screenshots-compress          scan the folder and compress what qualifies
+#   screenshots-compress FILE...  compress specific files, ignoring the size gate
+set -euo pipefail
+
+# ---------------------------------------------------------------- configuration
+# Every value is overridable from the plist's EnvironmentVariables, so tuning
+# never means editing this file.
+WATCH_DIR="${SCREENSHOTS_DIR:-$HOME/Pictures/Screenshots}"
+TARGET_MB="${TARGET_MB:-20}"            # Discord's ceiling. Decimal MB, not MiB.
+MAX_LONG_EDGE="${MAX_LONG_EDGE:-1920}"  # cap the long edge; never upscales
+FPS_CAP="${FPS_CAP:-30}"                # 60fps of a mostly-static screen is waste
+AUDIO_KBPS="${AUDIO_KBPS:-64}"          # mono AAC: this is narration, not music
+SAFETY="${SAFETY:-0.95}"                # headroom for container + rate overshoot
+MIN_VIDEO_KBPS="${MIN_VIDEO_KBPS:-150}" # floor; below this x265 produces soup
+X265_PRESET="${X265_PRESET:-medium}"
+SUFFIX=".compressed.mp4"
+
+# launchd hands the job a minimal PATH (/usr/bin:/bin:/usr/sbin:/sbin), so
+# Homebrew binaries must be resolved explicitly. Branch rather than shelling out
+# to `brew --prefix`, per this repo's convention.
+if [[ -d /opt/homebrew ]]; then
+  BREW_PREFIX=/opt/homebrew
+else
+  BREW_PREFIX=/usr/local
+fi
+FFMPEG="${FFMPEG:-$BREW_PREFIX/bin/ffmpeg}"
+FFPROBE="${FFPROBE:-$BREW_PREFIX/bin/ffprobe}"
+
+WORK_DIR="${TMPDIR:-/tmp}"
+LOCK_DIR="$WORK_DIR/screenshots-compress.lock"
+
+log() { printf '%s  %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*"; }
+
+# ------------------------------------------------------------------------ lock
+# launchd can re-fire the job while an encode is still running (our own sidecar
+# landing in the watched folder is itself a trigger). A directory is the only
+# mkdir-atomic lock primitive available without flock(1), which macOS lacks.
+acquire_lock() {
+  if ! mkdir "$LOCK_DIR" 2>/dev/null; then
+    local owner
+    owner=$(cat "$LOCK_DIR/pid" 2>/dev/null || true)
+    # A SIGKILL skips the EXIT trap and would otherwise wedge the job forever.
+    if [[ -n $owner ]] && kill -0 "$owner" 2>/dev/null; then
+      log "another run (pid $owner) holds the lock; exiting"
+      exit 0
+    fi
+    log "clearing stale lock from pid ${owner:-unknown}"
+    rm -rf "$LOCK_DIR"
+    mkdir "$LOCK_DIR" 2>/dev/null || {
+      log "could not take lock"
+      exit 0
+    }
+  fi
+  echo $$ >"$LOCK_DIR/pid"
+  trap 'rm -rf "$LOCK_DIR"' EXIT
+}
+
+# ----------------------------------------------------------------- eligibility
+# Three rules, and no marker files. Rules 1 and 2 are what stop the daemon
+# eating its own output: the sidecar we write re-triggers launchd, and the
+# second pass has to no-op.
+should_compress() {
+  local f=$1
+  [[ -f $f ]] || return 1
+  [[ $f == *"$SUFFIX" ]] && return 1
+  [[ -f "${f%.mp4}$SUFFIX" ]] && return 1
+
+  local bytes limit
+  bytes=$(stat -f %z "$f")
+  limit=$((TARGET_MB * 1000 * 1000))
+  # Already shareable. This is what makes the daemon ignore macOS's own
+  # cmd-shift-5 recordings, which land at ~400 kbps and 3-5 MB.
+  ((bytes > limit)) || return 1
+  return 0
+}
+
+# ------------------------------------------------------- wait for the writer
+# The Vorssaint editor writes the .mp4 on Save; encoding a half-written file
+# produces garbage. Require BOTH that no process holds it open and that its size
+# stopped moving — lsof alone races on the gap between close() and the next write.
+wait_until_settled() {
+  local f=$1 last=-1 cur i
+  for ((i = 0; i < 150; i++)); do
+    if ! /usr/sbin/lsof -- "$f" >/dev/null 2>&1; then
+      cur=$(stat -f %z "$f" 2>/dev/null || echo -1)
+      [[ $cur == "$last" ]] && return 0
+      last=$cur
+    fi
+    sleep 2
+  done
+  log "  timed out waiting for $f to settle"
+  return 1
+}
+
+# --------------------------------------------------------------- rate solving
+# A fixed CRF cannot hit a size target: the same CRF gives 19 MB on a 2-minute
+# clip and 90 MB on a 6-minute one. Solving backwards from duration is the only
+# way to land near a ceiling, and it is why this uses two passes -- pass 1
+# measures the content's complexity so pass 2 can spend the budget where it
+# matters instead of clamping blindly.
+video_kbps_for() {
+  local duration=$1
+  awk -v d="$duration" -v mb="$TARGET_MB" -v a="$AUDIO_KBPS" \
+    -v s="$SAFETY" -v floor="$MIN_VIDEO_KBPS" 'BEGIN {
+      if (d <= 0) { print floor; exit }
+      total = (mb * 1000 * 1000 * 8 * s) / d / 1000   # kbps for the whole file
+      v = total - a
+      if (v < floor) v = floor
+      printf "%d", v
+    }'
+}
+
+# The budget above is a goal, and a goal will happily be overspent: a 75s clip
+# gets a ~1950 kbps allowance even when the source only ever used 360 kbps, and
+# the encoder inflates a 3 MB file to 15 MB. Re-encoding can only lose
+# information, so spending more bits than the original carried is pure waste.
+# Clamp to whatever the source actually used, measured from bytes-on-disk rather
+# than the stream's bit_rate field, which is routinely N/A.
+source_kbps_of() {
+  local f=$1 duration=$2
+  awk -v b="$(stat -f %z "$f")" -v d="$duration" 'BEGIN {
+    if (d <= 0) { print 0; exit }
+    printf "%d", (b * 8 / d) / 1000
+  }'
+}
+
+# ------------------------------------------------------------------- encoding
+compress() {
+  local src=$1
+  local out="${src%.mp4}$SUFFIX"
+  local base
+  base=$(basename "$src")
+
+  wait_until_settled "$src" || return 0
+
+  local duration width height fps
+  duration=$("$FFPROBE" -v error -show_entries format=duration \
+    -of default=nw=1:nk=1 "$src" 2>/dev/null || echo 0)
+  read -r width height fps < <("$FFPROBE" -v error -select_streams v:0 \
+    -show_entries stream=width,height,r_frame_rate \
+    -of csv=p=0 "$src" 2>/dev/null | tr ',' ' ')
+
+  local vkbps skbps
+  vkbps=$(video_kbps_for "$duration")
+  skbps=$(source_kbps_of "$src" "$duration")
+  if ((skbps > 0 && vkbps > skbps)); then
+    log "  source is already leaner (${skbps}k) than the ${vkbps}k budget; capping"
+    vkbps=$skbps
+  fi
+
+  # fps first, then scale: dropping frames before resampling pixels is strictly
+  # less work. Only applied when the source is actually faster than the cap,
+  # so a 24fps source is never interpolated up to 30.
+  local vf="scale=w='min($MAX_LONG_EDGE,iw)':h='min($MAX_LONG_EDGE,ih)"
+  vf="$vf':force_original_aspect_ratio=decrease:force_divisible_by=2"
+  local src_fps
+  src_fps=$(awk -F/ -v r="$fps" 'BEGIN { split(r, p, "/");
+    printf "%.2f", (p[2] > 0 ? p[1] / p[2] : 0) }')
+  if awk -v a="$src_fps" -v b="$FPS_CAP" 'BEGIN { exit !(a > b) }'; then
+    vf="fps=$FPS_CAP,$vf"
+  fi
+
+  log "$base  ${width}x${height} @ ${src_fps}fps, ${duration%.*}s -> ${vkbps}k video"
+  if ((vkbps <= 400)); then
+    log "  note: tight budget at this duration; drop MAX_LONG_EDGE for a sharper result"
+  fi
+
+  # Everything transient stays in TMPDIR. Writing a two-pass stats file or a
+  # partial .mp4 into WATCH_DIR would re-trigger launchd on every chunk flush.
+  local stem="$WORK_DIR/sc-$$-$RANDOM"
+  local stats="$stem.stats" tmp_out="$stem.mp4"
+  # shellcheck disable=SC2064  # expand $stem now, not at trap time
+  trap "rm -rf '$LOCK_DIR' '$stem'*" EXIT
+
+  if ! "$FFMPEG" -nostdin -y -v error -i "$src" \
+    -c:v libx265 -b:v "${vkbps}k" -preset "$X265_PRESET" \
+    -x265-params "pass=1:stats=$stats:log-level=error" \
+    -vf "$vf" -an -f null /dev/null; then
+    log "  pass 1 failed; skipping"
+    return 0
+  fi
+
+  # -tag:v hvc1 is load-bearing: without it the stream is tagged hev1, which
+  # QuickTime, Safari and the Discord desktop player all refuse to decode. The
+  # file looks fine to ffprobe and plays nowhere that matters.
+  if ! "$FFMPEG" -nostdin -y -v error -i "$src" \
+    -map 0:v:0 -map "0:a:0?" \
+    -c:v libx265 -b:v "${vkbps}k" -preset "$X265_PRESET" \
+    -x265-params "pass=2:stats=$stats:log-level=error" \
+    -vf "$vf" \
+    -c:a aac -b:a "${AUDIO_KBPS}k" -ac 1 \
+    -tag:v hvc1 -movflags +faststart "$tmp_out"; then
+    log "  pass 2 failed; skipping"
+    return 0
+  fi
+
+  local before after
+  before=$(stat -f %z "$src")
+  after=$(stat -f %z "$tmp_out")
+  mv "$tmp_out" "$out"
+  rm -f "$stem".stats*
+  trap 'rm -rf "$LOCK_DIR"' EXIT
+
+  log "  $(basename "$out")  $((before / 1000000))MB -> $((after / 1000000))MB"
+  if ((after > TARGET_MB * 1000 * 1000)); then
+    log "  WARNING: still over ${TARGET_MB}MB"
+  fi
+}
+
+# ----------------------------------------------------------------------- main
+acquire_lock
+
+if (($# > 0)); then
+  # Explicit files bypass the size gate; if you asked for it, you meant it.
+  for f in "$@"; do
+    [[ $f == *"$SUFFIX" ]] && {
+      log "skip $f (already an output)"
+      continue
+    }
+    compress "$f"
+  done
+  exit 0
+fi
+
+[[ -d $WATCH_DIR ]] || {
+  log "no such directory: $WATCH_DIR"
+  exit 0
+}
+shopt -s nullglob
+for f in "$WATCH_DIR"/*.mp4; do
+  should_compress "$f" || continue
+  compress "$f"
+done

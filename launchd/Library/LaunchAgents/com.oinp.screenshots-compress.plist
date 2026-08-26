@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Shrinks oversized screen recordings for Discord. See scripts/.local/bin/screenshots-compress.
+
+  WatchPaths, not a resident fswatch process: launchd watches the folder with
+  kqueue and starts the job when its contents change, so there is nothing to
+  keep alive and nothing to restart after a crash. It also drops the fswatch
+  Homebrew dependency the deleted com.oinp.screenshots-to-mp4 agent needed.
+
+  The two absolute /Users/oinp paths below are unavoidable: launchd performs no
+  tilde or variable expansion in WatchPaths or StandardOutPath. ProgramArguments
+  goes through bash so that one at least can use $HOME.
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.oinp.screenshots-compress</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>-c</string>
+        <string>exec "$HOME/.local/bin/screenshots-compress"</string>
+    </array>
+
+    <key>WatchPaths</key>
+    <array>
+        <string>/Users/oinp/Pictures/Screenshots</string>
+    </array>
+
+    <!-- Catches anything that landed while logged out. The scan is idempotent. -->
+    <key>RunAtLoad</key>
+    <true/>
+
+    <!-- Tunables. Changing one here beats editing the script; reload after. -->
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>TARGET_MB</key>
+        <string>20</string>
+        <key>MAX_LONG_EDGE</key>
+        <string>1920</string>
+        <key>FPS_CAP</key>
+        <string>30</string>
+        <key>X265_PRESET</key>
+        <string>medium</string>
+    </dict>
+
+    <!-- A multi-minute x265 encode must not make the machine feel slow. -->
+    <key>ProcessType</key>
+    <string>Background</string>
+    <key>Nice</key>
+    <integer>10</integer>
+    <key>LowPriorityIO</key>
+    <true/>
+
+    <key>StandardOutPath</key>
+    <string>/tmp/screenshots-compress.log</string>
+    <key>StandardErrorPath</key>
+    <string>/tmp/screenshots-compress.error.log</string>
+</dict>
+</plist>
