@@ -89,13 +89,24 @@ tail -f /tmp/screenshots-compress.error.log
   key to 10 measured 234s against 231s without it. The nice value does not gate
   core access on this hardware; the QoS class does. The script cannot fix it
   from the inside either — lowering your own niceness requires privilege.
-- **Resizing is the wrong lever for screen content.** Tempting, and measurably
+- **Framerate is nearly free; resolution is not.** At a fixed 442k budget on a
+  90s slice, 1440 wide scored 0.9741 at 30fps, 0.9742 at 25 and 0.9742 at 20 —
+  identical to four decimals. All of the quality difference against 1802 wide
+  (0.9872) is the resize. But SSIM is a per-frame spatial metric and **cannot
+  see judder**, so it says nothing about motion smoothness; judge that by eye.
+- **Pick a framerate that divides the source.** Vorssaint records at 60, so 30
+  (60/2) and 20 (60/3) drop frames evenly. 25 does not — 60/25 = 2.4 drops in a
+  2,2,3,2,3 pattern that reads as judder on smooth scrolling. The current 20 was
+  chosen for that reason over the 25 originally proposed.
+- **Resizing is the wrong lever if you care about quality.** Tempting, and measurably
   counterproductive: at a fixed 442k budget, 1802 wide scored SSIM 0.9926, 1280
   scored 0.9743, 1100 scored 0.9664. Screen frames are mostly flat regions that
   cost x265 almost nothing, and the value sits in text living on the native
   pixel grid — resampling glyphs destroys detail no bitrate recovers. This is
   the opposite of camera video, where fewer pixels really does mean more bits
-  each. `hevc_videotoolbox` was measured too and rejected at 0.9069.
+  each. `hevc_videotoolbox` was measured too and rejected at 0.9069. The
+  current 1440 cap is a deliberate speed-for-fidelity trade made with those
+  numbers in hand, not a default — raise MAX_LONG_EDGE to 1920 to undo it.
 - **`plutil -lint` validates XML, not intent.** It passed happily on a version
   of this plist with the `ProcessType` key accidentally deleted. Assert real
   keys with `PlistBuddy -c 'Print :ProcessType'`.

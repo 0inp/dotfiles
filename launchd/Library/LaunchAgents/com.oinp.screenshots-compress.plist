@@ -39,9 +39,15 @@
         <key>TARGET_MB</key>
         <string>20</string>
         <key>MAX_LONG_EDGE</key>
-        <string>1920</string>
+        <string>1440</string>
+        <!--
+          20, not 25. The source is 60fps, and 60/20 = 3 exactly, so every
+          third frame is kept and the cadence stays even. 60/25 = 2.4 drops in
+          an uneven 2,2,3,2,3 pattern, which reads as judder on smooth
+          scrolling. 30 is also clean (60/2) but costs more time.
+        -->
         <key>FPS_CAP</key>
-        <string>30</string>
+        <string>20</string>
         <key>X265_PRESET</key>
         <string>veryfast</string>
     </dict>

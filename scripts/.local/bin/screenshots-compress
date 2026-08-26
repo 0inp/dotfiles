@@ -27,8 +27,8 @@ set -euo pipefail
 # never means editing this file.
 WATCH_DIR="${SCREENSHOTS_DIR:-$HOME/Pictures/Screenshots}"
 TARGET_MB="${TARGET_MB:-20}"            # Discord's ceiling. Decimal MB, not MiB.
-MAX_LONG_EDGE="${MAX_LONG_EDGE:-1920}"  # cap the long edge; never upscales
-FPS_CAP="${FPS_CAP:-30}"                # 60fps of a mostly-static screen is waste
+MAX_LONG_EDGE="${MAX_LONG_EDGE:-1440}"  # cap the long edge; never upscales
+FPS_CAP="${FPS_CAP:-20}"                # 60fps of a mostly-static screen is waste
 AUDIO_KBPS="${AUDIO_KBPS:-64}"          # mono AAC: this is narration, not music
 SAFETY="${SAFETY:-0.95}"                # headroom for container + rate overshoot
 MIN_VIDEO_KBPS="${MIN_VIDEO_KBPS:-150}" # floor; below this x265 produces soup
