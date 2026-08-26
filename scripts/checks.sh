@@ -15,7 +15,9 @@
 #   fnox      config.toml is committed on purpose because it holds only
 #             keychain *references*. A literal value there is a secret pushed
 #             to a public repo.
-#   brewfile  the Brewfile is the source of truth for installed packages.
+#   brewfile  the Brewfile is the source of truth for installed packages. A
+#             manifest entry with nothing installed behind it is drift and
+#             blocks; a package merely a version behind only warns.
 #
 # No `set -e`: every check runs and reports, so one failure never hides the
 # rest. Exit status is the number of failed checks.
@@ -30,6 +32,8 @@ _bad() {
   fail=$((fail + 1))
 }
 _skip() { printf '  ⏭️  %s\n' "$1"; }
+# Visible but non-blocking: prints like a failure, does not touch `fail`.
+_warn() { printf '  ⚠️  %s\n' "$1"; }
 
 # ---------- stow ----------
 # Mirrors install.sh's `stow -t ~ */` exactly: one package per non-dot
@@ -173,20 +177,58 @@ check_secrets() {
 }
 
 # ---------- Brewfile ----------
+# `brew bundle check` prints the SAME sentence — "needs to be installed or
+# updated" — whether a package is absent or merely a version behind, and
+# collapses both into one non-zero exit. Only the first is drift worth blocking
+# a push over; a version bump is ambient machine state that `brew upgrade`
+# resolves. So every flagged entry is re-probed with `brew list` to recover the
+# severity the message threw away.
 check_brewfile() {
-  echo "🍺 Brewfile — installed packages match the manifest"
+  echo "🍺 Brewfile — manifest packages are installed"
   if ! command -v brew >/dev/null 2>&1; then
     _skip "brew not installed"
     return
   fi
-  local out
-  if out=$(brew bundle check --global 2>&1); then
+  local out missing="" outdated="" kind name flag
+  if out=$(brew bundle check --verbose --global 2>&1); then
     _ok "Brewfile satisfied"
-  else
-    _bad "Brewfile out of sync"
-    printf '%s\n' "$out" | sed 's/^/     /'
-    printf '     fix: brew bundle --global  (or: brew bundle dump --force --global)\n'
+    return
   fi
+
+  # awk, not sed: BSD sed's BRE has no `\|` alternation, so the equivalent sed
+  # script matches zero lines on macOS and every failure looks unparseable.
+  while read -r kind name; do
+    case "$kind" in
+      Formula) flag=--formula ;;
+      Cask) flag=--cask ;;
+      *) continue ;;
+    esac
+    if brew list "$flag" "$name" >/dev/null 2>&1; then
+      outdated="$outdated $name"
+    else
+      missing="$missing $name"
+    fi
+  done < <(printf '%s\n' "$out" | awk '/needs to be installed or updated/ {print $2, $3}')
+
+  # Fail closed. A failure we could not parse — Homebrew reworded the string, or
+  # the Brewfile has a syntax error, which also exits non-zero but prints no
+  # entries — must never read as "just drift, carry on". That is how a check
+  # turns into a permanent green pass while enforcing nothing.
+  if [ -z "$missing$outdated" ]; then
+    _bad "Brewfile check failed (unrecognised output)"
+    printf '%s\n' "$out" | sed 's/^/     /'
+    return
+  fi
+
+  if [ -n "$missing" ]; then
+    _bad "not installed:$missing"
+    [ -n "$outdated" ] && printf '     also outdated (not blocking):%s\n' "$outdated"
+    printf '     fix: brew bundle --global\n'
+    return
+  fi
+
+  _warn "outdated (not blocking):$outdated"
+  printf '     fix: brew bundle --global\n'
 }
 
 usage() {
@@ -198,7 +240,7 @@ usage: checks.sh <check>...
   symlinks   tracked symlinks resolve repo-relative
   zvm        no uppercase ZVM_AFTER_INIT_COMMANDS
   fnox       [secrets] holds references, never literals
-  brewfile   installed packages match the Brewfile
+  brewfile   Brewfile packages are installed (outdated only warns)
   all        run all of the above
 
 Exit status is the number of failed checks.
