@@ -43,16 +43,24 @@
         <key>FPS_CAP</key>
         <string>30</string>
         <key>X265_PRESET</key>
-        <string>medium</string>
+        <string>veryfast</string>
     </dict>
 
-    <!-- A multi-minute x265 encode must not make the machine feel slow. -->
+    <!--
+      Standard, NOT Background. On Apple Silicon `Background` maps to a
+      background QoS class, and macOS schedules that on efficiency cores only —
+      the P-cores sit idle. Measured on a 5-minute recording: 474s as
+      Background vs 132s in the foreground, same script and same file. The key
+      was added for politeness and cost 3.6x.
+
+      Nice still yields to whatever is in front of you, which is the politeness
+      that was actually wanted. LowPriorityIO is gone: this reads one large file
+      sequentially and writes one small one, so throttling I/O buys nothing.
+    -->
     <key>ProcessType</key>
-    <string>Background</string>
+    <string>Standard</string>
     <key>Nice</key>
     <integer>10</integer>
-    <key>LowPriorityIO</key>
-    <true/>
 
     <key>StandardOutPath</key>
     <string>/tmp/screenshots-compress.log</string>

@@ -32,7 +32,7 @@ FPS_CAP="${FPS_CAP:-30}"                # 60fps of a mostly-static screen is was
 AUDIO_KBPS="${AUDIO_KBPS:-64}"          # mono AAC: this is narration, not music
 SAFETY="${SAFETY:-0.95}"                # headroom for container + rate overshoot
 MIN_VIDEO_KBPS="${MIN_VIDEO_KBPS:-150}" # floor; below this x265 produces soup
-X265_PRESET="${X265_PRESET:-medium}"
+X265_PRESET="${X265_PRESET:-veryfast}"
 SUFFIX=".compressed.mp4"
 
 # launchd hands the job a minimal PATH (/usr/bin:/bin:/usr/sbin:/sbin), so
