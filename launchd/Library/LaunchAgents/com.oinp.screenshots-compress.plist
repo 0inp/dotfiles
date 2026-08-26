@@ -47,20 +47,30 @@
     </dict>
 
     <!--
-      Standard, NOT Background. On Apple Silicon `Background` maps to a
-      background QoS class, and macOS schedules that on efficiency cores only —
-      the P-cores sit idle. Measured on a 5-minute recording: 474s as
-      Background vs 132s in the foreground, same script and same file. The key
-      was added for politeness and cost 3.6x.
+      Interactive, and this is the single highest-impact key in the file.
 
-      Nice still yields to whatever is in front of you, which is the politeness
-      that was actually wanted. LowPriorityIO is gone: this reads one large file
-      sequentially and writes one small one, so throttling I/O buys nothing.
+      On Apple Silicon ProcessType decides which CPU cluster the job may run
+      on, and it has no gradual middle: Background and Standard both confine it
+      to the efficiency cores, Interactive lets it use everything. Measured on
+      the same 5-minute recording, same script, same file:
+
+        Background    ~250% CPU    474s
+        Standard       552% CPU    231s   (552% is the 6 E-cores saturated)
+        Interactive    792% CPU    105s
+        foreground     771% CPU    111s   (reference)
+
+      `nice` is a red herring. It reads 19 in every one of those rows — even
+      Interactive at 792% — so the nice value is not what gates core access,
+      the QoS class is. The Nice key was tried at 10 and removed again: 234s
+      with it, 231s without. It does nothing here, which is why it is absent.
+      A process cannot fix this from the inside either, since lowering its own
+      niceness needs privilege.
+
+      The cost of Interactive is real: ~790% CPU for the ~2 minutes after each
+      save. Chosen deliberately over Standard's invisible-but-4-minute encode.
     -->
     <key>ProcessType</key>
-    <string>Standard</string>
-    <key>Nice</key>
-    <integer>10</integer>
+    <string>Interactive</string>
 
     <key>StandardOutPath</key>
     <string>/tmp/screenshots-compress.log</string>

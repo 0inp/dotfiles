@@ -79,5 +79,23 @@ tail -f /tmp/screenshots-compress.error.log
   will not pick up edits without `bootout` first. `scripts/checks.sh stow`
   catches an unstowed module but cannot tell you the agent is unloaded — check
   with `launchctl print`.
-- **`Nice` and `LowPriorityIO` matter here.** An x265 encode saturates every
-  core for minutes; without them, saving a recording makes the machine crawl.
+- **`ProcessType` is the only scheduling key that does anything**, and it is
+  worth 4.5x. On Apple Silicon it decides which CPU cluster the job may use,
+  with no gradual middle — `Background` and `Standard` both confine it to the
+  efficiency cores, `Interactive` unlocks all of them. Same file, same script:
+  474s / 231s / 105s respectively.
+- **`Nice` is a red herring, do not reach for it.** It reads 19 under launchd in
+  every configuration, including `Interactive` running at 792% CPU. Setting the
+  key to 10 measured 234s against 231s without it. The nice value does not gate
+  core access on this hardware; the QoS class does. The script cannot fix it
+  from the inside either — lowering your own niceness requires privilege.
+- **Resizing is the wrong lever for screen content.** Tempting, and measurably
+  counterproductive: at a fixed 442k budget, 1802 wide scored SSIM 0.9926, 1280
+  scored 0.9743, 1100 scored 0.9664. Screen frames are mostly flat regions that
+  cost x265 almost nothing, and the value sits in text living on the native
+  pixel grid — resampling glyphs destroys detail no bitrate recovers. This is
+  the opposite of camera video, where fewer pixels really does mean more bits
+  each. `hevc_videotoolbox` was measured too and rejected at 0.9069.
+- **`plutil -lint` validates XML, not intent.** It passed happily on a version
+  of this plist with the `ProcessType` key accidentally deleted. Assert real
+  keys with `PlistBuddy -c 'Print :ProcessType'`.
