@@ -94,7 +94,7 @@ keybindings:
       name: pr-review + cleanup
       command: >
         mux-new-window "PR-{{.PrNumber}}"
-        'PR=$(cd "{{.RepoPath}}" && gh pr view {{.PrNumber}} --json headRefName,baseRefName) && BRANCH=$(echo "$PR" | jq -r .headRefName) && BASE=$(echo "$PR" | jq -r .baseRefName) && wt -C "{{.RepoPath}}" switch pr:{{.PrNumber}} -x "claude \"Use the caveman skill for your replies in this session, but not for the PR comments you post — those stay normal prose. Then use the sillant-pr-review skill to review PR {{.PrNumber}} (branch $BRANCH) against its parent branch $BASE.\"" ; wt -C "{{.RepoPath}}" remove "$BRANCH" --force-delete --force 2>/dev/null ; echo "✅ Worktree for $BRANCH removed" ; printf "Press Enter to close...\n" ; read'
+        'PR=$(cd "{{.RepoPath}}" && gh pr view {{.PrNumber}} --json headRefName,baseRefName) && BRANCH=$(echo "$PR" | jq -r .headRefName) && BASE=$(echo "$PR" | jq -r .baseRefName) && wt -C "{{.RepoPath}}" switch pr:{{.PrNumber}} -x "claude \"Use the caveman skill for your replies in this session, but not for the PR comments you post — those stay normal prose. Then run /pr-review $BRANCH $BASE to review PR {{.PrNumber}}.\"" ; wt -C "{{.RepoPath}}" remove "$BRANCH" --force-delete --force 2>/dev/null ; echo "✅ Worktree for $BRANCH removed" ; printf "Press Enter to close...\n" ; read'
     - key: E
       command: gh enhance -R {{.RepoName}} {{.PrNumber}}
 
