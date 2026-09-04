@@ -39,6 +39,23 @@ re-parses it with `bash -c`. So the prompt is wrapped in **plain** double quotes
 literal `"` character and let the prompt split into one argument per word. `$BRANCH`
 and `$BASE` expand at that second parse, which is where they are assigned.
 
+**Never clean up the `C` worktree with `--force`.** `/pr-comments` is gated: it
+applies the review fixes locally and then *stops*, waiting for an explicit GO
+before committing. Quitting Claude at that gate leaves real work uncommitted in
+the worktree — and `wt remove --force` deletes a dirty worktree, "including
+staged, modified, and untracked files", silently. Without `--force`, wt refuses
+(exit 1, message on **stderr**) and the work survives, so the cleanup is a plain
+`if`; the old form also piped stderr to `/dev/null` and then printed its success
+line unconditionally, which reported a removal that never happened.
+
+`wt switch pr:N` **reuses** an existing worktree for that branch rather than
+creating one, so on your own PR the cleanup would remove the worktree you were
+working in — with the ignored files the `post-start` `copy-ignored` hook had
+to fetch. Hence the `PRE` probe: `git worktree list` is read *before* the
+switch, and a worktree that already existed is left alone. Ignored files alone
+do not make a worktree dirty (verified) — only tracked-file changes and
+untracked files do.
+
 ## AI Notes
 - Modify `config.yml` to change dashboard sections and filters
 - Keybindings are defined in the config file for quick actions
