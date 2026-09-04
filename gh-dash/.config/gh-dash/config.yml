@@ -52,8 +52,10 @@ defaults:
         width: 5
       repo:
         width: 20
+        hidden: true
       author:
         width: 15
+        hidden: true
       authorIcon:
         hidden: false
       assignees:
