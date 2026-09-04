@@ -89,12 +89,12 @@ keybindings:
       name: address my pr comments
       command: >
         mux-new-window "PR-{{.PrNumber}}-comments"
-        'BRANCH=$(cd "{{.RepoPath}}" && gh pr view {{.PrNumber}} --json headRefName --jq ".headRefName") && wt -C "{{.RepoPath}}" switch pr:{{.PrNumber}} -x "claude \"/pr-comments {{.PrNumber}}\"" ; wt -C "{{.RepoPath}}" remove "$BRANCH" --force --no-delete-branch 2>/dev/null ; echo "✅ Worktree removed, branch kept" ; printf "Press Enter to close...\n" ; read'
+        'BRANCH=$(cd "{{.RepoPath}}" && gh pr view {{.PrNumber}} --json headRefName --jq ".headRefName") && wt -C "{{.RepoPath}}" switch pr:{{.PrNumber}} -x claude -- "/pr-comments {{.PrNumber}}" ; wt -C "{{.RepoPath}}" remove "$BRANCH" --force --no-delete-branch 2>/dev/null ; echo "✅ Worktree removed, branch kept" ; printf "Press Enter to close...\n" ; read'
     - key: R
       name: pr-review + cleanup
       command: >
         mux-new-window "PR-{{.PrNumber}}"
-        'PR=$(cd "{{.RepoPath}}" && gh pr view {{.PrNumber}} --json headRefName,baseRefName) && BRANCH=$(echo "$PR" | jq -r .headRefName) && BASE=$(echo "$PR" | jq -r .baseRefName) && wt -C "{{.RepoPath}}" switch pr:{{.PrNumber}} -x "claude \"Use the caveman skill for your replies in this session, but not for the PR comments you post — those stay normal prose. Then run /pr-review $BRANCH $BASE to review PR {{.PrNumber}}.\"" ; wt -C "{{.RepoPath}}" remove "$BRANCH" --force-delete --force 2>/dev/null ; echo "✅ Worktree for $BRANCH removed" ; printf "Press Enter to close...\n" ; read'
+        'PR=$(cd "{{.RepoPath}}" && gh pr view {{.PrNumber}} --json headRefName,baseRefName) && BRANCH=$(echo "$PR" | jq -r .headRefName) && BASE=$(echo "$PR" | jq -r .baseRefName) && wt -C "{{.RepoPath}}" switch pr:{{.PrNumber}} -x claude -- "Use the caveman skill for your replies in this session, but not for the PR comments you post — those stay normal prose. Then run /pr-review $BRANCH $BASE to review PR {{.PrNumber}}." ; wt -C "{{.RepoPath}}" remove "$BRANCH" --force-delete --force 2>/dev/null ; echo "✅ Worktree for $BRANCH removed" ; printf "Press Enter to close...\n" ; read'
     - key: E
       command: gh enhance -R {{.RepoName}} {{.PrNumber}}
 
