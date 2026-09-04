@@ -1,7 +1,7 @@
 {
   "plugins": {
     "conform.nvim": {
-      "rev": "18aeab3d63d350dcf44d64c462cc489a3412af40",
+      "rev": "016802de402556da54c36bd7359b441266b01cdd",
       "src": "https://github.com/stevearc/conform.nvim"
     },
     "friendly-snippets": {
@@ -9,11 +9,11 @@
       "src": "https://github.com/rafamadriz/friendly-snippets"
     },
     "gitsigns.nvim": {
-      "rev": "dd3f588bacbeb041be6facf1742e42097f62165d",
+      "rev": "5be654f2232c10ddcad19c1607a67b6b4b78fc29",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
     "live-server.nvim": {
-      "rev": "85915d0e7dd926a54b0082aaeafc10a82bfe8288",
+      "rev": "f98bae79fd30274524412f7514549d84391d6bb2",
       "src": "https://github.com/selimacerbas/live-server.nvim"
     },
     "lualine.nvim": {
@@ -21,15 +21,15 @@
       "src": "https://github.com/nvim-lualine/lualine.nvim"
     },
     "markdown-plus.nvim": {
-      "rev": "ffd156b1ffab8547390bf6ca641ae42cf5f286d8",
+      "rev": "52f6af120a6409a5b8860cb0db01e835483d00d6",
       "src": "https://github.com/yousefhadder/markdown-plus.nvim"
     },
     "markdown-preview.nvim": {
-      "rev": "545cf3bc6c6425b33a9b25acef54f66e4035ca0f",
+      "rev": "faf50b5e233df953a1fd6946d0a8d758bf2e38a1",
       "src": "https://github.com/selimacerbas/markdown-preview.nvim"
     },
     "mason-lspconfig.nvim": {
-      "rev": "7b01e2974a47d489bb92f47a41e4c0088ea8f86e",
+      "rev": "40276c4df7e6bdce6801d6c035c6227f9115a855",
       "src": "https://github.com/mason-org/mason-lspconfig.nvim"
     },
     "mason-tool-installer.nvim": {
@@ -41,7 +41,7 @@
       "src": "https://github.com/mason-org/mason.nvim"
     },
     "mini.nvim": {
-      "rev": "6791615e48801cbf5b2baefadcea77a7760de3f4",
+      "rev": "9d01f392b33fb2ba36fbc87fc0bf4453e63ffb0a",
       "src": "https://github.com/nvim-mini/mini.nvim"
     },
     "monokai": {
@@ -53,15 +53,15 @@
       "src": "https://github.com/akinsho/nvim-bufferline.lua"
     },
     "nvim-colorizer.lua": {
-      "rev": "5cfe7fffbd01e17b3c1e14af85d5febdef88bd8c",
+      "rev": "72a05f62c52241bc7441c820eb53946f92b2e6a4",
       "src": "https://github.com/catgoose/nvim-colorizer.lua"
     },
     "nvim-lspconfig": {
-      "rev": "af9adce488c75ca0a81017945c2b7fa7b461bc23",
+      "rev": "85e732c62ac59ab7c12df71ddd020baa87948390",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-treesitter": {
-      "rev": "4916d6592ede8c07973490d9322f187e07dfefac",
+      "rev": "427e9222363d07c32d6db6169e4049c28d58d141",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "todo-comments.nvim": {
