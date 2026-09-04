@@ -20,6 +20,14 @@ Configuration for [gh-dash](https://github.com/dlvhdr/gh-dash), a GitHub CLI ext
 
 ## Constraints
 
+**A section title is not its scope — `smartFilteringAtLaunch` is.** It
+defaults to `true`, so launching `gh dash` in a repo prepends
+`repo:<owner>/<name>` to *every* section: from `~/dev/sillant/Table`, tab 1
+runs `is:pr repo:Sillant/Table is:open author:@me`. The `All PRs` tab therefore
+means "all PRs of the current repo" there, and only widens to `org:Sillant`
+when gh dash is launched outside a clone. Kept on deliberately — repo focus is
+the common case. Read the query box at the top before trusting a count.
+
 **`wt switch -x` takes a program, not a shell string** (worktrunk >= 0.76). The
 `C` and `R` keybindings launch Claude in a PR worktree; the prompt must be a
 separate argument after `--`:
