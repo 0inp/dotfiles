@@ -38,7 +38,7 @@ symlinks in `~`, not against intent.
 | git          | Git config **and** `lazygit.yaml`    | `~/.gitconfig`, `~/.gitignore`, `~/.config/lazygit.yaml` |
 | gnupg        | GPG configuration                    | *(nothing stowed — see its CONTEXT.md)*         |
 | herdr        | Agent-aware multiplexer (ex-tmux)    | `~/.config/herdr/`                              |
-| launchd      | LaunchAgents (screen-recording shrink) | `~/Library/LaunchAgents/`                     |
+| launchd      | LaunchAgents (capture rename + shrink) | `~/Library/LaunchAgents/`                     |
 | lazygit      | Lazygit `customCommands` only        | `~/.config/lazygit/config.yml`                  |
 | mise         | Runtime versions + global npm tools  | `~/.config/mise/`                               |
 | nvim         | Neovim configuration                 | `~/.config/nvim/`                               |
@@ -60,13 +60,22 @@ metrics); the old `stats/` module and its plist are in git history.
 
 Its recorder made the old `launchd/` agent redundant — that one watched for
 `.mov` and converted to `.mp4`, and the editor now saves `.mp4` directly. The
-module came back for a different reason: Vorssaint cannot be configured down to
-a *shareable* size. Its presets scale resolution, never bitrate, and
-`recorderFrameRate` is ignored outright by the export path (declared 30, reads
-back 30, every file is 60fps — verify with `ffprobe`, not `defaults read`). So
-`com.oinp.screenshots-compress` re-encodes anything over 20 MB for Discord. The
-original `.mov`-to-`.mp4` agent and `scripts/screenshots-to-mp4.sh` are still in
-history at `46fb86e^`.
+module came back for two things Vorssaint cannot do itself, both handled by
+`com.oinp.captures-tidy`:
+
+- **Size.** Its presets scale resolution, never bitrate, and `recorderFrameRate`
+  is ignored outright by the export path (declared 30, reads back 30, every file
+  is 60fps — verify with `ffprobe`, not `defaults read`). The agent re-encodes
+  anything over 20 MB for Discord, replacing the file in place.
+- **Naming.** Vorssaint names *screenshots* from a pattern
+  (`screenshotFileNamePattern`) but has no equivalent for recordings:
+  `ScreenRecorderService.saveDestination` reads only `recorderSaveFolder` and
+  `Date()`, so `Recording 2026-09-03 at 17.04.01` is built in code. The agent
+  renames both kinds to `SS_`/`SR_YYYY_MM_DD_-_hh_mm_ss` so one rule covers both
+  instead of two that drift.
+
+The original `.mov`-to-`.mp4` agent and `scripts/screenshots-to-mp4.sh` are still
+in history at `46fb86e^`.
 
 ### Known overlap: lazygit is split across two modules
 `git/` owns `~/.config/lazygit.yaml` (theme and GUI settings; `.zshenv` points

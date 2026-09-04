@@ -1,25 +1,36 @@
 #!/bin/bash
-# Shrink oversized screen recordings in ~/Pictures/Screenshots so they can be
-# dropped straight into a Discord message.
+# Tidy ~/Pictures/Screenshots, the folder Vorssaint saves every capture into.
+# Two jobs, in this order:
 #
-# Why this exists rather than a Vorssaint setting:
+#   1. rename  every screenshot to SS_YYYY_MM_DD_-_hh_mm_ss and every recording
+#              to SR_..., so the folder sorts chronologically and says what
+#              each file is at a glance.
+#   2. shrink  any recording over 20 MB, in place, so it can be dropped
+#              straight into a Discord message.
+#
+# Why the rename lives here rather than in Vorssaint:
+#   Vorssaint can name screenshots — `screenshotFileNamePattern`, the "File
+#   name" field under Screenshot — but has no equivalent for recordings.
+#   ScreenshotService.saveDestination reads that pattern;
+#   ScreenRecorderService.saveDestination is a separate function that reads
+#   only `recorderSaveFolder` and Date(), so "Recording 2026-09-03 at
+#   17.04.01" is built in code and no `defaults write` can reach it. Doing both
+#   halves here keeps one rule instead of two that drift.
+#
+# Why the shrink exists rather than a Vorssaint setting:
 #   Vorssaint's recorder exposes only coarse quality presets, and they scale
 #   resolution, not bitrate. Worse, `recorderFrameRate` is declared 30 in
 #   vorssaint-apply, reads back as 30, and is still ignored — every file the
 #   editor exports is 60fps. Its output lands at 4.7-9.8 Mbps; a 6-minute
 #   recording is 211 MB. Getting under 20 MB needs roughly a 10x cut, which no
-#   preset in the app can express. So the reduction happens here instead.
+#   preset in the app can express.
 #
-# This is the successor to com.oinp.screenshots-to-mp4 (deleted in 46fb86e),
-# which watched for .mov and re-encoded to .mp4. Vorssaint writes .mp4 itself
-# now, so the format conversion is gone and only the size problem is left.
-#
-# Run by ~/Library/LaunchAgents/com.oinp.screenshots-compress.plist, which fires
-# it via WatchPaths whenever the folder changes. It scans, works, and exits.
+# Run by ~/Library/LaunchAgents/com.oinp.captures-tidy.plist, which fires it via
+# WatchPaths whenever the folder changes. It scans, works, and exits.
 #
 # Usage:
-#   screenshots-compress          scan the folder and compress what qualifies
-#   screenshots-compress FILE...  compress specific files, ignoring the size gate
+#   captures-tidy          rename what needs it, then compress what qualifies
+#   captures-tidy FILE...  compress specific files, ignoring every gate
 set -euo pipefail
 
 # ---------------------------------------------------------------- configuration
@@ -33,7 +44,11 @@ AUDIO_KBPS="${AUDIO_KBPS:-64}"          # mono AAC: this is narration, not music
 SAFETY="${SAFETY:-0.95}"                # headroom for container + rate overshoot
 MIN_VIDEO_KBPS="${MIN_VIDEO_KBPS:-150}" # floor; below this x265 produces soup
 X265_PRESET="${X265_PRESET:-veryfast}"
-SUFFIX=".compressed.mp4"
+
+# Written into the mp4's `comment` tag by pass 2 and read back by
+# should_compress. See the note there for why a marker is still needed once the
+# output replaces its own source.
+MARKER="captures-tidy"
 
 # launchd hands the job a minimal PATH (/usr/bin:/bin:/usr/sbin:/sbin), so
 # Homebrew binaries must be resolved explicitly. Branch rather than shelling out
@@ -47,14 +62,15 @@ FFMPEG="${FFMPEG:-$BREW_PREFIX/bin/ffmpeg}"
 FFPROBE="${FFPROBE:-$BREW_PREFIX/bin/ffprobe}"
 
 WORK_DIR="${TMPDIR:-/tmp}"
-LOCK_DIR="$WORK_DIR/screenshots-compress.lock"
+LOCK_DIR="$WORK_DIR/captures-tidy.lock"
 
 log() { printf '%s  %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*"; }
 
 # ------------------------------------------------------------------------ lock
-# launchd can re-fire the job while an encode is still running (our own sidecar
-# landing in the watched folder is itself a trigger). A directory is the only
-# mkdir-atomic lock primitive available without flock(1), which macOS lacks.
+# launchd can re-fire the job while an encode is still running (every rename and
+# every replaced file is itself a mutation of the watched folder). A directory is
+# the only mkdir-atomic lock primitive available without flock(1), which macOS
+# lacks.
 acquire_lock() {
   if ! mkdir "$LOCK_DIR" 2>/dev/null; then
     local owner
@@ -75,15 +91,77 @@ acquire_lock() {
   trap 'rm -rf "$LOCK_DIR"' EXIT
 }
 
+# -------------------------------------------------------------------- renaming
+# Both Vorssaint and macOS name a capture "<something> YYYY-MM-DD at HH.MM.SS",
+# and that <something> is localized — matching the literal "Recording" would
+# break the day this Mac switches language. So the timestamp's shape is the
+# whole test, and the extension alone decides which prefix the file gets. The
+# shape is distinctive enough that a file dropped into the folder by hand does
+# not match by accident.
+#
+# Prints the new stem, or fails if the file is not one of ours.
+target_stem_for() {
+  local stem=$1 ext=$2 prefix
+  case "$(printf '%s' "$ext" | tr 'A-Z' 'a-z')" in
+    png | jpg | jpeg | heic | gif | tiff) prefix=SS ;;
+    mp4 | mov | m4v) prefix=SR ;;
+    *) return 1 ;;
+  esac
+  [[ $stem =~ ([0-9]{4})-([0-9]{2})-([0-9]{2})\ at\ ([0-9]{2})\.([0-9]{2})\.([0-9]{2})$ ]] || return 1
+  printf '%s_%s_%s_%s_-_%s_%s_%s' "$prefix" \
+    "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}" "${BASH_REMATCH[3]}" \
+    "${BASH_REMATCH[4]}" "${BASH_REMATCH[5]}" "${BASH_REMATCH[6]}"
+}
+
+# The timestamp comes from the NAME, never from the mtime. Compression rewrites
+# the file, so its mtime carries the encode time rather than the capture time —
+# renaming from stat(2) would silently relabel every recording the daemon has
+# already touched.
+rename_capture() {
+  local f=$1 dir base ext stem target dest n=2
+  [[ -f $f ]] || return 0
+  dir=$(dirname "$f")
+  base=$(basename "$f")
+  ext=${base##*.}
+  [[ $ext == "$base" ]] && return 0 # no extension at all
+  stem=${base%.*}
+  target=$(target_stem_for "$stem" "$ext") || return 0
+
+  # The Vorssaint editor holds the file open while it writes on Save. Renaming
+  # under it would not corrupt anything — rename(2) leaves an open fd alone —
+  # but the app resolves the capture by path afterwards, so leave it be. The
+  # next fire picks it up.
+  if /usr/sbin/lsof -- "$f" >/dev/null 2>&1; then
+    log "skip $base (still open)"
+    return 0
+  fi
+
+  dest="$dir/$target.$ext"
+  while [[ -e $dest ]]; do
+    dest="$dir/${target}_$n.$ext"
+    n=$((n + 1))
+  done
+  # -n so that a file appearing at $dest between the loop above and here is
+  # never clobbered. BSD mv exits 0 when -n makes it decline, so the exit status
+  # says nothing — assert the move by looking at the filesystem instead.
+  mv -n "$f" "$dest" 2>/dev/null || true
+  if [[ -e $f || ! -e $dest ]]; then
+    log "could not rename $base"
+    return 0
+  fi
+  log "renamed $base -> $(basename "$dest")"
+}
+
 # ----------------------------------------------------------------- eligibility
-# Three rules, and no marker files. Rules 1 and 2 are what stop the daemon
-# eating its own output: the sidecar we write re-triggers launchd, and the
-# second pass has to no-op.
+# What pass 2 stamped into the container, if this file has been through here.
+marker_of() {
+  "$FFPROBE" -v error -show_entries format_tags=comment \
+    -of default=nw=1:nk=1 "$1" 2>/dev/null || true
+}
+
 should_compress() {
   local f=$1
   [[ -f $f ]] || return 1
-  [[ $f == *"$SUFFIX" ]] && return 1
-  [[ -f "${f%.mp4}$SUFFIX" ]] && return 1
 
   local bytes limit
   bytes=$(stat -f %z "$f")
@@ -91,6 +169,15 @@ should_compress() {
   # Already shareable. This is what makes the daemon ignore macOS's own
   # cmd-shift-5 recordings, which land at ~400 kbps and 3-5 MB.
   ((bytes > limit)) || return 1
+
+  # The size gate alone cannot stop a re-encode loop. A recording long enough to
+  # hit the MIN_VIDEO_KBPS floor comes out of pass 2 still above TARGET_MB — the
+  # `WARNING: still over` path below — and, now that the output replaces its own
+  # source, would be re-encoded on every fire and lose quality each time. The
+  # old guard was the .compressed.mp4 sidecar's existence; with no sidecar left,
+  # the marker travels inside the container instead. Checked after the size
+  # gate: it costs an ffprobe, and only oversized files ever reach it.
+  [[ "$(marker_of "$f")" == "$MARKER" ]] && return 1
   return 0
 }
 
@@ -144,10 +231,34 @@ source_kbps_of() {
   }'
 }
 
+# ------------------------------------------------------------ output sanity
+# The output overwrites its own source, so a bad encode destroys the only copy.
+# These three assertions are what stands between pass 2 and that mv, and any one
+# of them failing leaves the original untouched.
+output_is_sound() {
+  local out=$1 want=$2 got codec
+  [[ -s $out ]] || {
+    log "  output is empty; keeping the original"
+    return 1
+  }
+  codec=$("$FFPROBE" -v error -select_streams v:0 -show_entries stream=codec_name \
+    -of default=nw=1:nk=1 "$out" 2>/dev/null || true)
+  [[ -n $codec ]] || {
+    log "  output has no video stream; keeping the original"
+    return 1
+  }
+  got=$("$FFPROBE" -v error -show_entries format=duration \
+    -of default=nw=1:nk=1 "$out" 2>/dev/null || echo 0)
+  awk -v a="$want" -v b="$got" 'BEGIN { exit !(b > 0 && a - b < 1 && b - a < 1) }' || {
+    log "  duration drifted (${want%.*}s -> ${got%.*}s); keeping the original"
+    return 1
+  }
+  return 0
+}
+
 # ------------------------------------------------------------------- encoding
 compress() {
   local src=$1
-  local out="${src%.mp4}$SUFFIX"
   local base
   base=$(basename "$src")
 
@@ -187,7 +298,7 @@ compress() {
 
   # Everything transient stays in TMPDIR. Writing a two-pass stats file or a
   # partial .mp4 into WATCH_DIR would re-trigger launchd on every chunk flush.
-  local stem="$WORK_DIR/sc-$$-$RANDOM"
+  local stem="$WORK_DIR/ct-$$-$RANDOM"
   local stats="$stem.stats" tmp_out="$stem.mp4"
   # shellcheck disable=SC2064  # expand $stem now, not at trap time
   trap "rm -rf '$LOCK_DIR' '$stem'*" EXIT
@@ -209,19 +320,25 @@ compress() {
     -x265-params "pass=2:stats=$stats:log-level=error" \
     -vf "$vf" \
     -c:a aac -b:a "${AUDIO_KBPS}k" -ac 1 \
+    -metadata "comment=$MARKER" \
     -tag:v hvc1 -movflags +faststart "$tmp_out"; then
     log "  pass 2 failed; skipping"
     return 0
   fi
 
+  output_is_sound "$tmp_out" "$duration" || return 0
+
   local before after
   before=$(stat -f %z "$src")
   after=$(stat -f %z "$tmp_out")
-  mv "$tmp_out" "$out"
+  # One rename(2) when TMPDIR shares the volume with WATCH_DIR, which it does
+  # here: there is never a moment where neither the original nor its
+  # replacement exists. Not a delete followed by a move.
+  mv "$tmp_out" "$src"
   rm -f "$stem".stats*
   trap 'rm -rf "$LOCK_DIR"' EXIT
 
-  log "  $(basename "$out")  $((before / 1000000))MB -> $((after / 1000000))MB"
+  log "  $base  $((before / 1000000))MB -> $((after / 1000000))MB, replaced"
   if ((after > TARGET_MB * 1000 * 1000)); then
     log "  WARNING: still over ${TARGET_MB}MB"
   fi
@@ -231,14 +348,9 @@ compress() {
 acquire_lock
 
 if (($# > 0)); then
-  # Explicit files bypass the size gate; if you asked for it, you meant it.
-  for f in "$@"; do
-    [[ $f == *"$SUFFIX" ]] && {
-      log "skip $f (already an output)"
-      continue
-    }
-    compress "$f"
-  done
+  # Explicit files bypass every gate, the marker included; if you asked for it,
+  # you meant it.
+  for f in "$@"; do compress "$f"; done
   exit 0
 fi
 
@@ -247,6 +359,14 @@ fi
   exit 0
 }
 shopt -s nullglob
+
+# Rename first, so that everything the compression logs and replaces already
+# carries its final name.
+for f in "$WATCH_DIR"/*; do
+  rename_capture "$f"
+done
+
+# Re-globbed on purpose: the loop above has renamed some of these.
 for f in "$WATCH_DIR"/*.mp4; do
   should_compress "$f" || continue
   compress "$f"

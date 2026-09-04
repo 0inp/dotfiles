@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <!--
-  Shrinks oversized screen recordings for Discord. See scripts/.local/bin/screenshots-compress.
+  Renames every capture in ~/Pictures/Screenshots and shrinks the oversized
+  recordings. See scripts/.local/bin/captures-tidy.
 
   WatchPaths, not a resident fswatch process: launchd watches the folder with
   kqueue and starts the job when its contents change, so there is nothing to
@@ -15,13 +16,13 @@
 <plist version="1.0">
 <dict>
     <key>Label</key>
-    <string>com.oinp.screenshots-compress</string>
+    <string>com.oinp.captures-tidy</string>
 
     <key>ProgramArguments</key>
     <array>
         <string>/bin/bash</string>
         <string>-c</string>
-        <string>exec "$HOME/.local/bin/screenshots-compress"</string>
+        <string>exec "$HOME/.local/bin/captures-tidy"</string>
     </array>
 
     <key>WatchPaths</key>
@@ -79,8 +80,8 @@
     <string>Interactive</string>
 
     <key>StandardOutPath</key>
-    <string>/tmp/screenshots-compress.log</string>
+    <string>/tmp/captures-tidy.log</string>
     <key>StandardErrorPath</key>
-    <string>/tmp/screenshots-compress.error.log</string>
+    <string>/tmp/captures-tidy.error.log</string>
 </dict>
 </plist>
