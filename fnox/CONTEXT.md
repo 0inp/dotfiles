@@ -5,7 +5,8 @@ Secret management, in two tiers:
 - **Bitwarden vault = source of truth.** Backed up, cross-machine, visible in
   the desktop app. Where you add and rotate secrets.
 - **macOS login keychain = local cache.** What every shell actually reads, at
-  ~0.01s, with no prompt ever.
+  ~0.01s, with no prompt — as long as the item's ACL stays open. Keeping it
+  that way is not automatic; see Gotchas.
 
 `secrets-pull` moves secrets from the first into the second. Nothing in this
 repo ever contains a secret value.
@@ -45,9 +46,10 @@ Three measured reasons:
    would either get an empty secret (silent auth failure downstream) or block on
    a GUI pinentry dialog.
 
-The keychain has none of these properties: it unlocks at login and never
-prompts. So Bitwarden is pulled from *explicitly*, by you, and the shell only
-ever touches the keychain.
+The keychain has none of these properties: it unlocks at login, and reads cost
+nothing and ask nothing — once the item ACL is open, which is a thing you have
+to arrange (see Gotchas). So Bitwarden is pulled from *explicitly*, by you, and
+the shell only ever touches the keychain.
 
 Storing `BW_SESSION` (or worse, the master password) somewhere to dodge the
 prompt is a bad trade: that key decrypts your **entire vault**, a far larger
@@ -70,6 +72,40 @@ var, put the value in its password field, add the pair to the `SECRETS` array in
 `scripts/.local/bin/secrets-pull`, then run `secrets-pull`.
 
 ## Gotchas
+- **fnox is ad-hoc signed, so a default keychain ACL does not survive upgrades.**
+  `codesign -dv` reports `Signature=adhoc`, `linker-signed`,
+  `TeamIdentifier=not set`, and an `Identifier` (`fnox-bd00014d1fce8af0`) derived
+  from the build itself. A keychain item's default ACL trusts the exact binary
+  that created it, so `brew upgrade fnox` orphans that trust and macOS starts
+  demanding the login password on every read. `activate` hooks `_fnox_hook` into
+  **both** `precmd_functions` and `chpwd_functions`, so that is one dialog per
+  secret, per prompt drawn, per `cd` — about twenty before you can type
+  anything. The 1.35.2 upgrade did exactly this on 2026-09-14.
+
+  The items are therefore created with an **open ACL** (`applications: <null>`),
+  which no future build can fall outside of, because there is no list left to
+  belong to:
+
+  ```bash
+  security delete-generic-password -s fnox -a <KEY>
+  printf '%s\n%s\n' "$value" "$value" \
+    | security add-generic-password -s fnox -a <KEY> -A -w
+  ```
+
+  `-w` last reads from stdin — twice, because `security` asks for a confirmation
+  retype — which keeps the value out of `ps` and shell history. `man security`
+  calls `-A` *"insecure, not recommended"*; that is true in general and moot
+  here, since the threat model at the bottom of this file already assumes any
+  process running as you can read these values.
+
+  Verified, not assumed: `fnox set` (and therefore `secrets-pull`) *preserves*
+  `applications: <null>`. It only rewrites the separate `partition_id` ACL entry
+  to the current `cdhash:`, and that entry is not what gates the dialog — an
+  unknown cdhash is appended silently when the trusted-app list is null.
+
+  Inspect with `security dump-keychain -a`, never with
+  `find-generic-password` alone: the latter prints the attributes and no ACL at
+  all, so a broken item looks perfectly healthy.
 - **`fnox sync` cannot do this.** It only accepts *encryption* providers (age,
   KMS) as targets and rejects the keychain: *"Provider 'keychain' cannot be used
   as a sync target."* Hence `secrets-pull` rather than a built-in.
@@ -113,6 +149,11 @@ bw config server https://vault.bitwarden.eu   # done by install.sh; EU account
 bw login
 secrets-pull
 ```
+
+`secrets-pull` creates the items through `fnox set`, which leaves the default
+ACL — trusting only the fnox build that ran. That is fine until the first
+`brew upgrade fnox`, which is when the dialog storm starts. Re-create them with
+an open ACL once, per the first gotcha above, and it never comes back.
 
 The EU server setting matters: `bw` defaults to the US server and otherwise
 fails with a misleading *"Invalid master password"*.
