@@ -33,3 +33,29 @@ Replaces tmux for AI agent workflows — sidebar shows blocked/working/done stat
 ```bash
 herdr server reload-config
 ```
+
+## Mouse buttons cannot be bound — don't retry this
+Investigated against 0.9.0 and settled. Three independent walls:
+
+1. The `[keys]` parser has no mouse vocabulary — only keys, arrows, `f1`..`f20`
+   and modifiers. `mouse4`, `button4`, `prefix+mouse4` are all rejected.
+2. Herdr's internal mouse event type only knows `Left`, `Right`, `Middle`,
+   `ScrollUp/Down/Left/Right`, `Moved` and `Drag`. A thumb button cannot be
+   *represented*, so this is a data-model limit rather than a missing keyword.
+3. Plugin actions fire on `keybinding` or `link_click` only; there is no hook on
+   raw input events.
+
+Ghostty has no mouse-button keybind trigger either, so a Herdr change alone
+would not be enough.
+
+Note the failure mode of wall 1: a bad `[keys]` entry is *quiet* —
+`invalid keybinding: ...; disabling binding`, then Herdr runs on without that
+binding. `herdr config check` is the only place it surfaces.
+
+An OS-level remap (Karabiner-Elements, thumb button → `ctrl+b n`) does work and
+was verified end to end, but it was removed again: capturing the mouse's
+pointing collection to get there was more disruptive than the shortcut was
+worth. `f13`..`f20` *are* accepted by `[keys]`, so if a future macOS tool can
+turn a thumb button into an F-key without grabbing the device, that is the path
+to reopen — `hidutil` accepts such a mapping but there is no evidence it
+applies to the button usage page.
