@@ -1,0 +1,72 @@
+# Project dictionary for the fiches de cadrage. Versioned on purpose: `zg` on a
+# word writes here, so the vocabulary accumulates across machines instead of
+# being relearnt. `zug` undoes one. Neovim recompiles the .add.spl beside this
+# file automatically; that artefact is gitignored.
+#
+# Seeded from the words actually flagged across every fiche, keeping only those
+# that appeared TWICE OR MORE. One-off oddities are left flagged on purpose --
+# that is the only thing still catching a genuine typo.
+#
+# Ticket references (DEV-1937 and friends) are NOT here and cannot be: the
+# spell checker treats each one as a single word, so the set is unbounded.
+# Writing them as `DEV-1937` in backticks makes them vanish for free -- the
+# markdown_inline query marks code spans @nospell.
+
+# -- domain / client vocabulary --
+DPGF
+CCTP
+BPU
+CRA
+BTP
+Sillant
+sillant-context
+vicat
+price-bible
+sous-total
+sous-types
+tout-ou-rien
+
+# -- French the bundled fr dictionary does not know --
+validateur
+renommage
+mergé
+ᵉ
+ᵉʳ
+
+# -- English technical vocabulary used inside French prose --
+webpack
+webhook
+mixin
+traceback
+asyncio
+jsdom
+es5
+ts-jest
+create-react-app
+self-review
+tech-report
+pdf-to-table
+import-bid
+import-referential
+signalement-import
+py
+v2
+PR4
+E2E
+ARN
+IAM
+LLM
+
+# -- identifiers that recur in prose --
+lotId
+jobId
+bidJobIds
+staleTime
+BidMetadata
+TaskGroup
+SheetSelection
+ImportBidRequest
+
+# -- elisions in front of an English noun --
+l'app
+l'endpoint

@@ -71,6 +71,21 @@ if ! command -v vibe &>/dev/null; then
   curl -LsSf https://mistral.ai/vibe/install.sh | bash
 fi
 
+# French spell files for Neovim. Not shipped with Neovim, and not committed
+# here either: they are ~2.8 MB of opaque binary that gitleaks would have to
+# scan on every run. Without them `spelllang=fr,en` (set in the markdown
+# ftplugin) degrades to English only and underlines every French word.
+NVIM_SPELL_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site/spell"
+mkdir -p "$NVIM_SPELL_DIR"
+for spellfile in fr.utf-8.spl fr.utf-8.sug; do
+  if [[ ! -s "$NVIM_SPELL_DIR/$spellfile" ]]; then
+    echo "Fetching Neovim spell file $spellfile..."
+    curl -sSLf --max-time 120 -o "$NVIM_SPELL_DIR/$spellfile" \
+      "https://ftp.nluug.nl/pub/vim/runtime/spell/$spellfile" \
+      || echo "⚠️  Could not fetch $spellfile — French spell check will be unavailable" >&2
+  fi
+done
+
 ## MacOS settings
 echo "Changing macOS defaults..."
 # Run in a subshell, not `source`: this script has unguarded `killall` calls

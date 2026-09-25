@@ -1,0 +1,4 @@
+# Compiled from spell/fr.utf-8.add by Neovim itself on every `zg` and whenever
+# the .add file is newer. Binary, machine-regenerable, pure churn in a diff.
+# The .add file is the source of truth.
+.config/nvim/spell/*.add.spl
