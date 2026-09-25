@@ -71,10 +71,8 @@ if ! command -v vibe &>/dev/null; then
   curl -LsSf https://mistral.ai/vibe/install.sh | bash
 fi
 
-# French spell files for Neovim. Not shipped with Neovim, and not committed
-# here either: they are ~2.8 MB of opaque binary that gitleaks would have to
-# scan on every run. Without them `spelllang=fr,en` (set in the markdown
-# ftplugin) degrades to English only and underlines every French word.
+# Neovim ships no French spell files, and spelllang=fr,en silently degrades to
+# English without them. Not committed: ~2.8 MB of opaque binary.
 NVIM_SPELL_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site/spell"
 mkdir -p "$NVIM_SPELL_DIR"
 for spellfile in fr.utf-8.spl fr.utf-8.sug; do

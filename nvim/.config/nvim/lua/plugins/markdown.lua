@@ -1,31 +1,16 @@
--- Markdown: three separate ways to read the same file, on purpose.
---
---   in-buffer  render-markdown.nvim   default, no moving parts
---   browser    markdown-preview.nvim  Mermaid + KaTeX, opt-in per buffer
---   terminal   leaf                   read-only pane, next to a Claude pane
---
--- markdown-plus.nvim is the *editing* layer (headings, lists, tables,
--- callouts, links). It has no rendering module at all, which is why
--- render-markdown.nvim is a complement and not a duplicate.
-
 vim.pack.add({
 	"https://github.com/yousefhadder/markdown-plus.nvim",
 	"https://github.com/MeanderingProgrammer/render-markdown.nvim",
 })
 require("markdown-plus").setup()
 require("render-markdown").setup({
-	-- Defaults otherwise: they are tuned to look right, so only the two
-	-- renderers that checkhealth flags as unbacked are switched off.
-	-- Neither is worth a treesitter parser here: the fiches carry no YAML
-	-- frontmatter and no LaTeX (which would also want utftex/latex2text).
+	-- No parser installed for either, and latex would also want utftex.
 	latex = { enabled = false },
 	yaml = { enabled = false },
 })
 
--- Neovim compiles spell/<lang>.add into .add.spl only when you press zg or zw.
--- A dictionary that arrived by `git pull` on another machine would therefore
--- never take effect -- silently, the words simply stay underlined. Rebuild it
--- whenever the source is newer than the compiled form.
+-- Neovim compiles spell/<lang>.add only on zg or zw, so a dictionary arriving
+-- over git would stay inert.
 local spell_add = vim.fn.stdpath("config") .. "/spell/fr.utf-8.add"
 local add_stat = vim.uv.fs_stat(spell_add)
 if add_stat then
@@ -40,19 +25,10 @@ vim.pack.add({
 	"https://github.com/selimacerbas/markdown-preview.nvim",
 })
 require("markdown_preview").setup({
-	-- "multi", NOT "takeover" -- see the note in nvim/CONTEXT.md.
-	--
-	-- In takeover mode a single Neovim owns the fixed port 8421 and the single
-	-- shared browser tab. A *second* Neovim takes the secondary branch of
-	-- markdown_preview/init.lua, writes its content, adopts the primary's
-	-- token, and returns -- before reaching either open_browser call site.
-	-- So with two files open in two instances (the normal case here),
-	-- :MarkdownPreview in the second one silently does nothing: no tab, no
-	-- error, no message.
-	--
-	-- "multi" gives every instance its own OS-assigned port and its own tab.
+	-- "takeover" shares one fixed port and one browser tab across instances: a
+	-- second Neovim registers with the first and opens nothing at all.
 	instance_mode = "multi",
-	port = 0, -- 0 = OS-assigned (multi); would mean the fixed 8421 in takeover
+	port = 0,
 	open_browser = true,
 	default_theme = "dark",
 	debounce_ms = 300,

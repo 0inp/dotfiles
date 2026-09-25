@@ -81,28 +81,27 @@ are **not** symlinked — they are run from the repo. Only `.local/bin/` is stow
     ~95s here. Nothing currently audits full history — see the note in
     `checks.sh`; the GitHub Action scans the last commit only.
 
-- **Daily todo**: `sillant-daily-todo` reads `wt list` plus `gh pr list` across
-  the repos named at the top of the script, hands that to `claude -p` with the
-  Linear MCP server as its *only* allowed tool, and writes the result into the
-  todo.txt that `tuxedo` reads (`TODO_DIR`, set in `.zshenv`).
+- **Daily todo**: `sillant-daily-todo` reads `wt list` plus `gh pr list` across the
+  repos named at the top of the script, hands that to `claude -p` with the Linear MCP
+  server as its only allowed tool, and writes the result into the todo.txt that
+  `tuxedo` reads (`TODO_DIR`, set in `.zshenv`). All paths are absolute — it runs from
+  anywhere.
 
-  Run by hand, every morning. There is deliberately **no launchd agent**: a
-  launchd job gets a minimal PATH, no `.zshrc`, and — per the fnox note in
-  `CLAUDE.md` — no secrets at all, because `fnox activate` installs a `precmd`
-  hook that a non-interactive shell never fires.
+  Run by hand. There is deliberately **no launchd agent**: a launchd job gets a
+  minimal PATH, no `.zshrc`, and — per the fnox note in `CLAUDE.md` — no secrets at
+  all, because `fnox activate` installs a `precmd` hook a non-interactive shell never
+  fires.
 
   Three things to know before editing it:
-  - **Idempotence is a delete rule, not an append rule.** Every generated task
-    carries `gen:YYYY-MM-DD`. Each run drops the *incomplete* tagged tasks and
-    writes a fresh block, so running it three times in a morning leaves one
-    block, not three. Completed tasks (`x ...`) survive so `tuxedo archive`
-    still sees them, and **stripping the `gen:` tag adopts a task** — the
-    script will never touch it again. That is the intended escape hatch.
-  - **bash 3.2**, same as `changelog.sh`. `mapfile` is bash 4 and is not
-    available; this was not theoretical, the first version failed on it.
-  - **`tuxedo` reloads on external change** (~250 ms), so replacing todo.txt
-    under an open TUI is safe and shows up on its own. That property is the
-    reason a flat todo.txt beat every SQLite-backed todo app for this job.
+  - **Idempotence is a delete rule, not an append rule.** Every generated task carries
+    `gen:YYYY-MM-DD`. Each run drops the *incomplete* tagged tasks and writes a fresh
+    block, so three runs in a morning leave one block. Completed tasks survive so
+    `tuxedo archive` still sees them, and **stripping the `gen:` tag adopts a task** —
+    the script never touches it again. That is the intended escape hatch.
+  - **bash 3.2**, same as `changelog.sh`: no `mapfile`, no associative arrays.
+  - **`tuxedo` reloads on external change** (~250 ms), so replacing todo.txt under an
+    open TUI is safe. That property is why a flat todo.txt beat every SQLite-backed
+    todo app for this job.
 
 - **Vorssaint**: `vorssaint-apply` is this repo's Vorssaint config. The app has
   no config file — every setting is UserDefaults in `com.vorssaint.utils` — so

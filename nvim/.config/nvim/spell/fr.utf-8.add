@@ -1,16 +1,5 @@
-# Project dictionary for the fiches de cadrage. Versioned on purpose: `zg` on a
-# word writes here, so the vocabulary accumulates across machines instead of
-# being relearnt. `zug` undoes one. Neovim recompiles the .add.spl beside this
-# file automatically; that artefact is gitignored.
-#
-# Seeded from the words actually flagged across every fiche, keeping only those
-# that appeared TWICE OR MORE. One-off oddities are left flagged on purpose --
-# that is the only thing still catching a genuine typo.
-#
-# Ticket references (DEV-1937 and friends) are NOT here and cannot be: the
-# spell checker treats each one as a single word, so the set is unbounded.
-# Writing them as `DEV-1937` in backticks makes them vanish for free -- the
-# markdown_inline query marks code spans @nospell.
+# Project dictionary. `zg` appends here, `zug` undoes. Seeded with the terms
+# that recur across the fiches; one-off oddities stay flagged on purpose.
 
 # -- domain / client vocabulary --
 DPGF

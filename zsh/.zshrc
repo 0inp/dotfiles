@@ -76,14 +76,8 @@ zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'  # lowercase input matche
 # Fuzzy finder
 # =========================================================
 
-# `fzf --zsh` (fzf >= 0.48) emits key-bindings AND completion in one go, so it
-# replaces sourcing shell/key-bindings.zsh + shell/completion.zsh by hand. That
-# pair of paths encoded fzf's *internal* layout under the Homebrew prefix; this
-# asks the binary instead and keeps working if the formula reorganises.
-# Same widgets as before: ^T file, \ec cd, ^R history, fzf-completion on ^I.
-# ^R and ^I are both reclaimed later anyway -- by atuin and fzf-tab.
-#
-# Only load in interactive shells as key-bindings use zle.
+# Asking the binary avoids hardcoding fzf's layout under the Homebrew prefix.
+# ^R and ^I are reclaimed later, by atuin and fzf-tab.
 if [[ -o interactive ]]; then
   eval "$(fzf --zsh)"
 fi

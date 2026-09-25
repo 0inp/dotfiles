@@ -1,27 +1,13 @@
 #!/bin/bash
-# Morning brief: turn the current git + Linear state into a short, actionable
-# todo.txt block that tuxedo picks up live.
+# Turn the current git and Linear state into a todo.txt block that tuxedo reads.
 #
-# Run it by hand, whenever you start the day. There is deliberately no launchd
-# agent: a script launched by launchd gets a minimal PATH, no ~/.zshrc, and —
-# per this repo's CLAUDE.md — no secrets at all, because `fnox activate`
-# installs a precmd hook that a non-interactive shell never fires. Run from
-# your own shell, everything is already there.
-#
-# Idempotence (the whole point):
-#   Every generated task carries a `gen:YYYY-MM-DD` tag. Each run deletes the
-#   *incomplete* tagged tasks and writes a fresh block, so running it three
-#   times in a morning leaves three identical results, not three copies.
-#
-#   Two escape hatches, both by design:
-#     - Completed tasks (`x ...`) are never touched, so `tuxedo archive` still
-#       sees what you did.
-#     - Strip the `gen:` tag from a line and the script adopts it as yours: it
-#       will never rewrite or delete that task again.
+# Generated tasks carry gen:<date>. Each run deletes the incomplete tagged ones
+# and writes a fresh block, so re-running it is idempotent. Completed tasks are
+# left alone, and removing a task's gen: tag hands it to you for good.
 #
 # Usage:
 #   sillant-daily-todo        regenerate today's block
-#   sillant-daily-todo -n     dry run: print what would be written, touch nothing
+#   sillant-daily-todo -n     dry run: print what would be written
 set -euo pipefail
 
 # The repos to look at. This is the one thing to edit.
@@ -31,7 +17,7 @@ REPOS=(
   "$HOME/dotfiles"
 )
 
-# How many tasks to ask for. Past ~8 the list stops being read in the morning.
+# Past ~8 the list stops being read in the morning.
 MAX_TASKS=8
 
 DRY_RUN=0
@@ -60,17 +46,14 @@ echo "→ collecting git state…" >&2
   echo "# Git state on $TODAY"
   echo
   for repo in "${REPOS[@]}"; do
-    # Not `-d "$repo/.git"`: inside a worktree .git is a *file* pointing at the
-    # common dir, so the directory test would silently skip it.
+    # Inside a worktree .git is a file, so a directory test would skip it.
     git -C "$repo" rev-parse --git-dir >/dev/null 2>&1 || {
       echo "(skipped, not a git repo: $repo)"
       continue
     }
     echo "## $(basename "$repo")"
     echo '```'
-    # `wt list` already carries branch, ahead/behind, dirty flags, age and the
-    # last commit subject for every worktree — one call beats five git plumbing
-    # calls, and it is the same view the human sees.
+    # One call, and the same view the human reads.
     (cd "$repo" && wt list 2>&1) || echo "(wt list failed)"
     echo '```'
     if (cd "$repo" && git remote get-url origin >/dev/null 2>&1); then
@@ -115,9 +98,7 @@ EOF
 )
 
 set +e
-# Read-only on purpose: the only tool allowed is the Linear MCP server, so the
-# brief cannot touch a file even if it decides it wants to. No --permission-mode
-# override either -- acceptEdits would pre-approve writes this never needs.
+# Linear is the only allowed tool, so the brief cannot touch a file.
 RAW="$(claude -p "$PROMPT" \
   --allowed-tools "mcp__plugin_linear_linear" 2>"$WORK/err")"
 rc=$?
@@ -129,10 +110,8 @@ if [[ $rc -ne 0 ]]; then
 fi
 
 # ---------- keep only plausible todo.txt lines ----------
-# The model is told not to editorialise, but a stray "Here are..." line would
-# otherwise become a task. Drop blanks, fences, headers and bullets.
-# A plain read loop, not `mapfile`: the shebang is /bin/bash, which on macOS
-# is still 3.2 and has no mapfile at all. It failed loudly here once already.
+# The model is told not to editorialise; this drops a stray line if it does.
+# A read loop rather than mapfile, which /bin/bash 3.2 on macOS lacks.
 TASKS=()
 while IFS= read -r line; do
   TASKS+=("$line")
@@ -153,13 +132,8 @@ fi
 
 # ---------- rewrite the generated block, atomically ----------
 NEW="$WORK/todo.txt"
-# Keep: completed tasks, and anything without a gen: tag (yours).
-# Drop: incomplete tasks carrying gen: — whatever day they were generated, so
-# yesterday's leftovers do not pile up under today's.
-# Written out rather than chained greps: the tag has to be matched as a whole
-# word anywhere on the line, and "is this line done?" has to be a separate
-# question from "is it tagged?". Interval syntax like {4} is spelled out
-# because it is not portable across awk implementations.
+# Any day's tag, so yesterday's leftovers do not pile up under today's.
+# Interval syntax like {4} is spelled out; awk implementations differ on it.
 awk '
   {
     done = ($0 ~ /^[ \t]*x[ \t]/)
@@ -179,8 +153,7 @@ if [[ $DRY_RUN -eq 1 ]]; then
   exit 0
 fi
 
-# tuxedo writes atomically and reloads on external change (~250 ms), so
-# replacing the file under an open TUI is safe and shows up by itself.
+# tuxedo reloads on external change, so an open TUI picks this up by itself.
 cp "$TODO_FILE" "$TODO_FILE.bak"
 mv "$NEW" "$TODO_FILE"
 

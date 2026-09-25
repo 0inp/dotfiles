@@ -15,9 +15,7 @@ local ensure_installed = {
 	"json",
 	"lua",
 	"markdown",
-	-- Required by render-markdown.nvim. It is already on disk today only
-	-- because it ships as a silent companion of the markdown parser -- not
-	-- because anything asked for it. Make that explicit.
+	-- Needed by render-markdown.nvim; the markdown parser does not imply it.
 	"markdown_inline",
 	"python",
 	"query",
