@@ -32,7 +32,12 @@ Supports **Apple Silicon** (`/opt/homebrew`) and **Intel** (`/usr/local`).
 - **Aliases**: Shortcuts for common commands.
 - **Keybindings**: Custom keyboard shortcuts.
 - **Functions**: Reusable shell utilities.
-- **FZF**: Fuzzy-finder integration.
+- **FZF**: loaded with `eval "$(fzf --zsh)"` (fzf >= 0.48), which emits the
+  key-bindings *and* the completion in one call. It replaced sourcing
+  `$HOMEBREW_PREFIX/opt/fzf/shell/{key-bindings,completion}.zsh` by hand — that
+  pair encoded fzf's internal layout under the Homebrew prefix. Note that two
+  of the keys it binds are reclaimed later on purpose: `^R` by atuin, `^I` by
+  fzf-tab. Verified in a real pty, not with `zsh -i -c`.
 - **Plugins**: Extensions for productivity.
 - **Prompt**: Custom shell prompt (`pure`).
 - **History**: `atuin` provides SQLite-backed history and fuzzy Ctrl-R.
