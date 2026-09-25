@@ -20,14 +20,42 @@ Replaces tmux for AI agent workflows — sidebar shows blocked/working/done stat
 - **Kanagawa theme** to match the rest of the setup
 - **Sound + toasts** fire when an agent finishes or needs input
 
-## Notable Keybinding Differences from Tmux
+## Moving around
+
+Prefix is `ctrl+b`. Full list in `config.toml`; these are the ones worth knowing.
+
+| Action | Key |
+|--------|-----|
+| Toggle the agent sidebar | `prefix+b` |
+| Next / previous agent | `prefix+]` / `prefix+[` |
+| Jump straight to agent N | `prefix+ctrl+N` |
+| Next / previous workspace | `prefix+)` / `prefix+(` |
+| Jump straight to workspace N | `prefix+shift+N` |
+| Workspace picker | `prefix+shift+t` |
+| Next / previous tab | `prefix+n` / `prefix+p` |
+
+**Alt is aerospace's namespace, not herdr's.** `alt-1..5` and `alt-b/c/f/m/o/t` are
+global hotkeys that switch aerospace workspaces, so they are consumed before the
+terminal sees them — a herdr binding on `alt` is dead whatever the prefix. That rules
+out the `focus_agent = "prefix+alt+1..9"` the config shipped commented out.
+
+`prefix+ctrl+N` works instead because ctrl+digit is only distinguishable under the
+kitty keyboard protocol, which herdr pushes and ghostty supports. On a terminal
+without it the binding would be dead.
+
+Agents cycle on `]` and `[` rather than `tab` / `shift+tab`: terminals send Shift-Tab
+as `CSI Z`, which need not match a `tab+shift` binding. A binding herdr cannot match
+is disabled silently.
+
+## Where herdr diverges from tmux
+
 | Action | Tmux | Herdr |
 |--------|------|-------|
-| Split side-by-side | `prefix+\|` | `prefix+\|` (same) |
-| Split top-bottom | `prefix+-` | `prefix+-` (same) |
-| Rename workspace | `prefix+r` | `prefix+shift+w` |
-| Resize panes | `prefix+,/.` etc. | `prefix+r` → `h/j/k/l` → `esc` |
-| Session picker | `prefix+T` (sesh) | `prefix+w` (built-in) |
+| Rename workspace | `prefix+$` | `prefix+shift+r` |
+| Workspace picker | `prefix+s` | `prefix+shift+t` |
+| Resize panes | `prefix+ctrl+arrow` | `prefix+a` → `h/j/k/l` → `esc` |
+| Copy mode | `prefix+[` | `prefix+v` |
+| Next / previous session | `prefix+)` / `prefix+(` | same |
 
 ## Reload Config
 ```bash

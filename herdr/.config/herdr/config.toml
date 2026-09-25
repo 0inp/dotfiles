@@ -40,6 +40,8 @@ new_workspace = "prefix+shift+n"
 rename_workspace = "prefix+shift+r"
 close_workspace = "prefix+shift+d"
 switch_workspace = "prefix+shift+1..9"
+next_workspace = "prefix+)"
+previous_workspace = "prefix+("
 goto = "prefix+g"
 
 # Pane splits — new_cwd = "follow" handles the -c "#{pane_current_path}" equivalent
@@ -66,7 +68,14 @@ resize_mode = "prefix+a"
 # Copy mode — vi bindings (v to select, y to yank, q/esc to exit)
 copy_mode = "prefix+v"
 
+# Agents. Not shift+tab, which terminals send as CSI Z rather than tab+shift.
+# Not alt+digit either: aerospace owns the whole alt namespace as a global
+# hotkey, so it never reaches the terminal. ctrl+digit needs the kitty keyboard
+# protocol, which herdr pushes and ghostty supports.
+next_agent = "prefix+]"
+previous_agent = "prefix+["
+focus_agent = "prefix+ctrl+1..9"
+
 # Misc
 toggle_sidebar = "prefix+b"
 detach = "prefix+q"
-# focus_agent = "prefix+alt+1..9"
