@@ -50,6 +50,12 @@ export LG_CONFIG_FILE="${XDG_CONFIG_HOME}/lazygit.yaml"
 # ripgrep — default flags for every `rg` invocation
 export RIPGREP_CONFIG_PATH="${XDG_CONFIG_HOME}/ripgrep/ripgreprc"
 
+# tuxedo (todo.txt TUI) — one todo list, not one per directory.
+# Without this, a bare `tuxedo` opens ./todo.txt relative to the cwd and
+# offers to create one where you happen to stand. TODO_FILE/DONE_FILE default
+# to todo.txt / done.txt inside TODO_DIR.
+export TODO_DIR="${XDG_DATA_HOME}/todo"
+
 # Brew
 export HOMEBREW_NO_ENV_HINTS=1
 export HOMEBREW_REQUIRE_TAP_TRUST=1

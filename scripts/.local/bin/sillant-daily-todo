@@ -1,0 +1,188 @@
+#!/bin/bash
+# Morning brief: turn the current git + Linear state into a short, actionable
+# todo.txt block that tuxedo picks up live.
+#
+# Run it by hand, whenever you start the day. There is deliberately no launchd
+# agent: a script launched by launchd gets a minimal PATH, no ~/.zshrc, and —
+# per this repo's CLAUDE.md — no secrets at all, because `fnox activate`
+# installs a precmd hook that a non-interactive shell never fires. Run from
+# your own shell, everything is already there.
+#
+# Idempotence (the whole point):
+#   Every generated task carries a `gen:YYYY-MM-DD` tag. Each run deletes the
+#   *incomplete* tagged tasks and writes a fresh block, so running it three
+#   times in a morning leaves three identical results, not three copies.
+#
+#   Two escape hatches, both by design:
+#     - Completed tasks (`x ...`) are never touched, so `tuxedo archive` still
+#       sees what you did.
+#     - Strip the `gen:` tag from a line and the script adopts it as yours: it
+#       will never rewrite or delete that task again.
+#
+# Usage:
+#   sillant-daily-todo        regenerate today's block
+#   sillant-daily-todo -n     dry run: print what would be written, touch nothing
+set -euo pipefail
+
+# The repos to look at. This is the one thing to edit.
+REPOS=(
+  "$HOME/dev/sillant/Table"
+  "$HOME/dev/sillant/vicat"
+  "$HOME/dotfiles"
+)
+
+# How many tasks to ask for. Past ~8 the list stops being read in the morning.
+MAX_TASKS=8
+
+DRY_RUN=0
+[[ "${1:-}" == "-n" || "${1:-}" == "--dry-run" ]] && DRY_RUN=1
+
+for tool in claude tuxedo wt git; do
+  command -v "$tool" >/dev/null || {
+    echo "❌ $tool not found" >&2
+    exit 1
+  }
+done
+
+TODO_DIR="${TODO_DIR:-$HOME/.local/share/todo}"
+TODO_FILE="${TODO_FILE:-$TODO_DIR/todo.txt}"
+mkdir -p "$TODO_DIR"
+[[ -f "$TODO_FILE" ]] || : >"$TODO_FILE"
+
+TODAY="$(date +%F)"
+WORK="$(mktemp -d)"
+trap 'rm -rf "$WORK"' EXIT
+CONTEXT="$WORK/context.md"
+
+# ---------- collect git state ----------
+echo "→ collecting git state…" >&2
+{
+  echo "# Git state on $TODAY"
+  echo
+  for repo in "${REPOS[@]}"; do
+    # Not `-d "$repo/.git"`: inside a worktree .git is a *file* pointing at the
+    # common dir, so the directory test would silently skip it.
+    git -C "$repo" rev-parse --git-dir >/dev/null 2>&1 || {
+      echo "(skipped, not a git repo: $repo)"
+      continue
+    }
+    echo "## $(basename "$repo")"
+    echo '```'
+    # `wt list` already carries branch, ahead/behind, dirty flags, age and the
+    # last commit subject for every worktree — one call beats five git plumbing
+    # calls, and it is the same view the human sees.
+    (cd "$repo" && wt list 2>&1) || echo "(wt list failed)"
+    echo '```'
+    if (cd "$repo" && git remote get-url origin >/dev/null 2>&1); then
+      echo "### Open PRs authored by me"
+      echo '```'
+      (cd "$repo" && gh pr list --author "@me" \
+        --json number,title,isDraft,reviewDecision,statusCheckRollup \
+        --template '{{range .}}#{{.number}} {{.title}} draft={{.isDraft}} review={{.reviewDecision}}
+{{end}}' 2>&1) || echo "(gh unavailable)"
+      echo '```'
+    fi
+    echo
+  done
+} >"$CONTEXT"
+
+# ---------- ask Claude ----------
+echo "→ asking Claude (Linear via MCP)…" >&2
+PROMPT=$(
+  cat <<EOF
+Below is my git state across the repos I work in. Cross-reference it with my
+assigned, non-completed Linear issues (use the Linear MCP tools).
+
+Produce AT MOST $MAX_TASKS lines in todo.txt format, ordered most urgent first.
+Rules for the output:
+- One task per line. Nothing else: no preamble, no numbering, no markdown,
+  no code fence, no trailing commentary.
+- Each line: an optional (A)-(C) priority, then the Linear key when there is
+  one, then ONE concrete next action, then +project and @context tags.
+- The action must be something I can start immediately. "Continue DEV-1234" is
+  useless; "DEV-1234 rebase onto main, 7 behind" is not.
+- Prefer what is blocked, stale, or waiting on me over what is merely open.
+- If nothing is worth doing in a repo, write no line for it.
+
+Example of the expected shape:
+(A) DEV-1937 push .worktrees/dev-1937, 4 commits unpushed +Table @git
+(B) DEV-1583 answer the review on #1119 +Table @review
+
+Git state:
+
+$(cat "$CONTEXT")
+EOF
+)
+
+set +e
+# Read-only on purpose: the only tool allowed is the Linear MCP server, so the
+# brief cannot touch a file even if it decides it wants to. No --permission-mode
+# override either -- acceptEdits would pre-approve writes this never needs.
+RAW="$(claude -p "$PROMPT" \
+  --allowed-tools "mcp__plugin_linear_linear" 2>"$WORK/err")"
+rc=$?
+set -e
+if [[ $rc -ne 0 ]]; then
+  echo "❌ claude failed (exit $rc)" >&2
+  sed 's/^/   /' "$WORK/err" >&2
+  exit 1
+fi
+
+# ---------- keep only plausible todo.txt lines ----------
+# The model is told not to editorialise, but a stray "Here are..." line would
+# otherwise become a task. Drop blanks, fences, headers and bullets.
+# A plain read loop, not `mapfile`: the shebang is /bin/bash, which on macOS
+# is still 3.2 and has no mapfile at all. It failed loudly here once already.
+TASKS=()
+while IFS= read -r line; do
+  TASKS+=("$line")
+done < <(
+  printf '%s\n' "$RAW" \
+    | sed 's/[[:space:]]*$//' \
+    | grep -v '^[[:space:]]*$' \
+    | grep -v '^[[:space:]]*```' \
+    | grep -v '^[[:space:]]*#' \
+    | grep -vE '^[[:space:]]*[-*][[:space:]]' \
+    | head -n "$MAX_TASKS"
+)
+
+if [[ ${#TASKS[@]} -eq 0 ]]; then
+  echo "⚠️  Claude returned no usable task line; $TODO_FILE left untouched." >&2
+  exit 0
+fi
+
+# ---------- rewrite the generated block, atomically ----------
+NEW="$WORK/todo.txt"
+# Keep: completed tasks, and anything without a gen: tag (yours).
+# Drop: incomplete tasks carrying gen: — whatever day they were generated, so
+# yesterday's leftovers do not pile up under today's.
+# Written out rather than chained greps: the tag has to be matched as a whole
+# word anywhere on the line, and "is this line done?" has to be a separate
+# question from "is it tagged?". Interval syntax like {4} is spelled out
+# because it is not portable across awk implementations.
+awk '
+  {
+    done = ($0 ~ /^[ \t]*x[ \t]/)
+    gen  = ($0 ~ /(^|[ \t])gen:[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]([ \t]|$)/)
+    if (!done && gen) next
+    print
+  }
+' "$TODO_FILE" >"$NEW"
+
+for task in "${TASKS[@]}"; do
+  printf '%s gen:%s\n' "$task" "$TODAY" >>"$NEW"
+done
+
+if [[ $DRY_RUN -eq 1 ]]; then
+  echo "— dry run, $TODO_FILE unchanged. Would write:"
+  cat "$NEW"
+  exit 0
+fi
+
+# tuxedo writes atomically and reloads on external change (~250 ms), so
+# replacing the file under an open TUI is safe and shows up by itself.
+cp "$TODO_FILE" "$TODO_FILE.bak"
+mv "$NEW" "$TODO_FILE"
+
+echo "✅ ${#TASKS[@]} tasks written to $TODO_FILE (previous copy: $TODO_FILE.bak)"
+tuxedo ls
