@@ -6,8 +6,16 @@ Configuration for Homebrew, the macOS package manager. Defines installed package
 ## Key Files
 | File                     | Description                          | Symlink Target                     |
 |--------------------------|--------------------------------------|------------------------------------|
-| `Brewfile`               | List of packages, taps, and casks    | `~/.Brewfile`                      |
-| `Brewfile.lock.json`     | Lockfile for reproducible installs   | `~/.Brewfile.lock.json`            |
+| `Brewfile`               | List of packages, taps, and casks    | `~/.config/brewfile/Brewfile`      |
+
+There is no `~/.Brewfile`. Stow tree-folds the whole directory, so
+`~/.config/brewfile` is a single symlink to `brew/.config/brewfile` and the
+files inside it are not links of their own. `.zshenv` points
+`HOMEBREW_BUNDLE_FILE_GLOBAL` at that path, which is what makes
+`brew bundle --global` work from anywhere.
+
+`Brewfile.lock.json` is **not** tracked — `brew/.gitignore` excludes it. It is a
+machine-specific build artifact; the Brewfile is the source of truth.
 
 ## Dependencies
 - **Homebrew**: Install via `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`.
