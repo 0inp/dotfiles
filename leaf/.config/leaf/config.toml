@@ -1,0 +1,9 @@
+theme = "ocean"
+
+# +{$line} lands on the line leaf is showing, not the top of the file.
+editor = "nvim +{$line}"
+
+watch = true
+
+# Defaults to 0, which disables `leaf -l` and `leaf -H` entirely.
+file-history-length = 20

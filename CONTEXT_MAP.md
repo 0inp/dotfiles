@@ -39,6 +39,7 @@ symlinks in `~`, not against intent.
 | gnupg        | GPG configuration                    | *(nothing stowed — see its CONTEXT.md)*         |
 | herdr        | Agent-aware multiplexer (ex-tmux)    | `~/.config/herdr/`                              |
 | launchd      | LaunchAgents (capture rename + shrink) | `~/Library/LaunchAgents/`                     |
+| leaf         | Terminal Markdown reader             | `~/.config/leaf/config.toml`                    |
 | lazygit      | Lazygit `customCommands` only        | `~/.config/lazygit/config.yml`                  |
 | mise         | Runtime versions + global npm tools  | `~/.config/mise/`                               |
 | nvim         | Neovim configuration                 | `~/.config/nvim/`                               |
@@ -46,6 +47,7 @@ symlinks in `~`, not against intent.
 | python       | Python REPL startup file             | `~/.pythonrc`                                   |
 | ripgrep      | Default flags for `rg`               | `~/.config/ripgrep/`                            |
 | scripts      | Custom scripts                       | `~/.local/bin/`                                 |
+| tuxedo       | todo.txt TUI (daily todo list)       | `~/.config/tuxedo/`                             |
 | vibe         | Mistral Vibe CLI config              | `~/.vibe/`                                      |
 | worktrunk    | Worktrunk configuration              | `~/.config/worktrunk/`                          |
 | zsh          | Zsh shell configuration              | `~/.zshrc`, `~/.zshenv`, `~/.zprofile`, `~/.config/zsh/` |

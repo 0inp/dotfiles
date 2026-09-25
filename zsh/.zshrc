@@ -171,6 +171,13 @@ if [[ -o interactive ]]; then
   unset _gh_comp_cache
 fi
 
+# =========================================================
+# leaf completions
+# =========================================================
+_leaf_comp="$XDG_DATA_HOME/leaf/completions/_leaf"
+[[ -o interactive && -r "$_leaf_comp" ]] && source "$_leaf_comp"
+unset _leaf_comp
+
 
 # =========================================================
 # Modular Config Files
@@ -179,4 +186,3 @@ fi
 for config_file (${HOME}/.config/zsh/*.zsh); do
   [[ -f ${config_file} ]] && source ${config_file}
 done
-
