@@ -101,8 +101,11 @@ pre-commit:
       run: shfmt -i 2 -ci -bn -w {staged_files}
       stage_fixed: true
 
-    # stylua's defaults already pass on all 17 nvim lua files unchanged, so
-    # this adds enforcement without a reformatting commit.
+    # stylua's defaults pass on all 17 nvim lua files unchanged, so this
+    # enforces formatting without ever springing a reformat on a commit that
+    # only meant to change a line. That claim drifted once -- four files had
+    # gone back to 2-space indent -- so re-check it rather than trust it:
+    #   for f in $(find nvim -name '*.lua'); do stylua --check "$f"; done
     - name: stylua
       glob: "*.lua"
       run: stylua {staged_files}

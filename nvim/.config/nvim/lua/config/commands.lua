@@ -45,4 +45,3 @@ vim.api.nvim_create_user_command("PackCheck", function()
 		vim.pack.del(non_active)
 	end
 end, { nargs = "*", desc = "Clean unused plugins" })
-
