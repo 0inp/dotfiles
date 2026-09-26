@@ -56,8 +56,14 @@ pre-commit:
         exit 1
       fail_text: remove these from the index, then re-commit
 
+    # Everything in scripts/.local/bin is bash and none of it carries an
+    # extension, so "*.sh" alone skipped all five -- the same trap as the zsh
+    # dotfiles below. Note what this catches and does not: bash -n is a parse
+    # check, and /bin/bash 3.2 accepts things here that it refuses to run.
     - name: syntax-bash
-      glob: "*.sh"
+      glob:
+        - "*.sh"
+        - "scripts/.local/bin/*"
       run: for f in {staged_files}; do bash -n "$f" || exit 1; done
 
     # .zshrc / .zshenv / .zprofile carry no .zsh extension, so they need
@@ -71,7 +77,9 @@ pre-commit:
       run: for f in {staged_files}; do zsh -n "$f" || exit 1; done
 
     - name: shellcheck
-      glob: "*.sh"
+      glob:
+        - "*.sh"
+        - "scripts/.local/bin/*"
       exclude:
         # Vendored, not ours to restyle: skill packs ship *.template.sh files
         # full of placeholders, and chtfzf.sh is an upstream cheat.sh wrapper.
@@ -87,11 +95,14 @@ pre-commit:
 
     # These flags are not a preference, they are this repo's existing style:
     # with them shfmt reports zero changes across install.sh, update.sh,
-    # agent-loop.sh and checks.sh. shfmt's own defaults (tabs) rewrite all
-    # four. -bn additionally permits `|` and `&&` at the start of a
-    # continuation line, which is how the pipelines here are already written.
+    # agent-loop.sh, checks.sh and the five scripts in scripts/.local/bin.
+    # shfmt's own defaults (tabs) rewrite every one. -bn additionally permits
+    # `|` and `&&` at the start of a continuation line, which is how the
+    # pipelines here are already written.
     - name: shfmt
-      glob: "*.sh"
+      glob:
+        - "*.sh"
+        - "scripts/.local/bin/*"
       exclude:
         - "agents/.agents/skills/**"
         - "resources/chtfzf.sh"
