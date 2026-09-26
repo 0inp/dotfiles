@@ -75,8 +75,13 @@ echo "→ collecte de l'état git…" >&2
 
 # ---------- ask Claude ----------
 echo "→ interrogation de Claude (Linear via MCP)…" >&2
-PROMPT=$(
-  cat <<EOF
+# Written to a file rather than captured with $(cat <<EOF): /bin/bash is 3.2,
+# whose $( ) scanner treats an apostrophe as opening a quote. The brief is
+# French prose, so the apostrophe in l'etat sends it hunting for a close quote
+# to end of file, then blames an unmatched backtick 25 lines further on.
+# bash -n does not catch it.
+PROMPT_FILE="$WORK/prompt.md"
+cat >"$PROMPT_FILE" <<EOF
 Voici l'état git de mes dépôts. Croise-le avec mes tickets Linear assignés et
 non terminés (utilise les outils MCP Linear).
 
@@ -106,9 +111,9 @@ Exemple de la forme attendue :
 
 État git :
 
-$(cat "$CONTEXT")
 EOF
-)
+cat "$CONTEXT" >>"$PROMPT_FILE"
+PROMPT="$(cat "$PROMPT_FILE")"
 
 set +e
 # Linear is the only allowed tool, so the brief cannot touch a file.
