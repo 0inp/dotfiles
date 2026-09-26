@@ -167,7 +167,10 @@ JSON
 DRY_RUN=0
 [[ "${1:-}" == "-n" || "${1:-}" == "--dry-run" ]] && DRY_RUN=1
 
-command -v python3 >/dev/null || { echo "❌ python3 not found" >&2; exit 1; }
+command -v python3 >/dev/null || {
+  echo "❌ python3 not found" >&2
+  exit 1
+}
 [[ -d /Applications/Vorssaint.app ]] || {
   echo "❌ Vorssaint is not installed (brew install --cask vorssaint)" >&2
   exit 1
@@ -177,7 +180,7 @@ command -v python3 >/dev/null || { echo "❌ python3 not found" >&2; exit 1; }
 WAS_RUNNING=0
 if pgrep -qx Vorssaint; then
   WAS_RUNNING=1
-  if (( DRY_RUN )); then
+  if ((DRY_RUN)); then
     echo "⚠️  Vorssaint is running — a real run would quit it first."
   else
     echo "⏹  Quitting Vorssaint (its cached preferences would overwrite these writes)."
@@ -186,7 +189,10 @@ if pgrep -qx Vorssaint; then
       pgrep -qx Vorssaint || break
       sleep 0.25
     done
-    pgrep -qx Vorssaint && { echo "❌ Vorssaint would not quit; aborting." >&2; exit 1; }
+    pgrep -qx Vorssaint && {
+      echo "❌ Vorssaint would not quit; aborting." >&2
+      exit 1
+    }
   fi
 fi
 
@@ -196,7 +202,7 @@ fi
 normalized() {
   case "$1" in
     bool) [[ "$2" == "true" ]] && echo 1 || echo 0 ;;
-    *)    printf '%s' "$2" ;;
+    *) printf '%s' "$2" ;;
   esac
 }
 
@@ -214,16 +220,19 @@ apply() {
   fi
 
   changed=1
-  if (( DRY_RUN )); then
+  if ((DRY_RUN)); then
     echo "→ $key WOULD change: $current -> $want"
     return
   fi
 
   case "$type" in
-    bool)   defaults write "$DOMAIN" "$key" -bool "$value" ;;
-    int)    defaults write "$DOMAIN" "$key" -int "$value" ;;
+    bool) defaults write "$DOMAIN" "$key" -bool "$value" ;;
+    int) defaults write "$DOMAIN" "$key" -int "$value" ;;
     string) defaults write "$DOMAIN" "$key" -string "$value" ;;
-    *)      echo "❌ unknown type '$type' for $key" >&2; exit 1 ;;
+    *)
+      echo "❌ unknown type '$type' for $key" >&2
+      exit 1
+      ;;
   esac
   echo "✓ $key set to $want"
 }
@@ -247,7 +256,7 @@ print(value.hex() if isinstance(value, bytes) else "")
   fi
 
   changed=1
-  if (( DRY_RUN )); then
+  if ((DRY_RUN)); then
     echo "→ $key WOULD change ($(printf '%s' "$json" | python3 -c 'import json,sys; print(len(json.load(sys.stdin)))') entries)"
     return
   fi
@@ -271,18 +280,18 @@ apply_json commandBarLinks \
   "$(printf '%s' "$LINKS_JSON" | python3 -c 'import json,sys; print(json.dumps(json.load(sys.stdin), separators=(",", ":")))')"
 
 # ---------- finish ----------
-if (( DRY_RUN )); then
+if ((DRY_RUN)); then
   echo "🔍 Dry run — nothing written."
   exit 0
 fi
 
-if (( changed )); then
+if ((changed)); then
   echo "🎉 Settings applied."
 else
   echo "🎉 Nothing to do — Vorssaint already matches this repo."
 fi
 
-if (( WAS_RUNNING )); then
+if ((WAS_RUNNING)); then
   echo "▶️  Starting Vorssaint again."
   open -ga Vorssaint
 else
