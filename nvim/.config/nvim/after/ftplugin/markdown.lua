@@ -1,6 +1,12 @@
 local set = vim.opt_local
 
-set.textwidth = 80 -- move text to new line at 80 characters
+-- A fiche is one paragraph per line, so it is read soft-wrapped. textwidth
+-- stays for `gq` on the hard-wrapped docs, but `t` would re-wrap a fiche on
+-- the first keystroke.
+set.textwidth = 80
+set.formatoptions:remove("t")
+set.wrap = true
+set.breakindent = true
 
 -- A fiche is French prose carrying English technical vocabulary, so a word is
 -- accepted when either dictionary knows it. fr.utf-8.spl is not shipped with
@@ -10,7 +16,6 @@ set.spell = true
 set.spelloptions = "camel"
 set.spellfile = vim.fn.stdpath("config") .. "/spell/fr.utf-8.add"
 set.linebreak = true
-set.formatoptions:append("t")
 set.smartindent = false
 
 -- Toggle Line Numbers (Visual Selection)
@@ -164,6 +169,16 @@ vim.cmd(
 vim.cmd(
 	string.format([[highlight @markup.heading.6.markdown cterm=bold gui=bold guifg=%s guibg=%s]], color_fg, color6_bg)
 )
+
+-- A paragraph is one line now, so a bare j or k would skip it whole. A count
+-- still addresses real lines, which is what relative numbers point at.
+vim.keymap.set({ "n", "v" }, "j", function()
+	return vim.v.count == 0 and "gj" or "j"
+end, { expr = true, buffer = true })
+
+vim.keymap.set({ "n", "v" }, "k", function()
+	return vim.v.count == 0 and "gk" or "k"
+end, { expr = true, buffer = true })
 
 -- Not <leader>m: maplocalleader is Space, so markdown-plus's <localleader>m*
 -- bindings occupy that range and this ftplugin, loading later, would shadow
