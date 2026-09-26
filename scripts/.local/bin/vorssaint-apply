@@ -32,7 +32,13 @@ DOMAIN="com.vorssaint.utils"
 # Where recordings land. The recorder's editor writes the .mp4 here on Save —
 # `saveVideo()` calls saveDestination(fileExtension: "mp4"), the same folder and
 # the same dated name the direct-save path would have used.
-RECORDINGS_DIR="~/Pictures/Screenshots"
+# Two spellings of one folder, on purpose. recorderSaveFolder is written by the
+# app's own folder picker, which stores an absolute path, so a literal tilde
+# there never matches and every run rewrites it. commandBarFileScopes is stored
+# with tildes and matches only in that form.
+RECORDINGS_DIR="$HOME/Pictures/Screenshots"
+# shellcheck disable=SC2088  # the tilde is data for the app, not a path to open
+RECORDINGS_SCOPE="~/Pictures/Screenshots"
 
 # key <tab> type <tab> value        type: bool | int | string | json
 #
@@ -81,7 +87,7 @@ SETTINGS=(
   # already offered as rows by CommandBarExtras.standardFolders(), so they do
   # not need to be listed anywhere.
   "commandBarFileScopes	string	~/Downloads
-$RECORDINGS_DIR"
+$RECORDINGS_SCOPE"
 
   # ---------- features ----------
   # Vorssaint is modular: an unavailable feature registers no taps and no
