@@ -1,6 +1,10 @@
 #!/bin/bash
 # Turn the current git and Linear state into a todo.txt block that tuxedo reads.
 #
+# The ticket is the todo.txt +project, written right after the priority, so it
+# is both what `tuxedo lsprj` groups by and the first thing the line says. The
+# repo gets no tag: the PR reference in the action already names it.
+#
 # Generated tasks carry gen:<date>. Each run deletes the incomplete tagged ones
 # and writes a fresh block, so re-running it is idempotent. Completed tasks are
 # left alone, and removing a task's gen: tag hands it to you for good.
@@ -25,7 +29,7 @@ DRY_RUN=0
 
 for tool in claude tuxedo wt git; do
   command -v "$tool" >/dev/null || {
-    echo "❌ $tool not found" >&2
+    echo "❌ $tool introuvable" >&2
     exit 1
   }
 done
@@ -41,7 +45,7 @@ trap 'rm -rf "$WORK"' EXIT
 CONTEXT="$WORK/context.md"
 
 # ---------- collect git state ----------
-echo "→ collecting git state…" >&2
+echo "→ collecte de l'état git…" >&2
 {
   echo "# Git state on $TODAY"
   echo
@@ -70,28 +74,37 @@ echo "→ collecting git state…" >&2
 } >"$CONTEXT"
 
 # ---------- ask Claude ----------
-echo "→ asking Claude (Linear via MCP)…" >&2
+echo "→ interrogation de Claude (Linear via MCP)…" >&2
 PROMPT=$(
   cat <<EOF
-Below is my git state across the repos I work in. Cross-reference it with my
-assigned, non-completed Linear issues (use the Linear MCP tools).
+Voici l'état git de mes dépôts. Croise-le avec mes tickets Linear assignés et
+non terminés (utilise les outils MCP Linear).
 
-Produce AT MOST $MAX_TASKS lines in todo.txt format, ordered most urgent first.
-Rules for the output:
-- One task per line. Nothing else: no preamble, no numbering, no markdown,
-  no code fence, no trailing commentary.
-- Each line: an optional (A)-(C) priority, then the Linear key when there is
-  one, then ONE concrete next action, then +project and @context tags.
-- The action must be something I can start immediately. "Continue DEV-1234" is
-  useless; "DEV-1234 rebase onto main, 7 behind" is not.
-- Prefer what is blocked, stale, or waiting on me over what is merely open.
-- If nothing is worth doing in a repo, write no line for it.
+Produis AU PLUS $MAX_TASKS lignes au format todo.txt, la plus urgente d'abord.
+Règles de sortie :
+- Une tâche par ligne. Rien d'autre : pas de préambule, pas de numérotation,
+  pas de markdown, pas de bloc de code, pas de commentaire final.
+- Écris en français. Laisse tels quels les identifiants et le vocabulaire
+  technique : clés Linear, références de PR (vicat#827), noms de branches, de
+  fichiers et de commandes, et les @contextes ci-dessous.
+- Chaque ligne : une priorité (A)-(C) facultative, puis le ticket écrit
+  +DEV-1234 quand il y en a un, puis UNE action concrète, puis un @contexte
+  parmi @review, @merge, @git.
+- Le ticket n'apparaît qu'une fois, sous la forme +DEV-1234. Ne le répète pas
+  en clair dans le texte de l'action.
+- N'ajoute pas de +projet pour le dépôt : il se lit déjà dans la référence de
+  PR que porte l'action.
+- L'action doit être démarrable immédiatement. « Continuer DEV-1234 » ne sert à
+  rien ; « rebaser sur main, 7 commits de retard » oui.
+- Préfère ce qui est bloqué, en attente de moi ou à l'arrêt, à ce qui est
+  seulement ouvert.
+- Si rien ne vaut la peine dans un dépôt, n'écris aucune ligne pour lui.
 
-Example of the expected shape:
-(A) DEV-1937 push .worktrees/dev-1937, 4 commits unpushed +Table @git
-(B) DEV-1583 answer the review on #1119 +Table @review
+Exemple de la forme attendue :
+(A) +DEV-1937 pousser .worktrees/dev-1937, 4 commits non poussés @git
+(B) +DEV-1583 répondre à la revue sur Table#1119 @review
 
-Git state:
+État git :
 
 $(cat "$CONTEXT")
 EOF
@@ -104,7 +117,7 @@ RAW="$(claude -p "$PROMPT" \
 rc=$?
 set -e
 if [[ $rc -ne 0 ]]; then
-  echo "❌ claude failed (exit $rc)" >&2
+  echo "❌ claude a échoué (code $rc)" >&2
   sed 's/^/   /' "$WORK/err" >&2
   exit 1
 fi
@@ -126,7 +139,7 @@ done < <(
 )
 
 if [[ ${#TASKS[@]} -eq 0 ]]; then
-  echo "⚠️  Claude returned no usable task line; $TODO_FILE left untouched." >&2
+  echo "⚠️  Claude n'a renvoyé aucune ligne exploitable ; $TODO_FILE inchangé." >&2
   exit 0
 fi
 
@@ -148,7 +161,7 @@ for task in "${TASKS[@]}"; do
 done
 
 if [[ $DRY_RUN -eq 1 ]]; then
-  echo "— dry run, $TODO_FILE unchanged. Would write:"
+  echo "— essai à blanc, $TODO_FILE inchangé. Écrirait :"
   cat "$NEW"
   exit 0
 fi
@@ -157,5 +170,5 @@ fi
 cp "$TODO_FILE" "$TODO_FILE.bak"
 mv "$NEW" "$TODO_FILE"
 
-echo "✅ ${#TASKS[@]} tasks written to $TODO_FILE (previous copy: $TODO_FILE.bak)"
+echo "✅ ${#TASKS[@]} tâches écrites dans $TODO_FILE (copie précédente : $TODO_FILE.bak)"
 tuxedo ls

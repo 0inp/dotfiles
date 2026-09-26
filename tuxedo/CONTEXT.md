@@ -2,6 +2,10 @@
 
 todo.txt TUI. Reads the list that `scripts/.local/bin/sillant-daily-todo` writes.
 
+That generator writes French, and makes the Linear ticket the `+project` — so
+`lsprj` groups by ticket, not by repo, and one ticket's work across several
+repos lands together. The repo carries no tag; the PR reference names it.
+
 ## Symlink target
 `~/.config/tuxedo/` → `tuxedo/.config/tuxedo/` (the whole directory is tree-folded,
 so anything tuxedo writes lands in this repo)
