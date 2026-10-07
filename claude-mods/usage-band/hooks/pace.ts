@@ -27,6 +27,14 @@ export function paceLevel(
   resetsAt: string | undefined,
   now: number,
 ): Level {
-  // HUMAN CONTRIBUTION, see Step 4
-  return 'none'
+  if (resetsAt === undefined) return 'none'
+  const reset = Date.parse(resetsAt)
+  if (Number.isNaN(reset)) return 'none'
+  if (used < FLOOR[kind]) return 'ok'
+  const windowMs = WINDOW_MS[kind]
+  const elapsed = Math.min(windowMs, Math.max(0, windowMs - (reset - now)))
+  const budget = (elapsed / windowMs) * 100
+  if (used >= budget) return 'danger'
+  if (used >= 0.8 * budget) return 'warning'
+  return 'ok'
 }
