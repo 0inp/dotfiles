@@ -100,7 +100,9 @@ Règles de sortie :
 - N'ajoute pas de +projet pour le dépôt : il se lit déjà dans la référence de
   PR que porte l'action.
 - L'action doit être démarrable immédiatement. « Continuer DEV-1234 » ne sert à
-  rien ; « rebaser sur main, 7 commits de retard » oui.
+  rien ; « merger origin/main, 7 commits de retard » oui. Une PR ouverte
+  s'intègre toujours par merge de origin/main, jamais par rebase.
+- Deux actions font deux lignes : jamais « puis » dans une même ligne.
 - Préfère ce qui est bloqué, en attente de moi ou à l'arrêt, à ce qui est
   seulement ouvert.
 - Si rien ne vaut la peine dans un dépôt, n'écris aucune ligne pour lui.
@@ -117,7 +119,7 @@ PROMPT="$(cat "$PROMPT_FILE")"
 
 set +e
 # Linear is the only allowed tool, so the brief cannot touch a file.
-RAW="$(claude -p "$PROMPT" \
+RAW="$(claude -p "$PROMPT" --model sonnet \
   --allowed-tools "mcp__plugin_linear_linear" 2>"$WORK/err")"
 rc=$?
 set -e
