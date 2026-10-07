@@ -8,6 +8,12 @@ Mets les notes d'avancement dans le même message que l'action suivante. Les poi
 qu'un repo définit dans son propre `CLAUDE.md` (un GO avant de coder, une validation avant
 commit) priment sur cette règle.
 
+## Attendre une tâche de fond
+
+Un sous-agent ou une commande en arrière-plan te réveille à sa fin : attends sa
+notification. Pour une attente que rien ne notifie (CI, déploiement), surveille avec
+`Monitor` ou un `gh run watch` en arrière-plan.
+
 ## Fin de run
 
 Une tâche qui modifie des fichiers ou enchaîne plusieurs étapes se termine sur trois
