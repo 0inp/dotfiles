@@ -18,6 +18,7 @@
 .claude/*
 
 # ... then re-include only real configuration.
+!.claude/CLAUDE.md
 !.claude/settings.json
 !.claude/statusline-command.sh
 !.claude/skills/
