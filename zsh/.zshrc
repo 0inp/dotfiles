@@ -180,3 +180,14 @@ unset _leaf_comp
 for config_file (${HOME}/.config/zsh/*.zsh); do
   [[ -f ${config_file} ]] && source ${config_file}
 done
+
+# =========================================================
+# Claude Code agent shell
+# =========================================================
+# The agent writes bash-style commands: an unquoted glob that matches nothing
+# (`--include=*.py`) must pass through, and `$files` must split on spaces. The
+# eza `ls` hides gitignored files (`.env`) and floods output with ANSI codes.
+if [[ -n $CLAUDECODE ]]; then
+  setopt NO_NOMATCH SH_WORD_SPLIT
+  unalias ls la lt 2>/dev/null
+fi
