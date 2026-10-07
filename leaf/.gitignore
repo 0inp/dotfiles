@@ -1,1 +1,6 @@
-.config/leaf/history.toml
+# Allowlist, not a denylist: same rationale as claude/.gitignore.
+#
+# ~/.config/leaf is tree-folded into this directory, so everything leaf writes at
+# runtime lands here. Today that is history.toml. Ignore the lot, re-include only the configuration.
+.config/leaf/*
+!.config/leaf/config.toml

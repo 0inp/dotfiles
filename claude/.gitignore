@@ -23,5 +23,9 @@
 !.claude/statusline-command.sh
 !.claude/skills/
 
+# claude.ai skill sync writes its buckets under skills/, which the allowlist
+# above re-includes. They are account state, not configuration.
+.claude/skills/synced/
+
 # Local per-machine overrides stay out even though settings.json is in.
 .claude/settings.local.json

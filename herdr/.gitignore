@@ -1,5 +1,8 @@
-herdr-client.log
-herdr-server.log
-session.json
-.config/herdr/release-notes.json
-.config/herdr/.plugins.lock
+# Allowlist, not a denylist: same rationale as claude/.gitignore.
+#
+# ~/.config/herdr is tree-folded into this directory, so everything herdr writes
+# at runtime lands here. Each release adds more (sockets, session.json,
+# session-snapshots/, logs, the plugin lock), so enumerating them loses.
+# Ignore the lot, re-include only the configuration.
+.config/herdr/*
+!.config/herdr/config.toml

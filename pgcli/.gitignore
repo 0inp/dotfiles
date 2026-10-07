@@ -1,2 +1,6 @@
-.config/pgcli/log
-.config/pgcli/history
+# Allowlist, not a denylist: same rationale as claude/.gitignore.
+#
+# ~/.config/pgcli is tree-folded into this directory, so everything pgcli writes at
+# runtime lands here. Today that is history and log. Ignore the lot, re-include only the configuration.
+.config/pgcli/*
+!.config/pgcli/config

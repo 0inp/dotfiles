@@ -1,0 +1,9 @@
+# Allowlist, not a denylist: same rationale as claude/.gitignore.
+#
+# ~/.config/tuxedo is tree-folded into this directory, so everything tuxedo
+# writes at runtime lands here. Ignore the lot, re-include only the
+# configuration. config.toml itself is versioned, but its share_token and
+# share_port lines are stripped on `git add` by the clean filter declared in
+# the root .gitattributes (see tuxedo/CONTEXT.md).
+.config/tuxedo/*
+!.config/tuxedo/config.toml
