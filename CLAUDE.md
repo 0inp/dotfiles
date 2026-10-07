@@ -11,6 +11,7 @@ Each module has a `CONTEXT.md` with tool-specific details. `CONTEXT_MAP.md` at t
 ## Key Commands
 
 **Stow (apply/remove symlinks):**
+
 ```bash
 stow -t ~ */          # symlink all packages (one package per module directory)
 stow -t ~ <module>    # symlink a single module
@@ -23,11 +24,13 @@ which symlinks `aerospace/`, `brew/`, `CLAUDE.md`, `.github/` and friends
 straight into `$HOME`, and bypasses every `.stow-local-ignore`.
 
 **Install (first time):**
+
 ```bash
 ./scripts/install.sh
 ```
 
 **Update Homebrew packages:**
+
 ```bash
 ./scripts/update.sh
 # or use the alias:
@@ -50,6 +53,7 @@ brew bundle dump --force --global  # regenerate the Brewfile
 the Brewfile is the source of truth.
 
 **Reload configs after changes:**
+
 ```bash
 # Zsh: open a new shell or source directly
 source ~/.zshrc
@@ -65,11 +69,13 @@ mise current   # verify active versions
 ```
 
 **Update zsh plugins:**
+
 ```bash
 zplugin-update   # defined in zsh/.config/zsh/plugins.zsh
 ```
 
 **Git hooks (lefthook):**
+
 ```bash
 lefthook install                # write .git/hooks (idempotent; install.sh runs it)
 lefthook run pre-commit         # run the fast, staged-file checks by hand
@@ -77,6 +83,7 @@ lefthook run pre-push --force   # run the whole-repo checks with nothing to push
 bash scripts/checks.sh all      # just the repo invariants, no lefthook
 LEFTHOOK=0 git commit ...       # bypass for one command
 ```
+
 `lefthook.yml` at the repo root is the config. pre-commit sees only staged
 files (gitleaks, syntax, shellcheck, then shfmt/stylua which auto-restage);
 pre-push runs the whole-repo invariants in `scripts/checks.sh`.
@@ -84,11 +91,14 @@ pre-push runs the whole-repo invariants in `scripts/checks.sh`.
 ## Architecture
 
 ### Stow layout
+
 Each module directory mirrors the target filesystem structure relative to `~`. For example, `zsh/.zshrc` symlinks to `~/.zshrc` and `zsh/.config/zsh/aliases.zsh` symlinks to `~/.config/zsh/aliases.zsh`. Files listed in `.stow-local-ignore` inside a module are excluded from symlinking.
 
 ### Zsh configuration
+
 `.zshenv` (all shells) → `.zprofile` (login shells) → `.zshrc` (interactive shells).
 `.zshrc` sources all `~/.config/zsh/*.zsh` files at startup. Modules:
+
 - `aliases.zsh` — shell aliases (tools: eza, bat, zoxide). Note: `grep` is **not**
   aliased to `rg`; rg's defaults live in the `ripgrep` module instead.
 - `plugins.zsh` — self-managed plugins (auto-cloned with `_zplugin_load` on first run)
@@ -102,6 +112,7 @@ Each module directory mirrors the target filesystem structure relative to `~`. F
 Environment variables are set in `.zshenv` (loaded for all shells, including non-interactive).
 
 ### Secrets (fnox + Bitwarden)
+
 Secrets are **not** stored in the repo. Two tiers:
 
 - **Bitwarden vault** — source of truth. Where you add and rotate secrets.
@@ -126,6 +137,7 @@ Unattended agents also cannot answer a master-password prompt. See
 `fnox/CONTEXT.md` for the full reasoning.
 
 Three gotchas:
+
 - The `value` field is the **provider-side key name**. Omit it and lookups fail
   *silently* (a warning, not an error). Prefer `fnox set` over hand-editing.
 - `activate` registers a `precmd` hook rather than exporting eagerly, so
@@ -144,6 +156,7 @@ globs that directory *after* `mise activate`, and re-running it there would hois
 Homebrew above the mise shims.
 
 ### Runtime versions (mise)
+
 `mise/.config/mise/config.toml` pins global versions: Node 26, Python 3.14,
 Go 1.26. Mise is activated only in interactive shells.
 
@@ -153,6 +166,7 @@ repos still on TS 5/6, and Mason has no `typescript` package. See
 `nvim/CONTEXT.md`.
 
 ### Shell history (atuin)
+
 `atuin` replaces Ctrl-R with fuzzy search over a SQLite history that records
 cwd, exit code and duration. Initialised interactive-only in `.zshrc` with
 `--disable-up-arrow` (Up/Down stay on zsh-history-substring-search) and
@@ -160,6 +174,7 @@ cwd, exit code and duration. Initialised interactive-only in `.zshrc` with
 re-applied from `zvm_after_init_commands` — see the constraint below.
 
 ### Git signing
+
 All commits and tags are GPG-signed using an SSH key (`gpg.format = ssh`). The `gpg "ssh"` section points to `~/.ssh/allowed_signers`.
 
 ## Constraints
@@ -188,6 +203,7 @@ takes a whole-history scan from ~95s to ~0.6s. One config serves the hooks and
 both CI jobs, so a finding cannot be green locally and red in CI.
 
 **Homebrew paths — never hardcode:** Always use `$(brew --prefix <pkg>)` in scripts. For performance-critical startup paths (`.zshenv`, `.zshrc`), use the branch pattern instead of spawning a subprocess:
+
 ```bash
 if [[ -d /opt/homebrew ]]; then
   # Apple Silicon
