@@ -21,6 +21,7 @@
 !.claude/CLAUDE.md
 !.claude/settings.json
 !.claude/statusline-command.sh
+!.claude/hooks/
 !.claude/skills/
 
 # claude.ai skill sync writes its buckets under skills/, which the allowlist
