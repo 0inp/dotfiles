@@ -116,6 +116,20 @@ require("mason-tool-installer").setup({
 vim.keymap.set("n", "<leader>M", vim.cmd.Mason, { desc = "Mason" })
 
 vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
+
+-- Neovim 0.12 maps `grr`/`gri` itself (runtime/lua/vim/_core/defaults.lua), and
+-- both dump multiple results into the quickfix list. These globals shadow those
+-- defaults and route the same requests through MiniPick instead, via the
+-- `on_list` hook that `vim.lsp.buf.*` already accepts. `grt` (type definition),
+-- `grn`, `gra` and `gO` keep the stock behaviour.
+vim.keymap.set("n", "grr", function()
+	require("mini.extra").pickers.lsp({ scope = "references" })
+end, { desc = "References (MiniPick)" })
+
+vim.keymap.set("n", "gri", function()
+	require("mini.extra").pickers.lsp({ scope = "implementation" })
+end, { desc = "Implementation (MiniPick)" })
+
 vim.keymap.set("n", "<leader>f", function()
 	require("conform").format()
 end, { desc = "Format Local buffer (Conform)" })

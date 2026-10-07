@@ -98,6 +98,41 @@ Corollary: removing a server from `lsp_servers` does not disable it if Mason
 still has the package installed. `ts_ls` kept attaching until
 `:MasonUninstall typescript-language-server` was run.
 
+## Key discovery: mini.clue, and the LSP keys it does not own
+
+`lua/plugins/clue.lua` is the which-key layer — `mini.clue`, already inside the
+mini.nvim of `base.lua`, so nothing new is downloaded. `<leader>pk`
+(`MiniExtra.pickers.keymaps()`) stays the fuzzy-search route for the same
+information.
+
+**Most of the goto keys are Neovim's, not this config's.** `grr`, `gri`, `grt`,
+`grn`, `gra`, `grx`, `gO` and insert-mode `<C-S>` are mapped unconditionally by
+`runtime/lua/vim/_core/defaults.lua`, with no LSP client required — the runtime
+comment says that is deliberate, so behaviour does not change depending on what
+is attached. Only `gd` and `K` are set here, in `lsp.lua`. `lsp.lua` then
+shadows `grr`/`gri` with `MiniExtra.pickers.lsp`, which reaches the same requests
+through the `on_list` hook `vim.lsp.buf.*` already accepts, instead of the
+default quickfix list. `grt` and `gO` were left on the stock behaviour.
+
+**A missing clue trigger fails silently in the useful direction.** Triggers are
+buffer-local mappings that must be the *most recent* ones on the buffer; when
+they are not, the key still works — it just stops working until the clue window
+is up. mini.clue re-asserts them on `BufWinEnter` and `LspAttach` itself, so no
+extra autocmd is needed; requiring `plugins.clue` last in `plugins/init.lua`
+only covers the first buffer.
+
+**Those callbacks are `vim.schedule_wrap`ped, so `nvim -c ':nmap g'` shows no
+trigger at all** and the setup reads as broken. Verify from a real session, or a
+`pty.fork()` with the check deferred past `VimEnter` — the same trap as the
+`zvm_after_init_commands` and `fnox activate` hooks documented in `CLAUDE.md`.
+
+**`s`, and operator-pending `a`/`i`, are deliberately not triggers.** `s` is
+mini.surround's prefix, and a trigger there puts the query delay on every
+`saiw`; mini.clue documents that Operator-pending triggers (mini.ai's `a`/`i`)
+have no foolproof support with custom operators. Insert-mode `<C-x>` *is* safe
+next to mini.completion, which replays `<C-x><C-o>` through
+`nvim_feedkeys(..., 'n', ...)` — no remap, so the trigger never sees it.
+
 ## AI Notes
 - Focus on `init.lua` and `lua/` for core configuration.
 - Use `nvim-pack-lock.json` to track plugin versions.
