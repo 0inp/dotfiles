@@ -18,3 +18,10 @@ export function ticketFromBranch(branch: string | undefined): string | undefined
 export function ticketToBind(boundKey: string | undefined, text: string): string | undefined {
   return boundKey === undefined ? ticketFromText(text) : undefined
 }
+
+// /branch forks the conversation under a new session id with no binding of its
+// own; the fork is about the same subject, so it inherits the parent's key.
+// /clear and /resume do not: one starts fresh, the other has its own binding.
+export function inheritOnFork(source: string, bound: string | undefined, previous: string | undefined): string | undefined {
+  return source === 'fork' && bound === undefined ? previous : undefined
+}

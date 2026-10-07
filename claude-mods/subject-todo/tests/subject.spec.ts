@@ -1,7 +1,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import {
-  applyAction, contextFor, createSubject, cycleItem, progress, renderList, type Outcome, type Subject,
+  applyAction, contextFor, createSubject, cycleItem, parseAction, progress, renderList, type Outcome, type Subject,
 } from '../hooks/subject.ts'
 
 const T0 = '2026-10-07T10:00:00.000Z'
@@ -105,4 +105,32 @@ test('contextFor: full form includes the list and asks to adapt an untouched tic
   const c = contextFor(base(), { full: true })
   assert.ok(c.includes('[') && c.includes('○ Lire'))
   assert.ok(c.includes('replace'))
+})
+
+// Review finding 1: tool input is untrusted model output.
+test('parseAction: rejects missing per-action fields instead of storing undefined', () => {
+  const bad: unknown[] = [
+    { action: 'bind' },
+    { action: 'bind', title: '   ' },
+    { action: 'add' },
+    { action: 'replace' },
+    { action: 'replace', items: [] },
+    { action: 'replace', items: [{ status: 'done' }] },
+    { action: 'update', status: 'done' },
+    { action: 'update', id: 'a3f' },
+    { action: 'update', id: 'a3f', status: 'finished' },
+    { action: 'remove', id: 'a3f' },
+    null,
+  ]
+  for (const input of bad) assert.ok('error' in parseAction(input), JSON.stringify(input))
+})
+
+test('parseAction: accepts and trims valid actions', () => {
+  assert.deepEqual(parseAction({ action: 'bind', title: ' Mods ' }), { action: 'bind', title: 'Mods' })
+  assert.deepEqual(parseAction({ action: 'add', text: ' PR ', after: 'a3f' }), { action: 'add', text: 'PR', after: 'a3f' })
+  assert.deepEqual(parseAction({ action: 'update', id: 'a3f', status: 'done' }), { action: 'update', id: 'a3f', status: 'done' })
+  assert.deepEqual(
+    parseAction({ action: 'replace', items: [{ text: 'Lire', status: 'done' }, { text: 'Coder' }] }),
+    { action: 'replace', items: [{ text: 'Lire', status: 'done' }, { text: 'Coder' }] },
+  )
 })

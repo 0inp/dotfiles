@@ -2139,6 +2139,20 @@ Check each item, and fix before moving on:
 7. Enter on a pane item cycles its status, and the next prompt's context
    reports it.
 8. `/resume` back into the session restores the subject.
+9. **`$.store` across processes** (final review, declined to judge). Two
+   sessions write *different* keys quickly, then each reads both back. If one
+   session's write erases the other's, the store caches the whole file per
+   process, and the one-key-per-subject design does not hold. Stop and redesign.
+10. Whether core validates `subject_todo` input against `inputSchema`, e.g.
+    the `status` enum. `parseAction` guards it either way.
+11. Whether the `Ajouter` field empties after a submit while `value: ''` is
+    redrawn, and keeps typed text across unrelated redraws.
+12. Whether `$.session.id()` already returns the **new** id inside
+    `classic.SessionStart` for `clear` and `fork`. If it returns the old one,
+    `restore` rebinds the old session.
+13. `/branch` keeps the subject, and `/clear` drops it.
+14. A commit and push from a GUI git client: `node` and `tsc` (from mise)
+    must be on the hook's `PATH`.
 
 - [ ] **Step 4: Settle the marketplace source and the permission rule name**
 

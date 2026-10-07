@@ -15,10 +15,26 @@ const SUBJECT = 'subject:'
 const SESSION = 'session:'
 const DAY_MS = 86_400_000
 
+const STATUSES: readonly unknown[] = ['todo', 'doing', 'done', 'skipped']
+
+function isItem(v: unknown): boolean {
+  if (typeof v !== 'object' || v === null) return false
+  const i = v as Record<string, unknown>
+  return (
+    typeof i.id === 'string' && typeof i.text === 'string' && STATUSES.includes(i.status) &&
+    (i.by === 'claude' || i.by === 'user') && typeof i.changedAt === 'string'
+  )
+}
+
+// Checks every field the pane and the context text read, so a corrupt or
+// foreign value reads as "no subject" rather than throwing on every prompt.
 function isSubject(v: unknown): v is Subject {
   if (typeof v !== 'object' || v === null) return false
   const s = v as Record<string, unknown>
-  return typeof s.key === 'string' && typeof s.title === 'string' && typeof s.updatedAt === 'string' && Array.isArray(s.items)
+  return (
+    typeof s.key === 'string' && typeof s.title === 'string' && typeof s.updatedAt === 'string' &&
+    (s.kind === 'ticket' || s.kind === 'conversation') && Array.isArray(s.items) && s.items.every(isItem)
+  )
 }
 
 export async function loadSubject(kv: KV, key: string): Promise<Subject | undefined> {
@@ -69,4 +85,16 @@ export async function prune(kv: KV, now: number, maxAgeMs = 30 * DAY_MS): Promis
     }
   }
   return removed
+}
+
+// get-compute-set is async, so two changes from this one process (a pane press
+// during a tool call, two quick presses) can interleave and the second write
+// drops the first. Every mutation in register.ts goes through one queue.
+export function serialQueue(): <T>(job: () => Promise<T>) => Promise<T> {
+  let tail: Promise<unknown> = Promise.resolve()
+  return <T>(job: () => Promise<T>): Promise<T> => {
+    const run = tail.then(job, job)
+    tail = run.catch(() => undefined)
+    return run
+  }
 }

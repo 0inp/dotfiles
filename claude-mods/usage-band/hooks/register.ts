@@ -16,6 +16,8 @@ const TONE_COLOR: Record<Tone, string | undefined> = {
 }
 const LABEL: Record<WindowKind, '5h' | '7d'> = { five_hour: '5h', seven_day: '7d' }
 const GIT_TTL_MS = 5_000
+// git must never hold up a prompt: a stuck lock or a huge repo gives up fast.
+const GIT_TIMEOUT = { timeoutMs: 2_000 }
 
 type RateLimit = { kind: string; percentUsed: number; resetsAt?: string }
 
@@ -37,7 +39,7 @@ export function register(on: On): void {
     gitAt = now
     try {
       cwd = await $.session.cwd()
-      const [st, rp] = await Promise.all([$.process.run(STATUS_ARGV), $.process.run(REVPARSE_ARGV)])
+      const [st, rp] = await Promise.all([$.process.run(STATUS_ARGV, GIT_TIMEOUT), $.process.run(REVPARSE_ARGV, GIT_TIMEOUT)])
       git =
         st.exitCode === 0
           ? { ...parseStatus(st.stdout), worktree: rp.exitCode === 0 ? parseWorktree(rp.stdout) : undefined }
@@ -55,7 +57,7 @@ export function register(on: On): void {
     const u = await $.session.usage()
     contextPct = u.context.percent
     limits = [...u.rateLimits]
-    await refreshGit($, true)
+    void refreshGit($, true)
     $.clock.every(60_000, () => redraw($))
     return next(e)
   })
@@ -81,7 +83,7 @@ export function register(on: On): void {
   })
 
   on('turn.complete', async ($, e, next) => {
-    await refreshGit($, true)
+    void refreshGit($, true)
     return next(e)
   })
 

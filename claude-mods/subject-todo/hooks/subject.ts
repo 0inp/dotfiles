@@ -126,3 +126,44 @@ export function contextFor(s: Subject, opts: { since?: string; full: boolean }):
   }
   return lines.join('\n')
 }
+
+const STATUSES: readonly string[] = ['todo', 'doing', 'done', 'skipped']
+const isStatus = (v: unknown): v is Status => typeof v === 'string' && STATUSES.includes(v)
+const nonEmpty = (v: unknown): v is string => typeof v === 'string' && v.trim() !== ''
+
+// The tool's input is model output: check each action's own fields before it
+// reaches the store, so a malformed call is an error Claude can read and retry,
+// never a subject saved with an undefined title or text.
+export function parseAction(input: unknown): ToolAction | { error: string } {
+  const a = (typeof input === 'object' && input !== null ? input : {}) as Record<string, unknown>
+  switch (a.action) {
+    case 'bind':
+      return nonEmpty(a.title) ? { action: 'bind', title: a.title.trim() } : { error: 'bind demande un title non vide.' }
+    case 'add':
+      if (!nonEmpty(a.text)) return { error: 'add demande un text non vide.' }
+      return typeof a.after === 'string' ? { action: 'add', text: a.text.trim(), after: a.after } : { action: 'add', text: a.text.trim() }
+    case 'update': {
+      if (!nonEmpty(a.id)) return { error: 'update demande un id.' }
+      if (a.status === undefined && a.text === undefined) return { error: 'update demande un status ou un text.' }
+      if (a.status !== undefined && !isStatus(a.status)) return { error: `status invalide : ${String(a.status)}.` }
+      if (a.text !== undefined && !nonEmpty(a.text)) return { error: 'update : text ne peut pas être vide.' }
+      const out: ToolAction = { action: 'update', id: a.id }
+      if (a.status !== undefined) out.status = a.status
+      if (nonEmpty(a.text)) out.text = a.text.trim()
+      return out
+    }
+    case 'replace': {
+      if (!Array.isArray(a.items) || a.items.length === 0) return { error: 'replace demande une liste items non vide.' }
+      const items: { text: string; status?: Status }[] = []
+      for (const it of a.items as unknown[]) {
+        const o = (typeof it === 'object' && it !== null ? it : {}) as Record<string, unknown>
+        if (!nonEmpty(o.text)) return { error: 'replace : chaque item demande un text non vide.' }
+        if (o.status !== undefined && !isStatus(o.status)) return { error: `status invalide : ${String(o.status)}.` }
+        items.push(o.status !== undefined ? { text: o.text.trim(), status: o.status } : { text: o.text.trim() })
+      }
+      return { action: 'replace', items }
+    }
+    default:
+      return { error: `action inconnue : ${String(a.action)}. Actions : bind, replace, update, add.` }
+  }
+}

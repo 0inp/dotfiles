@@ -3,10 +3,10 @@
 // shows it in a pane, and tells Claude about it beside every prompt.
 
 import type { EngineInterface as Api, On, RenderElement } from 'claude-code'
-import { ticketFromBranch, ticketToBind } from './binding.ts'
+import { inheritOnFork, ticketFromBranch, ticketToBind } from './binding.ts'
 import { TICKET_TEMPLATE } from './template.ts'
-import { applyAction, createSubject, cycleItem, renderList, contextFor, type Subject, type ToolAction } from './subject.ts'
-import { bindSession, boundKey, loadSubject, mutateSubject, prune, saveSubject } from './store.ts'
+import { applyAction, contextFor, createSubject, cycleItem, parseAction, renderList, type Subject } from './subject.ts'
+import { bindSession, boundKey, loadSubject, mutateSubject, prune, saveSubject, serialQueue } from './store.ts'
 import { paneTree, type Elements } from './pane.ts'
 
 const PANE = 'subject-todo'
@@ -45,22 +45,29 @@ let sessionId = ''
 let current: Subject | undefined
 let announced = false // the full list goes to Claude once per bind or resume
 let lastPromptAt: string | undefined
+// One queue for every store write from this process (pane, tool, binding).
+const serial = serialQueue()
 
 export function register(on: On): void {
   const nowIso = async ($: Api) => new Date(await $.clock.now()).toISOString()
   const redraw = ($: Api) => $.ui.invalidate('ui.render')
 
+  // An unasked pane waits undrawn below 144 columns; ui.open resolves void,
+  // so ask ui.panes whether it was placed and say so when it was not.
   async function show($: Api, s: Subject): Promise<void> {
-    // Older types say open() resolves void, newer docs { isPlaced }: accept both.
-    const placed = (await $.ui.open({ id: PANE, title: 'Todo' })) as { isPlaced?: boolean } | undefined
-    if (placed && placed.isPlaced === false) $.ui.toast(`${s.kind === 'ticket' ? s.key : s.title} rattaché · /todo`)
+    await $.ui.open({ id: PANE, title: 'Todo' })
+    const pane = (await $.ui.panes()).find((p) => p.id === PANE)
+    if (pane && !pane.isPlaced) $.ui.toast(`${s.kind === 'ticket' ? s.key : s.title} rattaché · /todo`)
   }
 
   async function bind($: Api, key: string, make: () => Subject): Promise<void> {
-    const existing = await loadSubject($.store, key)
-    current = existing ?? make()
-    if (!existing) await saveSubject($.store, current)
-    await bindSession($.store, sessionId, key)
+    current = await serial(async () => {
+      const existing = await loadSubject($.store, key)
+      const s = existing ?? make()
+      if (!existing) await saveSubject($.store, s)
+      await bindSession($.store, sessionId, key)
+      return s
+    })
     announced = false
     redraw($)
     await show($, current)
@@ -68,17 +75,22 @@ export function register(on: On): void {
 
   async function currentBranch($: Api): Promise<string | undefined> {
     try {
-      const r = await $.process.run(['git', 'branch', '--show-current'])
+      const r = await $.process.run(['git', 'branch', '--show-current'], { timeoutMs: 2_000 })
       return r.exitCode === 0 ? r.stdout.trim() || undefined : undefined
     } catch {
       return undefined
     }
   }
 
-  // Restore this session's subject, else fall back to a dev-<n> branch.
-  async function restore($: Api): Promise<void> {
+  // Restore this session's subject: its own binding, else (on /branch) the
+  // parent's subject, else a dev-<n> branch.
+  async function restore($: Api, source = 'startup'): Promise<void> {
+    const previous = current?.key
     sessionId = await $.session.id()
-    const key = await boundKey($.store, sessionId)
+    const bound = await boundKey($.store, sessionId)
+    const inherited = inheritOnFork(source, bound, previous)
+    if (inherited) await serial(() => bindSession($.store, sessionId, inherited))
+    const key = bound ?? inherited
     current = key ? await loadSubject($.store, key) : undefined
     announced = false
     lastPromptAt = undefined
@@ -94,8 +106,9 @@ export function register(on: On): void {
 
   async function mutate($: Api, fn: (s: Subject, now: string) => ReturnType<typeof cycleItem>) {
     if (!current) return undefined
+    const key = current.key
     const now = await nowIso($)
-    const out = await mutateSubject($.store, current.key, (s) => fn(s, now))
+    const out = await serial(() => mutateSubject($.store, key, (s) => fn(s, now)))
     if ('subject' in out) {
       current = out.subject
       redraw($)
@@ -113,7 +126,7 @@ export function register(on: On): void {
 
   // /clear, /resume and /branch reset the session without a session.start.
   on('classic.SessionStart', { source: ['clear', 'resume', 'fork'] }, async ($, e, next) => {
-    await restore($)
+    await restore($, e.source)
     return next(e)
   })
 
@@ -133,7 +146,8 @@ export function register(on: On): void {
   })
 
   on('tool.call', { tool: TOOL_FULL }, async ($, e) => {
-    const a = e as unknown as ToolAction
+    const a = parseAction(e)
+    if ('error' in a) return { result: current ? `${a.error}\n\n${renderList(current)}` : a.error }
     if (!current) {
       if (a.action !== 'bind') {
         return { result: 'Aucun sujet rattaché : appelle subject_todo avec action "bind" et un title.' }
