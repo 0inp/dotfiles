@@ -1,0 +1,16 @@
+{
+  "name": "dotfiles-mods",
+  "owner": { "name": "Stephane Point" },
+  "plugins": [
+    {
+      "name": "usage-band",
+      "source": "./usage-band",
+      "description": "Context and rate-limit usage, coloured by pace, above the prompt"
+    },
+    {
+      "name": "subject-todo",
+      "source": "./subject-todo",
+      "description": "A todo pane per subject (ticket or conversation) that Claude keeps up to date"
+    }
+  ]
+}
