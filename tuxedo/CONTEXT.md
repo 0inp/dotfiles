@@ -24,6 +24,19 @@ filter. Versioning those choices is the reason the directory is stowed.
 
 Two of the keys it writes are secrets-adjacent: `share_token` and `share_port`,
 added the first time you press `s` for phone capture. Anyone holding the token with
-LAN reach can append to your inbox, and this repo is **public**. gitleaks flags a
-`share_token` line under this repo's `.gitleaks.toml`, so the pre-commit hook is the
-net — do not bypass it with `--no-verify` on a commit that touches this file.
+LAN reach can append to your inbox, and this repo is **public**.
+
+Two layers keep them out:
+
+1. **The `tuxedo-share` clean filter** (root `.gitattributes`) deletes both lines
+   from what git stores; the working copy keeps them, so `git diff` never shows
+   them. Its driver lives in `.git/config` and is defined by `scripts/install.sh`.
+   On a clone where that never ran, the filter is a **silent no-op**: verified,
+   git stages the file unfiltered with exit 0. Check with
+   `git config --get filter.tuxedo-share.clean`.
+2. **gitleaks** flags a `share_token` line under this repo's `.gitleaks.toml`, so
+   the pre-commit hook catches what the filter missed. Do not bypass it with
+   `--no-verify` on a commit that touches this file.
+
+Everything else tuxedo writes next to the config is ignored by the allowlist in
+`tuxedo/.gitignore`.

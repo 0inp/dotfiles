@@ -56,6 +56,15 @@ if command -v lefthook &>/dev/null; then
   lefthook install
 fi
 
+# Define the clean filter .gitattributes assigns to tuxedo's config.toml. Like
+# the hooks above it lives in .git/config, which git never tracks. Until this
+# runs, git stages that file unfiltered, token included, and says nothing.
+# `required` only makes a failing sed abort the add instead of passing through.
+git config filter.tuxedo-share.clean \
+  "sed -e '/^share_token[[:space:]]*=/d' -e '/^share_port[[:space:]]*=/d'"
+git config filter.tuxedo-share.smudge cat
+git config filter.tuxedo-share.required true
+
 # Point the Bitwarden CLI at the EU region — it defaults to the US server and
 # `bw login` fails with a confusing "Invalid master password" otherwise. This
 # setting lives in the CLI's own data.json, not in this repo, so a fresh machine

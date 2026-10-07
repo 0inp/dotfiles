@@ -1,0 +1,5 @@
+# tuxedo rewrites its own config.toml and adds a LAN capture token to it. The
+# clean filter drops those lines from what git stores; the working copy keeps
+# them. The driver lives in .git/config, defined by scripts/install.sh: on a
+# clone where it never ran, git stages the file unfiltered without a word.
+tuxedo/.config/tuxedo/config.toml filter=tuxedo-share
