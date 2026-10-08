@@ -10,19 +10,22 @@ import json
 import re
 import sys
 
-HEREDOC = re.compile(r"<<-?\s*(?P<delimiter>[A-Za-z_][A-Za-z0-9_]*)\b")
+HEREDOC = re.compile(r"<<-?\s*(?P<quote>['\"]?)(?P<delimiter>[A-Za-z_][A-Za-z0-9_]*)(?P=quote)")
 
 
 def find_unsafe_heredoc(command: str) -> str | None:
-    for match in HEREDOC.finditer(command):
+    """Walk heredocs in order, skipping each body, so `<<EOF` quoted inside a body is text."""
+    position = 0
+    while match := HEREDOC.search(command, position):
         delimiter = match.group("delimiter")
         body_start = command.find("\n", match.end())
         if body_start == -1:
-            continue
+            return None
         terminator = re.search(rf"^\s*{delimiter}\s*$", command[body_start + 1 :], re.MULTILINE)
-        body = command[body_start + 1 : body_start + 1 + terminator.start()] if terminator else command[body_start + 1 :]
-        if "`" in body:
+        body_end = body_start + 1 + terminator.start() if terminator else len(command)
+        if not match.group("quote") and "`" in command[body_start + 1 : body_end]:
             return delimiter
+        position = body_start + 1 + terminator.end() if terminator else len(command)
     return None
 
 
