@@ -1,6 +1,8 @@
 [tools]
 node = "26"
-python = "3.14"
+# 3.12 rides along so `python3.12` is on PATH everywhere: the security-guidance plugin
+# runs its hook with the first python3.1x it finds, and its SDK venv is built on 3.12.
+python = ["3.14", "3.12"]
 go = "1.26"
 
 # TypeScript 7 (the Go rewrite) ships the language server used by Neovim via
