@@ -147,3 +147,9 @@ pre-push:
       run: bash scripts/checks.sh fnox
     - name: brewfile
       run: bash scripts/checks.sh brewfile
+
+    # Pure-logic specs and a type-check of the mods. Runs only when the push
+    # touches claude-mods/, and needs no Claude Code, so it works on any version.
+    - name: claude-mods
+      glob: "claude-mods/**"
+      run: bash claude-mods/check.sh

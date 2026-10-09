@@ -1,0 +1,6 @@
+{
+  "name": "usage-band",
+  "version": "0.1.0",
+  "description": "Context and rate-limit usage, coloured by pace, above the prompt",
+  "author": { "name": "Stephane Point" }
+}

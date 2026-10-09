@@ -52,8 +52,9 @@ symlinks in `~`, not against intent.
 | worktrunk    | Worktrunk configuration              | `~/.config/worktrunk/`                          |
 | zsh          | Zsh shell configuration              | `~/.zshrc`, `~/.zshenv`, `~/.zprofile`, `~/.config/zsh/` |
 
-Not stow packages: `docs/` (agent + domain documentation) and `resources/`
-(helper scripts the installer runs), both excluded via `.stow-local-ignore`.
+Not stow packages: `docs/` (agent + domain documentation), `resources/`
+(helper scripts the installer runs) and `claude-mods/` (Claude Code mods,
+loaded from the repo; see its CONTEXT.md), all excluded via `.stow-local-ignore`.
 
 No module for Vorssaint: it has no config file, only UserDefaults. Its settings
 are declared in `scripts/.local/bin/vorssaint-apply` and pushed with `defaults

@@ -1,0 +1,6 @@
+{
+  "name": "subject-todo",
+  "version": "0.1.0",
+  "description": "A todo pane per subject (ticket or conversation) that Claude keeps up to date",
+  "author": { "name": "Stephane Point" }
+}
