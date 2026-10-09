@@ -30,26 +30,28 @@ let home = ''
 let git: GitInfo = { staged: 0, modified: 0 }
 let gitAt = 0
 
-export function register(on: On): void {
-  const redraw = ($: Api) => $.ui.invalidate('ui.render')
+// Top level, not inside register: the validator follows $ only into functions
+// declared at the top of this file.
+const redraw = ($: Api) => $.ui.invalidate('ui.render')
 
-  async function refreshGit($: Api, force = false): Promise<void> {
-    const now = await $.clock.now()
-    if (!force && now - gitAt < GIT_TTL_MS) return
-    gitAt = now
-    try {
-      cwd = await $.session.cwd()
-      const [st, rp] = await Promise.all([$.process.run(STATUS_ARGV, GIT_TIMEOUT), $.process.run(REVPARSE_ARGV, GIT_TIMEOUT)])
-      git =
-        st.exitCode === 0
-          ? { ...parseStatus(st.stdout), worktree: rp.exitCode === 0 ? parseWorktree(rp.stdout) : undefined }
-          : { staged: 0, modified: 0 }
-    } catch {
-      git = { staged: 0, modified: 0 }
-    }
-    redraw($)
+async function refreshGit($: Api, force = false): Promise<void> {
+  const now = await $.clock.now()
+  if (!force && now - gitAt < GIT_TTL_MS) return
+  gitAt = now
+  try {
+    cwd = await $.session.cwd()
+    const [st, rp] = await Promise.all([$.process.run(STATUS_ARGV, GIT_TIMEOUT), $.process.run(REVPARSE_ARGV, GIT_TIMEOUT)])
+    git =
+      st.exitCode === 0
+        ? { ...parseStatus(st.stdout), worktree: rp.exitCode === 0 ? parseWorktree(rp.stdout) : undefined }
+        : { staged: 0, modified: 0 }
+  } catch {
+    git = { staged: 0, modified: 0 }
   }
+  redraw($)
+}
 
+export function register(on: On): void {
   on('session.start', async ($, e, next) => {
     home = (await $.env.get('HOME')) ?? ''
     cwd = await $.session.cwd()
