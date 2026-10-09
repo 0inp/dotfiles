@@ -1,8 +1,21 @@
 {
+  "env": {
+    "SECURITY_REVIEW_MODEL": "claude-sonnet-5-5",
+    "SG_AGENTIC_MODEL": "sonnet"
+  },
   "model": "opus[1m]",
-  "statusLine": {
-    "type": "command",
-    "command": "bash ~/.claude/statusline-command.sh"
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.claude/hooks/block-unquoted-heredoc.py"
+          }
+        ]
+      }
+    ]
   },
   "enabledPlugins": {
     "atomic-agents@claude-plugins-official": true,
@@ -29,7 +42,9 @@
     "session-report@claude-plugins-official": true,
     "superpowers@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true,
-    "worktrunk@worktrunk": true
+    "worktrunk@worktrunk": true,
+    "usage-band@dotfiles-mods": true,
+    "subject-todo@dotfiles-mods": true
   },
   "extraKnownMarketplaces": {
     "worktrunk": {
@@ -37,25 +52,20 @@
         "source": "github",
         "repo": "max-sixty/worktrunk"
       }
+    },
+    "dotfiles-mods": {
+      "source": {
+        "source": "directory",
+        "path": "~/dotfiles/claude-mods"
+      }
     }
   },
-  "env": {
-    "SECURITY_REVIEW_MODEL": "claude-sonnet-5-5",
-    "SG_AGENTIC_MODEL": "sonnet"
-  },
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 ~/.claude/hooks/block-unquoted-heredoc.py"
-          }
-        ]
-      }
-    ]
-  },
   "effortLevel": "high",
-  "theme": "dark"
+  "skipWorkflowUsageWarning": true,
+  "theme": "dark",
+  "permissions": {
+    "allow": [
+      "mcp__subject-todo__subject_todo"
+    ]
+  }
 }
