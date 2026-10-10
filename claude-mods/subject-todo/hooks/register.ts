@@ -130,7 +130,7 @@ async function mutate($: Api, fn: (s: Subject, now: string) => ReturnType<typeof
 export function register(on: On): void {
   on('session.start', async ($, e, next) => {
     await $.tool.register({ name: TOOL, description: TOOL_DESCRIPTION, inputSchema: INPUT_SCHEMA })
-    await $.command.register({ name: 'todo', description: 'Ouvrir la todo du sujet', immediate: true })
+    await $.command.register({ name: 'todo', description: 'Afficher ou masquer la todo du sujet', immediate: true })
     await prune(kv($), await $.clock.now())
     await restore($)
     return next(e)
@@ -176,8 +176,12 @@ export function register(on: On): void {
     return { result: renderList(out.subject) }
   })
 
+  // A toggle: a shown pane closes; a hidden one (closed, a tab behind another,
+  // or waiting undrawn for width) comes up and takes the keys.
   on('command.run', { command: 'todo' }, async ($) => {
-    await $.ui.open({ id: PANE, title: 'Todo', focus: true, closeOnEscape: true })
+    const pane = (await $.ui.panes()).find((p) => p.id === PANE)
+    if (pane?.isShown && pane.isPlaced) await $.ui.close({ id: PANE })
+    else await $.ui.open({ id: PANE, title: 'Todo', focus: true, closeOnEscape: true })
     return {}
   })
 
