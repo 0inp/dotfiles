@@ -186,8 +186,9 @@ done
 # =========================================================
 # The agent writes bash-style commands: an unquoted glob that matches nothing
 # (`--include=*.py`) must pass through, and `$files` must split on spaces. The
-# eza `ls` hides gitignored files (`.env`) and floods output with ANSI codes.
+# eza `ls` hides gitignored files (`.env`) and floods output with ANSI codes; the bat
+# `cat` reads a file name starting with `-` as one of its own options.
 if [[ -n $CLAUDECODE ]]; then
   setopt NO_NOMATCH SH_WORD_SPLIT
-  unalias ls la lt 2>/dev/null
+  unalias ls la lt cat 2>/dev/null
 fi
