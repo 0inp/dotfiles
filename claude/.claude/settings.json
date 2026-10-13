@@ -88,7 +88,8 @@
   "theme": "dark",
   "permissions": {
     "allow": [
-      "mcp__subject-todo__subject_todo"
+      "mcp__subject-todo__subject_todo",
+      "Bash(gh api repos/*/pulls/*/reviews *)"
     ]
   }
 }
