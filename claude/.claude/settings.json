@@ -12,6 +12,29 @@
           {
             "type": "command",
             "command": "python3 ~/.claude/hooks/block-unquoted-heredoc.py"
+          },
+          {
+            "type": "command",
+            "command": "python3 ~/.claude/hooks/block-main-clone-checkout.py"
+          },
+          {
+            "type": "command",
+            "command": "python3 ~/.claude/hooks/block-delete-branch-with-children.py"
+          },
+          {
+            "type": "command",
+            "command": "python3 ~/.claude/hooks/block-dependency-drift.py"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.claude/hooks/check-memory-index-size.py"
           }
         ]
       }
