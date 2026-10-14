@@ -50,9 +50,6 @@ export LG_CONFIG_FILE="${XDG_CONFIG_HOME}/lazygit.yaml"
 # ripgrep — default flags for every `rg` invocation
 export RIPGREP_CONFIG_PATH="${XDG_CONFIG_HOME}/ripgrep/ripgreprc"
 
-# Without this a bare `tuxedo` resolves ./todo.txt against the cwd.
-export TODO_DIR="${XDG_DATA_HOME}/todo"
-
 # Brew
 export HOMEBREW_NO_ENV_HINTS=1
 export HOMEBREW_REQUIRE_TAP_TRUST=1

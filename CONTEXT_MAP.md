@@ -47,7 +47,6 @@ symlinks in `~`, not against intent.
 | python       | Python REPL startup file             | `~/.pythonrc`                                   |
 | ripgrep      | Default flags for `rg`               | `~/.config/ripgrep/`                            |
 | scripts      | Custom scripts                       | `~/.local/bin/`                                 |
-| tuxedo       | todo.txt TUI (daily todo list)       | `~/.config/tuxedo/`                             |
 | vibe         | Mistral Vibe CLI config              | `~/.vibe/`                                      |
 | worktrunk    | Worktrunk configuration              | `~/.config/worktrunk/`                          |
 | zsh          | Zsh shell configuration              | `~/.zshrc`, `~/.zshenv`, `~/.zprofile`, `~/.config/zsh/` |
