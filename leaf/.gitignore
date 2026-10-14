@@ -4,3 +4,4 @@
 # runtime lands here. Today that is history.toml. Ignore the lot, re-include only the configuration.
 .config/leaf/*
 !.config/leaf/config.toml
+!.config/leaf/gruvbox.toml

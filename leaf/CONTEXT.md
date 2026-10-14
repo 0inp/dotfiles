@@ -5,8 +5,15 @@ fiche.
 
 ## Symlink target
 `~/.config/leaf/config.toml` → `leaf/.config/leaf/config.toml`
+`~/.config/leaf/gruvbox.toml` → `leaf/.config/leaf/gruvbox.toml`
 
 ## Settings that differ from the defaults
+- `theme = "gruvbox.toml"` — a custom theme beside the config, matching
+  ghostty's Gruvbox Dark. It is upstream's `gruvbox.toml` example with
+  `syntax = "base16-mocha.dark"`. Only the syntect built-ins work there
+  (`base16-ocean.dark`, `base16-mocha.dark`, `base16-eighties.dark`,
+  `Solarized (dark)`…), and a misspelt name falls back to ocean silently, so
+  diff `leaf --inline ansi` output to check a change took effect.
 - `watch = true` — reload on every save, so the pane follows an edit or an agent
   write without a keypress.
 - `editor = "nvim +{$line}"` — `Ctrl+E` lands on the line leaf is showing, not on
@@ -56,3 +63,9 @@ The binary holds no trace of the `ignore` crate.
 searches `$PWD`; `$1` pre-fills the query, so `lf fiches` from `~/dev/sillant`
 is the intended call. The name would shadow the `lf` file manager if that ever
 gets installed.
+
+## No mouse toggling of task checkboxes
+The mouse scrolls, double-click copies a code block, Ctrl+click opens a link —
+nothing more. Toggling `- [ ]` would mean writing the file, and the author
+turned down any in-app editing in issue #298 (Oct 2026) to keep leaf a reader.
+`Ctrl+E` to nvim is the intended path.

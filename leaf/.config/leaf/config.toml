@@ -1,4 +1,5 @@
-theme = "ocean"
+# Relative to this file. Built-ins: arctic, forest, ocean, solarized-dark.
+theme = "gruvbox.toml"
 
 # +{$line} lands on the line leaf is showing, not the top of the file.
 editor = "nvim +{$line}"
