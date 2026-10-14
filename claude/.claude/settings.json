@@ -85,7 +85,7 @@
   },
   "effortLevel": "high",
   "skipWorkflowUsageWarning": true,
-  "theme": "dark",
+  "theme": "custom:gruvbox",
   "permissions": {
     "allow": [
       "mcp__subject-todo__subject_todo",

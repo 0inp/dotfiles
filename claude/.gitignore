@@ -23,6 +23,7 @@
 !.claude/statusline-command.sh
 !.claude/hooks/
 !.claude/skills/
+!.claude/themes/
 
 # claude.ai skill sync writes its buckets under skills/, which the allowlist
 # above re-includes. They are account state, not configuration.
