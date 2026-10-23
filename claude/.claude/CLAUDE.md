@@ -1,5 +1,10 @@
 # Préférences globales
 
+## Langue
+
+Écris-moi en français : réponses, notes d'avancement et courtes phrases avant un appel
+d'outil. Ça vaut aussi après un compactage, même quand le résumé de contexte est en anglais.
+
 ## Autonomie
 
 Quand une étape ne demande pas mon avis, continue. Arrête-toi pour demander seulement si tu ne
