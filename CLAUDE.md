@@ -102,7 +102,7 @@ Each module directory mirrors the target filesystem structure relative to `~`. F
 - `aliases.zsh` — shell aliases (tools: eza, bat, zoxide). Note: `grep` is **not**
   aliased to `rg`; rg's defaults live in the `ripgrep` module instead.
 - `plugins.zsh` — self-managed plugins (auto-cloned with `_zplugin_load` on first run)
-- `functions.zsh` — reusable shell functions (`rfv`, `timezsh`, `colormap`)
+- `functions.zsh` — reusable shell functions (`rfv`, `lf`, `timezsh`, `colormap`, `airmedia`)
 - `bindings.zsh` — vi-mode key bindings, plus the `zvm_after_init_commands`
   entries that re-apply bindings zsh-vi-mode would otherwise wipe
 - `fzf.zsh` — fzf configuration and keybindings

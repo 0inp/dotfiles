@@ -37,3 +37,24 @@ function lf() {
           --bind 'ctrl-e:become(nvim -- {})' \
           --bind 'enter:become(leaf -w -- {})'
 }
+
+# Mount the Air's media (/srv/media) on ~/AirMedia over SFTP and open it in
+# Finder once the mount is up; stays in the foreground, Ctrl-C unmounts. IINA
+# then loads Bazarr's sidecar .srt, which it skips when playing from a URL.
+# --sftp-disable-hashcheck: otherwise rclone runs md5sum on the Air and reads hang.
+# -o locallocks: otherwise any fcntl lock on the mount hangs.
+function airmedia() {
+  local mnt=~/AirMedia
+  if mount | grep -q " on ${mnt} "; then
+    open "$mnt"
+    return
+  fi
+  mkdir -p "$mnt"
+  ( for _ in {1..30}; do
+      mount | grep -q " on ${mnt} " && { open "$mnt"; exit; }
+      sleep 1
+    done ) &!
+  rclone nfsmount :sftp:/srv/media "$mnt" --sftp-ssh "ssh air" \
+    --sftp-disable-hashcheck --read-only \
+    --vfs-cache-mode full --vfs-cache-max-size 10G -o locallocks
+}
