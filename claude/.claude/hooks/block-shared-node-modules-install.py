@@ -5,6 +5,10 @@ Table worktrees link their node_modules to the main checkout's, and `npm ci` sta
 deleting node_modules: run from such a worktree, it empties the tree every other session
 is testing against. Installs belong in the main checkout, or in a worktree whose
 node_modules is a real directory of its own.
+
+Run from an npm workspace directory (`Table/price-bible/`), `npm ci` also empties the root
+node_modules but reinstalls that workspace alone: eslint loses `@eslint/js` and the other
+workspaces their packages. Installs run from the repository root.
 """
 
 import json
@@ -36,12 +40,21 @@ def find_npm_directory(words: list[str], directory: str) -> str | None:
     return os.path.normpath(os.path.join(directory, os.path.expanduser(prefix or ".")))
 
 
-def find_linked_node_modules(directory: str) -> Path | None:
+def read_repository_root(directory: str) -> Path | None:
     result = subprocess.run(["git", "-C", directory, "rev-parse", "--show-toplevel"],
                             capture_output=True, text=True)
-    if result.returncode != 0:
-        return None
-    root = Path(result.stdout.strip())
+    return Path(result.stdout.strip()) if result.returncode == 0 else None
+
+
+def is_npm_workspace(root: Path, directory: str) -> bool:
+    try:
+        workspaces = json.loads((root / "package.json").read_text()).get("workspaces", [])
+    except (OSError, ValueError):
+        return False
+    return any(Path(directory) == root / workspace for workspace in workspaces)
+
+
+def find_linked_node_modules(root: Path) -> Path | None:
     workspaces = [path.parent for path in root.glob("*/package.json")]
     candidates = [root / "node_modules", *(workspace / "node_modules" for workspace in workspaces)]
     return next((candidate for candidate in candidates if candidate.is_symlink()), None)
@@ -54,7 +67,19 @@ def main() -> None:
         directory = find_npm_directory(simple.words, simple.directory)
         if directory is None:
             continue
-        linked = find_linked_node_modules(directory)
+        root = read_repository_root(directory)
+        if root is None:
+            continue
+        if is_npm_workspace(root, directory) and "--workspace" not in " ".join(simple.words):
+            print(
+                f"Refused: `npm {simple.words[1]}` from the npm workspace {directory} empties "
+                f"the root node_modules and reinstalls this workspace alone (eslint then "
+                f"misses @eslint/js). Run it from the repository root: cd {root} && npm "
+                f"{simple.words[1]}.",
+                file=sys.stderr,
+            )
+            sys.exit(2)
+        linked = find_linked_node_modules(root)
         if linked:
             print(
                 f"Refused: `npm {' '.join(simple.words[1:3])}` in {directory} would rewrite "
