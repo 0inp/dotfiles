@@ -6,14 +6,20 @@
   d = diff -w
   unshallow = "! git remote set-branches origin '*' && git pull --unshallow"
   edit-changes = "!nvim $(git diff --name-only --diff-filter=M) -O"
-  fco = "!git checkout $(git branch -a | fzf)"
+  # for-each-ref, not `git branch -a`: its "* " marker was glob-expanded by sh
+  # into file names, and `git checkout <files> main` reset those files.
+  fco = "!git for-each-ref --format='%(refname:lstrip=2)' refs/heads refs/remotes/origin | sed 's#^origin/##' | grep -vx HEAD | sort -u | fzf | xargs git switch"
   grog = log --graph --abbrev-commit --decorate --all --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(dim white) - %an%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n %C(white)%s%C(reset)'
   it = "!git init && git commit -m 'Initial commit' --allow-empty"
-  lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit -10
-  purr = pull --rebase
+  lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' -10
   ready = rebase -i @{u}
-  sweep = "!git remote update -p && git purr && git branch --merged | grep -Ev '^\\*|master|main' | xargs -I{} git branch -d {}"
-  wync = "!git stash && git purr && git stash pop && git push"
+  # Removes worktrees and branches already in the default branch, squash merges
+  # included; never the main worktree nor one with uncommitted changes.
+  # `git sweep --dry-run` previews.
+  sweep = "!wt step prune"
+  # --autostash, not stash/pop: with nothing to stash, `stash pop` applied an old,
+  # unrelated stash.
+  wync = "!git pull --autostash && git push"
   cwip = "!git add . && git commit --no-verify -m 'WIP'"
 
 [branch]
