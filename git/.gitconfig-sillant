@@ -1,0 +1,7 @@
+# vim:ft=gitconfig
+# Included by ~/.gitconfig for every repo under ~/dev/sillant/ (worktrees too:
+# their gitdir lives under the main clone). Same SSH signing key: GitHub marks
+# a commit Verified when the key is on the account and this address is one of
+# the account's verified emails.
+[user]
+  email = stephane.point@sillant.com

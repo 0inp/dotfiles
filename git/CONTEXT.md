@@ -8,6 +8,7 @@ Configuration for Git, including global settings, aliases, and tool integrations
 |--------------------------|--------------------------------------|------------------------------------|
 | `.gitconfig`             | Global Git configuration             | `~/.gitconfig`                     |
 | `.gitignore`             | Global Git ignore rules              | `~/.gitignore`                     |
+| `.gitconfig-sillant`     | Work email for `~/dev/sillant/` repos | `~/.gitconfig-sillant`            |
 
 ## Dependencies
 - **Git**: Install via Homebrew (`brew install git`).
@@ -20,6 +21,10 @@ Configuration for Git, including global settings, aliases, and tool integrations
   status` uses a background daemon instead of walking the worktree.
 - **`push.autoSetupRemote`**: `git push` sets upstream on new branches by
   itself; the old `upush` alias was removed as redundant.
+
+- **Two identities**: `[includeIf "gitdir:~/dev/sillant/"]` swaps in the
+  Sillant email; same SSH signing key. `~/.ssh/allowed_signers` (not in this
+  repo) lists the key under both addresses for local `--show-signature`.
 
 ## AI Notes
 - Focus on `.gitconfig` for aliases and global settings.

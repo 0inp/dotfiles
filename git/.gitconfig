@@ -133,3 +133,7 @@
 
 [tag]
 	gpgSign = true
+
+# Work identity for Sillant repos; must stay last so it overrides [user] above.
+[includeIf "gitdir:~/dev/sillant/"]
+  path = ~/.gitconfig-sillant
