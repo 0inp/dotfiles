@@ -12,8 +12,9 @@ pane_borders = true
 
 agent_panel_sort = "spaces"
 [ui.toast]
-# change to "system" for macOS notifications when away from the terminal
-delivery = "herdr"
+# "terminal" asks Ghostty for a desktop notification, so a finished or waiting
+# agent is seen from another app too; "herdr" only toasted inside the TUI.
+delivery = "terminal"
 delay_seconds = 1
 
 [ui.sound]
