@@ -294,6 +294,38 @@ _cl_section_gh() {
   return 0
 }
 
+# ---------- uv tools ----------
+
+# `uv tool list` prints "name vX.Y.Z" then one "- binary" line per entry point.
+_cl_uv_tools() {
+  uv tool list 2>/dev/null | awk '$1 != "-" && NF >= 2 { sub(/^v/, "", $2); print $1 "\t" $2 }'
+}
+
+_cl_section_uv() {
+  local before="$CL_DIR/uv-tools.tsv"
+  [[ -s "$before" ]] || return 0
+  command -v uv &>/dev/null || return 0
+
+  local after rows name old new
+  after="$(_cl_uv_tools)"
+  rows=""
+  while IFS=$'\t' read -r name old; do
+    [[ -n "$name" ]] || continue
+    new="$(printf '%s\n' "$after" | awk -F'\t' -v n="$name" '$1 == n { print $2; exit }')"
+    [[ -n "$new" && "$new" != "$old" ]] || continue
+    rows="$rows$name	$old	$new
+"
+  done <"$before"
+  [[ -n "$rows" ]] || return 0
+
+  printf '\n🐍 uv tools (%s)\n' "$(_cl_count "$rows")"
+  while IFS=$'\t' read -r name old new; do
+    [[ -n "$name" ]] || continue
+    _cl_entry "$name" "$old" "$new" ""
+  done <<<"$rows"
+  return 0
+}
+
 # ---------- zsh plugins ----------
 
 # The only source with an exact changelog: these are git checkouts, so the
@@ -342,6 +374,7 @@ cl_snapshot() {
   command -v brew &>/dev/null && brew outdated --json=v2 >"$CL_DIR/brew.json" 2>/dev/null
   command -v mise &>/dev/null && mise outdated --json >"$CL_DIR/mise.json" 2>/dev/null
   command -v gh &>/dev/null && gh extension list >"$CL_DIR/gh-ext.tsv" 2>/dev/null
+  command -v uv &>/dev/null && _cl_uv_tools >"$CL_DIR/uv-tools.tsv" 2>/dev/null
 
   local dir sha
   for dir in "${ZPLUGINDIR:-$HOME/.config/zsh/plugins}"/*/; do
@@ -371,6 +404,7 @@ cl_report() {
   _cl_section_brew
   _cl_section_mise
   _cl_section_gh
+  _cl_section_uv
   _cl_section_plugins
 
   [[ $CL_CHANGED -eq 0 ]] && printf '  Nothing changed.\n'

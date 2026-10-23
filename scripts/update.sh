@@ -59,6 +59,15 @@ else
   echo "⚠️  No plugin dir at $ZPLUGINDIR, skipping"
 fi
 
+# ---------- uv tools ----------
+# Tools installed with `uv tool install` (mistral-vibe, from install.sh).
+echo "🐍 Updating uv tools..."
+if command -v uv &>/dev/null; then
+  uv tool upgrade --all && echo "✅ uv tools updated"
+else
+  echo "⚠️  uv not installed, skipping"
+fi
+
 # ---------- gh extensions ----------
 echo "🐙 Updating gh extensions..."
 if command -v gh &>/dev/null; then

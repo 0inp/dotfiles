@@ -54,6 +54,8 @@ fi
 if command -v lefthook &>/dev/null; then
   echo "Installing git hooks..."
   lefthook install
+  # The global [hook "gitleaks"] in .gitconfig would scan a second time here.
+  git config hook.gitleaks.enabled false
 fi
 
 # Point the Bitwarden CLI at the EU region — it defaults to the US server and
