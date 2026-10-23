@@ -22,6 +22,8 @@ RUNNERS = {"pytest", "mypy", "tsc", "jest", "vitest", "eslint"}
 NPM_SCRIPTS = re.compile(r"^(test|typecheck|lint|tsc|check)(:|$)")
 CHECKOUT_PATH = re.compile(r"^/Users/oinp/dev/sillant/(vicat|Table)(/|$)")
 TOOL_PATH = re.compile(r"/(\.venv|node_modules)/")
+VICAT_PATH = re.compile(r"^/Users/oinp/dev/sillant/vicat(/|$)")
+POETRY_ENV_TIMEOUT_SECONDS = 15
 
 
 def strip_launchers(words: list[str]) -> list[str]:
@@ -64,6 +66,30 @@ def find_target_path(words: list[str], directory: str) -> str:
     return directory
 
 
+def find_command_python(words: list[str], directory: str) -> str | None:
+    """The interpreter a vicat command really loads when it is not the shared price_bible
+    venv: the `bin/python` beside a runner called by its venv path, or the Poetry env of
+    the directory for `poetry run`. None keeps deps_check on the shared venv, which is what
+    `vicat-py` runs."""
+    if not VICAT_PATH.match(os.path.normpath(directory)):
+        return None
+    runner = strip_launchers(words)
+    if runner and "/bin/" in runner[0]:
+        python = os.path.join(os.path.dirname(os.path.join(directory, runner[0])), "python")
+        return python if os.path.exists(python) else None
+    launchers = [os.path.basename(word) for word in words[: len(words) - len(runner)]]
+    if not any(launchers[i : i + 2] == ["poetry", "run"] for i in range(len(launchers))):
+        return None
+    try:
+        result = subprocess.run(["poetry", "env", "info", "--executable"], cwd=directory,
+                                capture_output=True, text=True,
+                                timeout=POETRY_ENV_TIMEOUT_SECONDS)
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    python = result.stdout.strip()
+    return python if result.returncode == 0 and os.path.exists(python) else None
+
+
 def main() -> None:
     payload = json.load(sys.stdin)
     command = payload.get("tool_input", {}).get("command", "")
@@ -77,8 +103,10 @@ def main() -> None:
         if target in checked:
             continue
         checked.add(target)
-        result = subprocess.run([sys.executable, str(DEPS_CHECK), target], capture_output=True,
-                                text=True)
+        python = find_command_python(simple.words, simple.directory)
+        arguments = [target, "--python", python] if python else [target]
+        result = subprocess.run([sys.executable, str(DEPS_CHECK), *arguments],
+                                capture_output=True, text=True)
         if result.returncode == 1:
             print(f"{result.stderr.strip()}\nOr prefix DEPS_CHECK_SKIP=1 to run anyway.",
                   file=sys.stderr)
