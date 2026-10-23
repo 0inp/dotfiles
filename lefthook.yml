@@ -111,6 +111,9 @@ pre-commit:
         # Deliberately column-aligned colour assignments that shfmt would
         # explode onto one line each. The alignment is the point.
         - "claude/.claude/statusline-command.sh"
+        # Written by `herdr integration install claude`, overwritten on update:
+        # restyling it would only churn.
+        - "claude/.claude/hooks/herdr-agent-state.sh"
       run: shfmt -i 2 -ci -bn -w {staged_files}
       stage_fixed: true
 
