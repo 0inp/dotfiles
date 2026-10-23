@@ -7,6 +7,10 @@ ZVM_INSERT_MODE_CURSOR=$ZVM_CURSOR_BEAM
 ZVM_NORMAL_MODE_CURSOR=$ZVM_CURSOR_BLOCK
 ZVM_VISUAL_MODE_CURSOR=$ZVM_CURSOR_BLOCK
 
+# yy / yw / p go through the macOS clipboard (pbcopy/pbpaste), not only zsh's
+# registers.
+ZVM_SYSTEM_CLIPBOARD_ENABLED=true
+
 # Disable command mode line highlight
 ZVM_VI_HIGHLIGHT_BACKGROUND=none
 ZVM_VI_HIGHLIGHT_FOREGROUND=none

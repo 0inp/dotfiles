@@ -1,0 +1,11 @@
+# Only what differs from atuin's defaults; `atuin default-config` prints the rest.
+# The old untracked file was that dump from 2025, whose comments had gone stale.
+
+## Enter runs the picked command, Tab puts it on the line for editing.
+enter_accept = true
+
+## Start the search in the keymap the shell was in: zsh-vi-mode's insert mode
+## gives vim-insert, normal mode (`/`, see bindings.zsh) gives vim-normal.
+## The default forced emacs whatever the shell mode.
+keymap_mode = "auto"
+keymap_cursor = { emacs = "steady-bar", vim_insert = "steady-bar", vim_normal = "steady-block" }

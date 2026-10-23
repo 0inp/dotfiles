@@ -1,0 +1,5 @@
+# Read by every fzf through $FZF_DEFAULT_OPTS_FILE (set in zsh/.config/zsh/fzf.zsh).
+# One option per line; fzf-tab does not read this file.
+--height=40%
+--layout=reverse
+--border=rounded

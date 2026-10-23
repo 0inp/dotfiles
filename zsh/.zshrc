@@ -120,6 +120,11 @@ fi
 #
 # NOTE: the keybindings atuin sets here do NOT survive zsh-vi-mode's keymap
 # reset, so they are re-applied from zvm_after_init_commands in bindings.zsh.
+# atuin PREPENDS itself to ZSH_AUTOSUGGEST_STRATEGY, so setting it first gives
+# (atuin completion): a completion-based suggestion when history has none. The
+# size cap stops suggestions from lagging on a huge paste.
+ZSH_AUTOSUGGEST_STRATEGY=(completion)
+ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
 if [[ -o interactive ]] && command -v atuin >/dev/null 2>&1; then
   eval "$(command atuin init zsh --disable-up-arrow --disable-ai)"
 fi

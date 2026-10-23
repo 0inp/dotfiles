@@ -29,10 +29,12 @@ symlinks in `~`, not against intent.
 |--------------|--------------------------------------|-------------------------------------------------|
 | aerospace    | macOS window manager config          | `~/.config/aerospace/`                          |
 | agents       | Cross-tool agent skills (shared)     | `~/.agents/`                                    |
+| atuin        | Shell history search settings        | `~/.config/atuin/config.toml`                   |
 | brew         | Homebrew packages and taps           | `~/.config/brewfile/`                           |
 | btop         | Resource monitor (replaced htop)     | `~/.config/btop/`                               |
 | claude       | Claude Code settings                 | `~/.claude/`, `~/.claude.json`                  |
 | fnox         | Secret refs (values in the keychain) | `~/.config/fnox/`                               |
+| fzf          | fzf default options (`fzfrc`)        | `~/.config/fzf/`                                |
 | gh-dash      | GitHub Dash configuration            | `~/.config/gh-dash/`                            |
 | ghostty      | Ghostty terminal emulator config     | `~/.config/ghostty/`                            |
 | git          | Git config                           | `~/.gitconfig`, `~/.gitignore`                  |
