@@ -10,6 +10,7 @@ source "${XDG_CONFIG_HOME:-$HOME/.config}/zsh/lib/path.zsh"
 
 # Added by OrbStack: command-line tools and integration
 # This won't be added again if you remove it.
-# Kept AFTER the PATH block on purpose, so OrbStack's own bin dir keeps the
-# precedence its installer intended (its `docker`/`orb` shims win over Homebrew).
+# It APPENDS ~/.orbstack/bin, so it never outranks Homebrew. OrbStack's `docker`
+# wins only because it is also linked into /usr/local/bin and the Brewfile has no
+# docker formula: a brew `docker` would shadow it (29.9 client, 29.8 server).
 source ~/.orbstack/shell/init.zsh 2>/dev/null || :

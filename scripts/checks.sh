@@ -16,8 +16,9 @@
 #             keychain *references*. A literal value there is a secret pushed
 #             to a public repo.
 #   brewfile  the Brewfile is the source of truth for installed packages. A
-#             manifest entry with nothing installed behind it is drift and
-#             blocks; a package merely a version behind only warns.
+#             manifest entry with nothing installed behind it, or naming a
+#             formula Homebrew no longer has, is drift and blocks; a package
+#             a version behind, or installed outside the manifest, only warns.
 #
 # No `set -e`: every check runs and reports, so one failure never hides the
 # rest. Exit status is the number of failed checks.
@@ -189,7 +190,12 @@ check_brewfile() {
     _skip "brew not installed"
     return
   fi
-  local out missing="" outdated="" kind name flag
+  _brewfile_manifest
+  _brewfile_extras
+}
+
+_brewfile_manifest() {
+  local out missing="" outdated="" gone="" kind name flag
   if out=$(brew bundle check --verbose --global 2>&1); then
     _ok "Brewfile satisfied"
     return
@@ -203,7 +209,12 @@ check_brewfile() {
       Cask) flag=--cask ;;
       *) continue ;;
     esac
-    if brew list "$flag" "$name" >/dev/null 2>&1; then
+    # `brew info`, not just `brew list`: a formula renamed or removed upstream
+    # stays listed under its old name, so `vercel-cli` read as merely
+    # outdated while every `brew bundle` died on it.
+    if ! brew info "$flag" "$name" >/dev/null 2>&1; then
+      gone="$gone $name"
+    elif brew list "$flag" "$name" >/dev/null 2>&1; then
       outdated="$outdated $name"
     else
       missing="$missing $name"
@@ -214,12 +225,16 @@ check_brewfile() {
   # the Brewfile has a syntax error, which also exits non-zero but prints no
   # entries — must never read as "just drift, carry on". That is how a check
   # turns into a permanent green pass while enforcing nothing.
-  if [ -z "$missing$outdated" ]; then
+  if [ -z "$missing$outdated$gone" ]; then
     _bad "Brewfile check failed (unrecognised output)"
     printf '%s\n' "$out" | sed 's/^/     /'
     return
   fi
 
+  if [ -n "$gone" ]; then
+    _bad "no longer in Homebrew (renamed or removed):$gone"
+    printf '     fix: brew info <name> names the replacement, edit the Brewfile\n'
+  fi
   if [ -n "$missing" ]; then
     _bad "not installed:$missing"
     [ -n "$outdated" ] && printf '     also outdated (not blocking):%s\n' "$outdated"
@@ -227,8 +242,21 @@ check_brewfile() {
     return
   fi
 
+  [ -n "$gone" ] && return
   _warn "outdated (not blocking):$outdated"
   printf '     fix: brew bundle --global\n'
+}
+
+# The other direction: installed by hand, absent from the manifest. Only warns,
+# since a package tried out for a day is not drift yet. Dependencies are not
+# listed: `brew bundle cleanup` keeps whatever a manifest entry needs.
+_brewfile_extras() {
+  local extras
+  extras=$(brew bundle cleanup --global 2>/dev/null \
+    | awk '/^Would uninstall (casks|formulae):/ {on=1; next} /^Would / {on=0} on {printf " %s", $0}')
+  [ -z "$extras" ] && return
+  _warn "installed but not in the Brewfile (not blocking):$extras"
+  printf '     fix: add them to the Brewfile, or brew uninstall them\n'
 }
 
 usage() {
