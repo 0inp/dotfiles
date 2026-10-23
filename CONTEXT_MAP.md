@@ -35,12 +35,12 @@ symlinks in `~`, not against intent.
 | fnox         | Secret refs (values in the keychain) | `~/.config/fnox/`                               |
 | gh-dash      | GitHub Dash configuration            | `~/.config/gh-dash/`                            |
 | ghostty      | Ghostty terminal emulator config     | `~/.config/ghostty/`                            |
-| git          | Git config **and** `lazygit.yaml`    | `~/.gitconfig`, `~/.gitignore`, `~/.config/lazygit.yaml` |
+| git          | Git config                           | `~/.gitconfig`, `~/.gitignore`                  |
 | gnupg        | GPG configuration                    | *(nothing stowed — see its CONTEXT.md)*         |
 | herdr        | Agent-aware multiplexer (ex-tmux)    | `~/.config/herdr/`                              |
 | launchd      | LaunchAgents (capture rename + shrink) | `~/Library/LaunchAgents/`                     |
 | leaf         | Terminal Markdown reader             | `~/.config/leaf/config.toml`                    |
-| lazygit      | Lazygit `customCommands` only        | `~/.config/lazygit/config.yml`                  |
+| lazygit      | Lazygit config (single file)         | `~/.config/lazygit/config.yml`                  |
 | mise         | Runtime versions + global npm tools  | `~/.config/mise/`                               |
 | nvim         | Neovim configuration                 | `~/.config/nvim/`                               |
 | pgcli        | PgCLI SQL client config              | `~/.config/pgcli/`                              |
@@ -78,14 +78,6 @@ module came back for two things Vorssaint cannot do itself, both handled by
 
 The original `.mov`-to-`.mp4` agent and `scripts/screenshots-to-mp4.sh` are still
 in history at `46fb86e^`.
-
-### Known overlap: lazygit is split across two modules
-`git/` owns `~/.config/lazygit.yaml` (theme and GUI settings; `.zshenv` points
-`LG_CONFIG_FILE` at it) while `lazygit/` owns `~/.config/lazygit/config.yml`
-(only `customCommands`). Because `LG_CONFIG_FILE` **replaces** lazygit's default
-config path rather than adding to it, the `customCommands` in the `lazygit/`
-module are probably never loaded. Unverified — press `<c-p>` on a local branch
-in lazygit to find out.
 
 ## Key Files
 - **`CONTEXT.md`**: Tool-specific context (purpose, key files, dependencies) in each module.

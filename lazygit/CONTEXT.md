@@ -1,25 +1,22 @@
 # Lazygit Module Context
 
 ## Purpose
-Holds lazygit's `customCommands` only. The theme and GUI settings live in the
-**`git`** module as `lazygit.yaml`.
+The whole lazygit config: theme, GUI settings, the delta diff renderer and the
+`customCommands`.
 
 ## Key Files
-| File         | Description                    | Symlink Target                 |
-|--------------|--------------------------------|--------------------------------|
-| `config.yml` | `customCommands` keybindings   | `~/.config/lazygit/config.yml` |
+| File         | Description             | Symlink Target                 |
+|--------------|-------------------------|--------------------------------|
+| `config.yml` | The single config file  | `~/.config/lazygit/config.yml` |
 
-## Overlap warning
-`.zshenv` sets `LG_CONFIG_FILE="$XDG_CONFIG_HOME/lazygit.yaml"`, pointing at the
-`git` module's file. `LG_CONFIG_FILE` **replaces** lazygit's default config path
-rather than adding to it, so the `customCommands` defined here are probably
-never loaded.
-
-To confirm: open `lazygit`, go to the local-branches panel and press `<c-p>`.
-If nothing happens, this file is being ignored. Two ways to fix it if so:
-- make `LG_CONFIG_FILE` a comma-separated list covering both files, or
-- fold these `customCommands` into `git/.config/lazygit.yaml` and drop this
-  module.
+## Gotchas
+- Found through `XDG_CONFIG_HOME` (set in `.zshenv`); without it lazygit looks
+  in `~/Library/Application Support/lazygit` on macOS.
+- Never set `LG_CONFIG_FILE`. It **replaces** this path instead of adding to it:
+  that is how the `<c-p>` command sat dead for months while a second file in the
+  `git` module held the theme. Check with `lazygit --print-config-dir`.
+- Do not write `subprocess: false` on a custom command. lazygit migrates that
+  key away and rewrites the file on disk, through the symlink, into the repo.
 
 ## Dependencies
 - **Lazygit**: `brew install lazygit`

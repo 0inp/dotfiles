@@ -44,9 +44,6 @@ export PYTHONSTARTUP=$HOME/.pythonrc
 # Docker
 export DOCKER_SCAN_SUGGEST=false
 
-# Lazygit config
-export LG_CONFIG_FILE="${XDG_CONFIG_HOME}/lazygit.yaml"
-
 # ripgrep — default flags for every `rg` invocation
 export RIPGREP_CONFIG_PATH="${XDG_CONFIG_HOME}/ripgrep/ripgreprc"
 
