@@ -19,6 +19,8 @@
 #             manifest entry with nothing installed behind it, or naming a
 #             formula Homebrew no longer has, is drift and blocks; a package
 #             a version behind, or installed outside the manifest, only warns.
+#   aerospace the config reloads on save, and an unknown key only shows as a
+#             passing warning on screen.
 #
 # No `set -e`: every check runs and reports, so one failure never hides the
 # rest. Exit status is the number of failed checks.
@@ -259,6 +261,25 @@ _brewfile_extras() {
   printf '     fix: add them to the Brewfile, or brew uninstall them\n'
 }
 
+# ---------- aerospace ----------
+# AeroSpace reloads its config on save (auto-reload-config), and a key it does
+# not know is a warning in a corner of the screen, easy to miss. The dry run
+# parses the repo's file as the running server would, without applying it.
+check_aerospace() {
+  echo "🪟 AeroSpace — config parses without warnings"
+  if ! command -v aerospace >/dev/null 2>&1 || ! pgrep -xq AeroSpace; then
+    _skip "AeroSpace not running"
+    return
+  fi
+  local out
+  if out=$(aerospace reload-config --dry-run --warnings-as-errors 2>&1); then
+    _ok "aerospace.toml is valid"
+  else
+    _bad "aerospace.toml has errors or warnings"
+    printf '%s\n' "$out" | sed 's/^/     /'
+  fi
+}
+
 usage() {
   cat <<'EOF'
 usage: checks.sh <check>...
@@ -269,6 +290,7 @@ usage: checks.sh <check>...
   zvm        no uppercase ZVM_AFTER_INIT_COMMANDS
   fnox       [secrets] holds references, never literals
   brewfile   Brewfile packages are installed (outdated only warns)
+  aerospace  aerospace.toml parses without warnings
   all        run all of the above
 
 Exit status is the number of failed checks.
@@ -287,6 +309,7 @@ for arg in "$@"; do
     symlinks) check_symlinks ;;
     zvm) check_zvm ;;
     fnox) check_fnox ;;
+    aerospace) check_aerospace ;;
     brewfile) check_brewfile ;;
     all)
       check_secrets
@@ -295,6 +318,7 @@ for arg in "$@"; do
       check_zvm
       check_fnox
       check_brewfile
+      check_aerospace
       ;;
     -h | --help)
       usage
