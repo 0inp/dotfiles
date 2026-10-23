@@ -20,8 +20,12 @@ export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always --icons=always {} | 
 # fzf-tab
 # =========================================================
 
-# Enable fzf-tab with minimal settings
-zstyle ':fzf-tab:*' fzf-flags '--ansi'
+# Catppuccin Mocha, the same colours as fzfrc. Only the colours: fzf-tab sizes
+# its own popup, and fzfrc's --height/--border would fight it.
+zstyle ':fzf-tab:*' fzf-flags --ansi \
+  '--color=bg+:#313244,spinner:#f5e0dc,hl:#f38ba8,fg:#cdd6f4,header:#f38ba8' \
+  '--color=info:#cba6f7,pointer:#f5e0dc,marker:#b4befe,fg+:#cdd6f4,prompt:#cba6f7' \
+  '--color=hl+:#f38ba8,selected-bg:#45475a,border:#6c7086,label:#cdd6f4'
 # Named groups (options, files, commands…), switched with < and >. Without the
 # descriptions format, fzf-tab has no group names to switch between.
 zstyle ':completion:*:descriptions' format '[%d]'
