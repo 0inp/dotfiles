@@ -91,5 +91,38 @@
       "mcp__subject-todo__subject_todo",
       "Bash(gh api repos/*/pulls/*/reviews *)"
     ]
+  },
+  "autoMode": {
+    "allow": [
+      "$defaults",
+      "PR Review Publication: on a `Sillant/*` pull request, posting the review the user validated in this session — one `POST repos/Sillant/<repo>/pulls/<n>/reviews` (inline comments and the verdict, APPROVE included), and replies to existing review threads (`POST …/pulls/<n>/comments/<id>/replies`) — is the user's own reviewer workflow, not External System Writes. It requires that the user approved the comments and the verdict earlier in the transcript (the two stops of /pr-review), and that the payload posted is the one they approved. It does not cover approving a PR the agent itself authored (Self-Approval still applies), dismissing or deleting reviews, nor merging."
+    ],
+    "environment": [
+      "### Org-wide",
+      "**Organization**: Sillant (GitHub org `Sillant`); repos in this workspace: `Sillant/vicat` (backend Python), `Sillant/Table` (frontend TypeScript), `Sillant/sillant-context` (shared rules and docs), `Sillant/Website`, `pr-digest`",
+      "**Cloud provider(s)**: AWS, region eu-west-3 (App Runner for the price_bible backend, Amplify for the Table frontend, EC2 for tech-report, RDS Postgres `price-bible-{dev-2,dev-3,main-2,staging,prod}`, S3, Secrets Manager, CloudWatch Logs); Sentry org `sillant`; Linear team `DEV`",
+      "**Repository visibility**: all `Sillant/*` repos are private",
+      "**Internal sharing / snippet hosting**: None configured — treat public paste/gist services as outside the trust boundary",
+      "**Secrets management**: AWS Secrets Manager (RDS credentials, app secrets), GitHub Actions secrets, Amplify environment variables; local untracked `.env` files in each clone (`vicat/**/.env`, `Table/**/.env`) are out of bounds for sharing",
+      "**Default / protected branches**: default `main` in every repo; `main`, `staging`, `prod` are protected in vicat and Table (pushing to `staging`/`prod` deploys)",
+      "**CI/CD deploy targets**: GitHub Actions deploy vicat to App Runner and Table to Amplify on merges to `main`, `staging`, `prod`",
+      "**Network posture**: None configured",
+      "**Source control**: GitHub, `github.com:Sillant/*` (vicat, Table, sillant-context, Website, pr-digest); the workspace root `/Users/oinp/dev/sillant` itself is a local-only git repo with no remote",
+      "**Trusted internal domains**: None configured",
+      "**Trusted cloud buckets**: None configured",
+      "**Key internal services**: price_bible API (App Runner), Table price-bible frontend (Amplify), Sentry, Linear",
+      "**Internal package registry**: None configured",
+      "**Sensitive data locations & audiences**: any file or store holding personal data, confidential business data, credentials, regulated data, or similarly sensitive material; preserve exact handles when known and share only with audiences cleared at the [named+specifics] bar. In this workspace specifically: every `.env` file, Secrets Manager values, the RDS databases (customer data), CI secret values",
+      "**Data retention / declassification**: None configured",
+      "**Sensitive remote targets**: any namespace, host, database or container whose name carries `prod` or `production` as a whole word or name segment (e.g. `price-bible-prod`, not `producer`); the `prod` and `staging` branches of `Sillant/vicat` and `Sillant/Table` are sensitive remote targets",
+      "**Protected deployment namespaces / environments**: None configured — fall back to the Sensitive remote targets heuristic",
+      "**Protected IaC scopes**: IAM, RBAC, networking, quota, and node-pool resources; anything whose name or tag carries `prod` or `production` as a whole word or name segment",
+      "### User-specific",
+      "**Primary use of Claude Code**: software development across the Sillant workspace — Python/FastAPI backend (vicat), TypeScript/React frontend (Table), shared rules and docs (sillant-context); also PR review, Linear ticket management, CI and deployment follow-up",
+      "**Trusted repo**: `/Users/oinp/dev/sillant` and every clone and worktree nested in it (`vicat/`, `Table/`, `sillant-context/`, `Website/`, `pr-digest/`, `*/.worktrees/*`), with their remotes `github.com:Sillant/*` (private). Confidential material is fine in these private repos; secrets and sensitive data (personal & entrusted) are never cleared into any repo by its visibility (see Definitions). Content ported, repointed, or first read from outside this session's repo is not this repo's own work, whoever directed the port",
+      "**Org-specific CLIs**: `gh`, `aws`, `mise` (workspace tasks in `/Users/oinp/dev/sillant/mise.toml`), `wt` (worktrunk), `poetry`, `npm`",
+      "**Routine under prefix qualifiers**: read-only status checks are routine, including on prod: `gh run view|list|watch`, `gh pr view|checks|list`, `gh api` GET on `repos/Sillant/*` (PRs, review comments, runs, jobs, logs), `aws apprunner list-operations|describe-service`, `aws amplify list-jobs|get-job`, CloudWatch Logs queries; `git log|status|diff|show` in any workspace repo; `mise run pgquery <env> <file.sql>` from `/Users/oinp/dev/sillant` (read-only transaction, statement timeout, the password is read inside the task and never printed) is routine on every environment including prod — the user explicitly approved it for measurements",
+      "mise run pgquery <env> is read-only on every environment, prod included (READ ONLY transaction enforced by the script): routine. Posting a PR review with gh api …/reviews after the user validated it in /pr-review is routine. Merging a PR (gh pr merge) the user explicitly asked to merge in this session is authorized; sillant-context PRs are not reviewed by team convention."
+    ]
   }
 }
