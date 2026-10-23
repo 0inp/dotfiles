@@ -1,6 +1,8 @@
 theme = Gruvbox Dark
 background-opacity = 0.95
-background-blur-radius = 25
+# Liquid Glass (macOS 26+): the system material, which tints and reacts to what
+# is behind the window, instead of a plain gaussian blur. Was a radius of 25.
+background-blur = macos-glass-regular
 
 font-family = JetBrainsMonoNL Nerd Font
 font-feature = -liga,-calt,-dlig
