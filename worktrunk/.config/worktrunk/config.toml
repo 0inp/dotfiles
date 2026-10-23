@@ -1,6 +1,5 @@
-[list]
-summary = true
-json-schema = 2
+# No [list] summary: it needs [commit.generation], unset here, so it did nothing.
+# json-schema = 2 was already the default.
 
 [post-start]
 copy = "wt step copy-ignored"
