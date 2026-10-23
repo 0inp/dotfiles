@@ -67,13 +67,15 @@ pre-commit:
       run: for f in {staged_files}; do bash -n "$f" || exit 1; done
 
     # .zshrc / .zshenv / .zprofile carry no .zsh extension, so they need
-    # naming explicitly — a bare "*.zsh" glob silently skips all three.
+    # naming explicitly — a bare "*.zsh" glob silently skips all three. They
+    # need the leading `*` too: a glob is matched against the repo-relative
+    # path, so ".zshenv" alone never matched zsh/.zshenv either.
     - name: syntax-zsh
       glob:
         - "*.zsh"
-        - ".zshrc"
-        - ".zshenv"
-        - ".zprofile"
+        - "*.zshrc"
+        - "*.zshenv"
+        - "*.zprofile"
       run: for f in {staged_files}; do zsh -n "$f" || exit 1; done
 
     - name: shellcheck
