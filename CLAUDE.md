@@ -157,8 +157,8 @@ Homebrew above the mise shims.
 
 ### Runtime versions (mise)
 
-`mise/.config/mise/config.toml` pins global versions: Node 26, Python 3.14,
-Go 1.26. Mise is activated only in interactive shells.
+`mise/.config/mise/config.toml` pins global versions: Node 26, Python 3.15,
+Go 1.27. Mise is activated only in interactive shells.
 
 It also carries `"npm:typescript" = "7"`. That is not a runtime pin — Neovim's
 `tsc` language server needs a TypeScript 7 binary on `$PATH` as a fallback for

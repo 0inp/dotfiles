@@ -2,8 +2,8 @@
 node = "26"
 # 3.12 rides along so `python3.12` is on PATH everywhere: the security-guidance plugin
 # runs its hook with the first python3.1x it finds, and its SDK venv is built on 3.12.
-python = ["3.14", "3.12"]
-go = "1.26"
+python = ["3.15", "3.12"]
+go = "1.27"
 
 # TypeScript 7 (the Go rewrite) ships the language server used by Neovim via
 # nvim-lspconfig's `tsc` server: `tsc --lsp --stdio`. lspconfig prefers a
