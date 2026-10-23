@@ -17,6 +17,8 @@ local mason_tools = {
 	"biome",
 	"jq",
 	"tombi",
+	"goimports",
+	"golangci-lint", -- golangci_lint_ls is only a bridge; this does the linting
 }
 
 -- Each entry is passed directly to vim.lsp.config — keys are top-level lsp config fields
@@ -26,19 +28,24 @@ local lsp_servers = {
 		settings = {
 			Lua = {
 				diagnostics = { globals = { "vim" } },
-				workspace = { library = vim.api.nvim_get_runtime_file("lua", true) },
+				-- The `vim.*` API. The runtime-file list it replaces was read before half
+				-- the plugins loaded, so it was partial and still indexed every plugin.
+				workspace = { library = { vim.env.VIMRUNTIME } },
 				telemetry = { enable = false },
 			},
 		},
 	},
 	-- Python
+	-- The native `ruff server` takes structured settings. `args` belonged to the
+	-- retired ruff-lsp and was silently ignored, so ruff linted with its defaults.
+	-- A project's own pyproject.toml / ruff.toml still wins (configurationPreference).
 	ruff = {
 		init_options = {
 			settings = {
-				args = {
-					"--select=ALL",
-					"--ignore=D203,D212,E501",
-					"--line-length=88",
+				lineLength = 88,
+				lint = {
+					select = { "ALL" },
+					ignore = { "D203", "D212", "E501" },
 				},
 			},
 		},
@@ -82,20 +89,9 @@ local lsp_servers = {
 			},
 		},
 	},
-	golangci_lint_ls = {
-		cmd = { "golangci-lint-langserver" },
-		root_markers = { ".git", "go.mod" },
-		init_options = {
-			command = {
-				"golangci-lint",
-				"run",
-				"--output.json.path",
-				"stdout",
-				"--show-stats=false",
-				"--issues-exit-code=1",
-			},
-		},
-	},
+	-- nvim-lspconfig's defaults: they root on go.mod / .golangci.yml before .git
+	-- and neutralise a project's own output settings.
+	golangci_lint_ls = {},
 }
 
 -- Servers whose binary does NOT come from Mason. They must be excluded from
@@ -115,7 +111,14 @@ require("mason-tool-installer").setup({
 })
 vim.keymap.set("n", "<leader>M", vim.cmd.Mason, { desc = "Mason" })
 
-vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
+-- Buffer-local, so buffers without a client keep Vim's own `gd`. `K` needs no
+-- mapping: Neovim maps it to hover on attach unless something else claimed it,
+-- and the old global one broke `K` in help buffers.
+vim.api.nvim_create_autocmd("LspAttach", {
+	callback = function(args)
+		vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = args.buf, desc = "Go to definition" })
+	end,
+})
 
 -- Neovim 0.12 maps `grr`/`gri` itself (runtime/lua/vim/_core/defaults.lua), and
 -- both dump multiple results into the quickfix list. These globals shadow those
@@ -134,19 +137,12 @@ vim.keymap.set("n", "<leader>f", function()
 	require("conform").format()
 end, { desc = "Format Local buffer (Conform)" })
 
-vim.keymap.set("n", "K", vim.lsp.buf.hover, { noremap = true, silent = true, desc = "Documentation" })
-
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = vim.tbl_deep_extend("force", capabilities, require("mini.completion").get_lsp_capabilities())
+-- Neovim merges this over its own default capabilities for every server.
+vim.lsp.config("*", { capabilities = require("mini.completion").get_lsp_capabilities() })
 
 for server, config in pairs(lsp_servers) do
-	vim.lsp.config(server, vim.tbl_extend("keep", { capabilities = capabilities }, config))
+	vim.lsp.config(server, config)
 end
 
 -- Mason-installed servers are enabled by mason-lspconfig; these are not.
 vim.lsp.enable(vim.tbl_keys(non_mason_servers))
-
--- Add custom LSP commands
-vim.api.nvim_create_user_command("LspInfo", function()
-	vim.cmd("checkhealth lsp")
-end, { desc = "Show LSP client information" })

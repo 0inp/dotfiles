@@ -17,7 +17,7 @@
       "src": "https://github.com/selimacerbas/live-server.nvim"
     },
     "lualine.nvim": {
-      "rev": "131a558e13f9f28b15cd235557150ccb23f89286",
+      "rev": "221ce6b2d999187044529f49da6554a92f740a96",
       "src": "https://github.com/nvim-lualine/lualine.nvim"
     },
     "markdown-plus.nvim": {
@@ -37,7 +37,7 @@
       "src": "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim"
     },
     "mason.nvim": {
-      "rev": "cbf8d285e1462dd24acf3507817be2bbcb035919",
+      "rev": "2a6940af80375532e5e9e7c1f2fc6319a1b7a69d",
       "src": "https://github.com/mason-org/mason.nvim"
     },
     "mini.nvim": {
@@ -47,14 +47,6 @@
     "monokai": {
       "rev": "a68e38b8e55d69a215d0f02598900a79c356da9d",
       "src": "https://github.com/loctvl842/monokai-pro.nvim"
-    },
-    "nvim-bufferline.lua": {
-      "rev": "655133c3b4c3e5e05ec549b9f8cc2894ac6f51b3",
-      "src": "https://github.com/akinsho/nvim-bufferline.lua"
-    },
-    "nvim-colorizer.lua": {
-      "rev": "72a05f62c52241bc7441c820eb53946f92b2e6a4",
-      "src": "https://github.com/catgoose/nvim-colorizer.lua"
     },
     "nvim-lspconfig": {
       "rev": "a9bb4d5f4276aa5cddc015faa3ecc5a7b5a26b14",
@@ -67,10 +59,6 @@
     "render-markdown.nvim": {
       "rev": "640a3ec6d538bad17c328be373c7cad0293d9589",
       "src": "https://github.com/MeanderingProgrammer/render-markdown.nvim"
-    },
-    "todo-comments.nvim": {
-      "rev": "31e3c38ce9b29781e4422fc0322eb0a21f4e8668",
-      "src": "https://github.com/folke/todo-comments.nvim"
     },
     "vim-fugitive": {
       "rev": "3b753cf8c6a4dcde6edee8827d464ba9b8c4a6f0",

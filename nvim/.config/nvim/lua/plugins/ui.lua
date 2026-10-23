@@ -32,19 +32,10 @@ require("lualine").setup({
 })
 --:
 
-----: bufferline
-vim.pack.add({
-	{ src = "https://github.com/akinsho/nvim-bufferline.lua" },
-})
-
-require("bufferline").setup({
-	options = {
-		mode = "buffers",
-		separator_style = "thin",
-		show_buffer_close_icons = true,
-		show_close_icon = true,
-	},
-})
+--: tabline
+-- mini.tabline, from the mini.nvim already loaded: bufferline.nvim has had no
+-- commit since January 2025.
+require("mini.tabline").setup()
 --:
 
 --: gitsigns

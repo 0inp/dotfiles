@@ -1,12 +1,9 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
-vim.keymap.set(
-	"v",
-	"p",
-	'"_dp',
-	{ noremap = true, silent = true, desc = "Paste over selection without losing yanked text" }
-)
+-- Visual `P` already pastes without overwriting the register (:h v_P). The old
+-- `"_dp` pasted one character too far at the end of a word ("foo  Xbaz").
+vim.keymap.set("x", "p", "P", { desc = "Paste over selection without losing yanked text" })
 
 vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]], { desc = "Delete without yanking" })
 
@@ -37,11 +34,7 @@ vim.keymap.set("n", "<leader>re", "<cmd>restart<cr>", { desc = "Restart config (
 vim.keymap.set("n", "<Leader>w", "<cmd>w!<CR>", { silent = true, desc = "Save" }) -- Save the current file
 vim.keymap.set("n", "<Leader>q", "<cmd>q<CR>", { silent = true, desc = "Quit Neovim" }) -- Quit Neovim
 
--- Move to window using the <ctrl> hjkl keys
-vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Go to Left Window", remap = true })
-vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Go to Lower Window", remap = true })
-vim.keymap.set("n", "<C-k>", "<C-w>k", { desc = "Go to Upper Window", remap = true })
-vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Go to Right Window", remap = true })
+-- <C-h/j/k/l> window moves live in plugins/ui.lua.
 
 -- TIP: Disable arrow keys in normal mode
 vim.keymap.set("n", "<left>", '<cmd>echo "Use h to move!!"<CR>')

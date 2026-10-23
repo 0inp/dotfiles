@@ -4,6 +4,12 @@ vim.pack.add({
 	"https://github.com/tpope/vim-fugitive",
 })
 
+-- mini icons ----
+-- Before anything that draws icons. The mock answers plugins that ask for
+-- nvim-web-devicons (lualine), which was never installed: no icons anywhere.
+require("mini.icons").setup()
+MiniIcons.mock_nvim_web_devicons()
+
 -- mini files ----
 local MiniFiles = require("mini.files")
 MiniFiles.setup({
