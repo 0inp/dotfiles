@@ -5,7 +5,11 @@ Concurrent sessions share those two checkouts: the venv, node_modules, the local
 serving manual QA and every worktree's tooling all read from them. A branch switched
 there by one session silently changes what the others test and serve, so branch work
 belongs in a worktree under `<clone>/.worktrees/`. Restoring files (`git checkout --
-PATH`) and returning to main stay allowed.
+PATH`) and returning to main stay allowed. A QA the user asks for on the main checkout
+goes through the workspace's `qa-switch`, which detaches it on the branch head.
+
+A directory the hook cannot read literally (`git -C $V`, `cd $p` in a loop) may be a main
+checkout, so a branch switch there is refused until the path is written out.
 """
 
 import json
@@ -41,12 +45,24 @@ def main() -> None:
         found = find_git_subcommand(simple.words)
         if not found or found[0] not in ("checkout", "switch") or not is_branch_switch(found[1]):
             continue
-        toplevel = read_toplevel(resolve_git_directory(simple))
+        directory = resolve_git_directory(simple)
+        if "$" in directory:
+            print(
+                f"Refused: `git {found[0]}` runs in {directory}, a path built from a shell "
+                f"variable the hook cannot resolve; it may be a main checkout. Write the "
+                f"repository path out literally.",
+                file=sys.stderr,
+            )
+            sys.exit(2)
+        toplevel = read_toplevel(directory)
         if toplevel in MAIN_CLONES:
             print(
                 f"Refused: `git {found[0]}` would switch the branch of the shared main checkout "
-                f"{toplevel}, which other sessions and the local QA stack read from. Use a "
-                f"worktree: git -C {toplevel} worktree add {toplevel}/.worktrees/<name> <branch>.",
+                f"{toplevel}, which other sessions and the local QA stack read from. Branch "
+                f"work: git -C {toplevel} worktree add {toplevel}/.worktrees/<name> <branch>. "
+                f"A QA the user asked for on the main checkout: "
+                f"/Users/oinp/dev/sillant/.claude/scripts/qa-switch {Path(toplevel).name} "
+                f"<branch>, then qa-switch {Path(toplevel).name} main once done.",
                 file=sys.stderr,
             )
             sys.exit(2)

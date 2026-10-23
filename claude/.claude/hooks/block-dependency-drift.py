@@ -24,13 +24,44 @@ CHECKOUT_PATH = re.compile(r"^/Users/oinp/dev/sillant/(vicat|Table)(/|$)")
 TOOL_PATH = re.compile(r"/(\.venv|node_modules)/")
 
 
+def strip_launchers(words: list[str]) -> list[str]:
+    """`npx jest`, `poetry run pytest`, `timeout 600 tsc`, `python -m mypy`, `vicat-py pytest`
+    → the runner itself, so only the program actually executed is matched, never an argument
+    such as the path in `ls node_modules/.bin/tsc`."""
+    while words:
+        launcher = os.path.basename(words[0])
+        if launcher in ("npx", "env", "vicat-py"):
+            words = words[1:]
+        elif launcher in ("poetry", "uv") and words[1:2] == ["run"]:
+            words = words[2:]
+        elif launcher == "timeout" and len(words) > 1:
+            words = words[2:]
+        elif launcher.startswith("python") and words[1:2] == ["-m"]:
+            words = words[2:]
+        else:
+            return words
+    return words
+
+
 def is_checked_run(words: list[str]) -> bool:
-    if any(os.path.basename(word) in RUNNERS for word in words):
+    words = strip_launchers(words)
+    if words and os.path.basename(words[0]) in RUNNERS:
         return True
     if words[:1] == ["npm"]:
         script = words[2] if words[1:2] == ["run"] and len(words) > 2 else words[1:2] and words[1]
         return bool(script and NPM_SCRIPTS.match(script))
     return False
+
+
+def find_target_path(words: list[str], directory: str) -> str:
+    """The first argument naming an existing path inside vicat or Table (`price-bible/src`,
+    `--config=price-bible/jest.config.js`), so the check covers the npm workspace the run
+    loads; else the directory the command runs in."""
+    for word in words[1:]:
+        path = os.path.normpath(os.path.join(directory, word.split("=", 1)[-1]))
+        if CHECKOUT_PATH.match(path) and not TOOL_PATH.search(path) and os.path.exists(path):
+            return path
+    return directory
 
 
 def main() -> None:
@@ -42,8 +73,7 @@ def main() -> None:
     for simple in split_simple_commands(command, payload.get("cwd", ".")):
         if not is_checked_run(simple.words):
             continue
-        target = next((word for word in simple.words if CHECKOUT_PATH.match(word)
-                       and not TOOL_PATH.search(word)), simple.directory)
+        target = find_target_path(simple.words, simple.directory)
         if target in checked:
             continue
         checked.add(target)

@@ -24,6 +24,10 @@
           {
             "type": "command",
             "command": "python3 ~/.claude/hooks/block-dependency-drift.py"
+          },
+          {
+            "type": "command",
+            "command": "python3 ~/.claude/hooks/block-shared-node-modules-install.py"
           }
         ]
       }

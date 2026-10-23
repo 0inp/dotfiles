@@ -13,6 +13,8 @@ from dataclasses import dataclass
 HEREDOC = re.compile(r"<<-?\s*(['\"]?)([A-Za-z_][A-Za-z0-9_]*)\1[^\n]*\n")
 SEPARATORS = {";", "&&", "||", "|", "&", "\n", "(", ")"}
 ENVIRONMENT_ASSIGNMENT = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*=")
+# Words that open a compound command: the command they introduce follows them.
+LEADING_KEYWORDS = {"do", "then", "else", "elif", "!", "time", "{"}
 
 
 @dataclass(frozen=True)
@@ -44,7 +46,7 @@ def split_simple_commands(command: str, cwd: str) -> list[SimpleCommand]:
         if token not in SEPARATORS:
             words.append(token)
             continue
-        while words and ENVIRONMENT_ASSIGNMENT.match(words[0]):
+        while words and (ENVIRONMENT_ASSIGNMENT.match(words[0]) or words[0] in LEADING_KEYWORDS):
             words.pop(0)
         if words[:1] == ["cd"] and len(words) > 1:
             directory = os.path.normpath(os.path.join(directory, os.path.expanduser(words[1])))
