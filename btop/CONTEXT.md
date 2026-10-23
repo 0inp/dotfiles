@@ -22,10 +22,12 @@ subdirectory lands inside the repo if you ever download one.
   zsh-vi-mode and Neovim setup.
 
 ## Gotcha
-**btop rewrites `btop.conf` on exit**, exactly like the `htoprc` it replaced.
-Changing settings in the TUI edits the file in this repo through the symlink,
-which shows up as an unstaged diff. That is expected — commit it or `git
-checkout` it, but don't be surprised by it.
+**`save_config_on_exit = false`.** Left on, btop rewrites `btop.conf` on every
+exit, through the symlink, into this repo: an unstaged diff after any change
+made in the TUI. A setting tried in the TUI is now lost on quit; to keep it,
+edit `btop.conf` here.
+
+**GPU box**: `gpu0` in `shown_boxes` is the Apple Silicon GPU (btop 1.4.7+).
 
 ## AI Notes
 - Bundled themes live in `$(brew --prefix btop)/share/btop/themes/`.
