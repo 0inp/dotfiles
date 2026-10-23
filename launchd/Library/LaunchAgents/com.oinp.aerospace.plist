@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Starts AeroSpace at login. Its own `start-at-login = true` registers a login
+  item that macOS lists, yet on 2026-10-23 AeroSpace was not running after boot
+  and had to be opened by hand; the logs gave no reason. launchd runs this at
+  every login, and the setting is off in aerospace.toml so only one mechanism
+  exists.
+
+  `open -g`: in the background, so a reload while AeroSpace already runs only
+  re-activates it, without stealing focus.
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.oinp.aerospace</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/open</string>
+        <string>-g</string>
+        <string>-a</string>
+        <string>AeroSpace</string>
+    </array>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>StandardErrorPath</key>
+    <string>/tmp/com.oinp.aerospace.error.log</string>
+</dict>
+</plist>

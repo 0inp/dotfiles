@@ -10,10 +10,14 @@ does two things to `~/Pictures/Screenshots` whenever it changes:
 2. **shrinks** oversized screen recordings, in place, so they can be dropped
    straight into a Discord message.
 
+A second, trivial agent, `com.oinp.aerospace`, opens AeroSpace at login: its
+own `start-at-login` left it stopped after a reboot (see the plist header).
+
 ## Key Files
 | File | Description | Symlink Target |
 |------|-------------|----------------|
 | `Library/LaunchAgents/com.oinp.captures-tidy.plist` | Fires `captures-tidy` when `~/Pictures/Screenshots` changes | `~/Library/LaunchAgents/` |
+| `Library/LaunchAgents/com.oinp.aerospace.plist` | Opens AeroSpace at login | `~/Library/LaunchAgents/` |
 
 ## Dependencies
 - `scripts/.local/bin/captures-tidy` — the work; the agent only triggers it

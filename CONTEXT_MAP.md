@@ -40,7 +40,7 @@ symlinks in `~`, not against intent.
 | git          | Git config                           | `~/.gitconfig`, `~/.gitignore`                  |
 | gnupg        | GPG configuration                    | *(nothing stowed — see its CONTEXT.md)*         |
 | herdr        | Agent-aware multiplexer (ex-tmux)    | `~/.config/herdr/`                              |
-| launchd      | LaunchAgents (capture rename + shrink) | `~/Library/LaunchAgents/`                     |
+| launchd      | LaunchAgents (captures, AeroSpace)   | `~/Library/LaunchAgents/`                       |
 | leaf         | Terminal Markdown reader             | `~/.config/leaf/config.toml`                    |
 | lazygit      | Lazygit config (single file)         | `~/.config/lazygit/config.yml`                  |
 | mise         | Runtime versions + global npm tools  | `~/.config/mise/`                               |
