@@ -21,14 +21,15 @@
   # unrelated stash.
   wync = "!git pull --autostash && git push"
   cwip = "!git add . && git commit --no-verify -m 'WIP'"
+  # git history (2.54+, experimental): fix or reword any commit without an
+  # interactive rebase; branches built on top are rewritten along. No hooks run.
+  fixup = history fixup
+  reword = history reword
 
 [branch]
   # Most-recently-committed-to first; far more useful than alphabetical once a
   # repo has more than a handful of branches.
   sort = -committerdate
-
-[color]
-  ui = true
 
 [column]
   # Multi-column output for `git branch`, `git tag`, `git status` when it fits.
@@ -45,7 +46,6 @@
   fsmonitor = true
   untrackedCache = true
   autocrlf = input
-  ignorecase = false
   excludesfile = ~/.gitignore
   pager = "delta"
 
@@ -75,15 +75,22 @@
 
 [fetch]
   prune = true
+  # Keep origin/HEAD on the remote's current default branch, so scripts can ask
+  # for it (`git rev-parse --abbrev-ref origin/HEAD`) instead of assuming main.
+  followRemoteHEAD = always
+
+# Declared in config (git 2.54+), so it runs in EVERY repo, before the repo's
+# own .git/hooks/pre-commit (lefthook, pre-commit). The dotfiles repo turns it
+# off locally because lefthook already runs the same scan there.
+[hook "gitleaks"]
+  event = pre-commit
+  command = gitleaks git --staged --redact --no-banner
 
 [gpg]
   format = ssh
 
 [gpg "ssh"]
   allowedSignersFile = "~/.ssh/allowed_signers"
-
-[http]
-  sslVerify = true
 
 [init]
   defaultBranch = main
@@ -106,6 +113,11 @@
   # `git push` on a brand-new branch now sets the upstream itself, which is
   # what the removed `upush` alias used to do by hand.
   autoSetupRemote = true
+
+[status]
+  # A branch cut from origin/main tracks it but pushes to origin/<branch>
+  # (push.default = current): show how far it is from both.
+  compareBranches = @{upstream} @{push}
 
 [rebase]
   autosquash = true

@@ -13,7 +13,8 @@ Configuration for Git, including global settings, aliases, and tool integrations
 - **Git**: Install via Homebrew (`brew install git`).
 
 ## Key Features
-- **Aliases**: Shortcuts for common Git commands (e.g., `git lg` for `git log --oneline --graph`).
+- **Aliases**: Shortcuts for common Git commands (e.g., `git lg` for the last 10 commits as a coloured graph, `git sweep` for `wt step prune`).
+- **gitleaks everywhere**: a config-declared `[hook "gitleaks"]` runs on pre-commit in every repo. Off locally in this repo (`git config hook.gitleaks.enabled false`), where lefthook already scans.
 - **Ignore Rules**: Global ignore patterns (e.g., `.DS_Store`, `*.log`).
 - **Performance**: `core.fsmonitor` + `core.untrackedCache` are on, so `git
   status` uses a background daemon instead of walking the worktree.
