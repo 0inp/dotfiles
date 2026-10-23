@@ -107,7 +107,7 @@
   },
   "effortLevel": "high",
   "skipWorkflowUsageWarning": true,
-  "theme": "custom:gruvbox",
+  "theme": "custom:catppuccin-mocha",
   "autoMode": {
     "allow": [
       "$defaults",

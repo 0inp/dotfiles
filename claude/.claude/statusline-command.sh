@@ -7,7 +7,7 @@
 # Row 1 is "where am I", row 2 is "how is it going".
 #
 # Colours use the ANSI-16 slots rather than hex, so the line follows whatever
-# palette the terminal is themed with (Gruvbox Dark here) instead of pinning
+# palette the terminal is themed with (Catppuccin Mocha here) instead of pinning
 # itself to it.
 #
 # Sizing rule: branch, worktree and dirty counts are never shortened — the path

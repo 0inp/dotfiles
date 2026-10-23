@@ -1,0 +1,3 @@
+# Catppuccin Mocha, built into bat. delta reads bat's themes too: its
+# syntax-theme in .gitconfig names the same one.
+--theme="Catppuccin Mocha"

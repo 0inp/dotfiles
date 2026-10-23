@@ -1,10 +1,14 @@
-theme = Gruvbox Dark
+theme = Catppuccin Mocha
 background-opacity = 0.95
 # A plain gaussian blur. Tried and rejected: macos-glass-regular (Liquid Glass).
 background-blur = 25
 
-font-family = JetBrainsMonoNL Nerd Font
-font-feature = -liga,-calt,-dlig
+# Not a Nerd Font patch: Ghostty embeds Symbols Nerd Font, so eza, nvim and
+# lazygit icons render with any font.
+font-family = Monaspace Neon
+# Ligatures off, `calt` ON: Monaspace's texture healing (wider m/w next to
+# narrow letters) is a contextual alternate and dies with -calt.
+font-feature = -liga,-dlig
 cursor-style = block
 cursor-style-blink = false
 cursor-color = cell-foreground

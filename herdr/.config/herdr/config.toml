@@ -3,7 +3,7 @@ onboarding = false
 new_cwd = "follow"
 
 [theme]
-name = "kanagawa"
+name = "catppuccin"
 
 [ui]
 mouse_capture = true

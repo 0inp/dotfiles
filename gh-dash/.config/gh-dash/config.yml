@@ -102,20 +102,22 @@ keybindings:
       command: gh enhance -R {{.RepoName}} {{.PrNumber}}
 
 theme:
+  # Catppuccin Mocha, as in catppuccin/gh-dash.
   colors:
     text:
-      primary: "#F7F1FF"
-      secondary: "#5AD4E6"
-      inverted: "#F7F1FF"
-      faint: "#757685"
-      warning: "#FC618D"
-      success: "#7BD88F"
+      primary: "#cdd6f4"
+      secondary: "#89b4fa"
+      inverted: "#11111b"
+      faint: "#bac2de"
+      warning: "#f9e2af"
+      success: "#a6e3a1"
+      error: "#f38ba8"
     background:
-      selected: "#535155"
+      selected: "#313244"
     border:
-      primary: "#948AE3"
-      secondary: "#7BD88F"
-      faint: "#3E4057"
+      primary: "#89b4fa"
+      secondary: "#45475a"
+      faint: "#313244"
   ui:
     sectionsShowCount: true
     table:

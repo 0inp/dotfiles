@@ -5,12 +5,12 @@ fiche.
 
 ## Symlink target
 `~/.config/leaf/config.toml` → `leaf/.config/leaf/config.toml`
-`~/.config/leaf/gruvbox.toml` → `leaf/.config/leaf/gruvbox.toml`
+`~/.config/leaf/catppuccin-mocha.toml` → `leaf/.config/leaf/catppuccin-mocha.toml`
 
 ## Settings that differ from the defaults
-- `theme = "gruvbox.toml"` — a custom theme beside the config, matching
-  ghostty's Gruvbox Dark. It is upstream's `gruvbox.toml` example with
-  `syntax = "base16-mocha.dark"`. Only the syntect built-ins work there
+- `theme = "catppuccin-mocha.toml"` — a custom theme beside the config,
+  matching ghostty's Catppuccin Mocha: upstream's `gruvbox.toml` example with
+  each colour swapped for its Mocha role, and `syntax = "base16-mocha.dark"`. Only the syntect built-ins work there
   (`base16-ocean.dark`, `base16-mocha.dark`, `base16-eighties.dark`,
   `Solarized (dark)`…), and a misspelt name falls back to ocean silently, so
   diff `leaf --inline ansi` output to check a change took effect.

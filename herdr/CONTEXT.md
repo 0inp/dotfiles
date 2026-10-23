@@ -17,7 +17,7 @@ Replaces tmux for AI agent workflows — sidebar shows blocked/working/done stat
 - **Workspaces** map 1:1 to tmux sessions (one per project/git repo)
 - **Sidebar** shows agent state at a glance; `prefix+b` toggles it
 - **Keybindings** mirror tmux as closely as possible (same `ctrl+b` prefix)
-- **Kanagawa theme** to match the rest of the setup
+- **Catppuccin theme** (herdr's built-in dark flavour) to match ghostty's Catppuccin Mocha
 - **Sound + toasts** fire when an agent finishes or needs input
 
 ## Moving around

@@ -9,3 +9,7 @@ enter_accept = true
 ## The default forced emacs whatever the shell mode.
 keymap_mode = "auto"
 keymap_cursor = { emacs = "steady-bar", vim_insert = "steady-bar", vim_normal = "steady-block" }
+
+[theme]
+## themes/catppuccin-mocha.toml, beside this file.
+name = "catppuccin-mocha"

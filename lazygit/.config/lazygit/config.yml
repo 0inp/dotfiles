@@ -4,31 +4,34 @@
 disableStartupPopups: true
 gui:
   skipDiscardChangeWarning: true
+  # Catppuccin Mocha (blue accent), as in catppuccin/lazygit.
   theme:
     activeBorderColor:
-      - "#ff9e64"
+      - "#89b4fa"
       - "bold"
     inactiveBorderColor:
-      - "#27a1b9"
+      - "#a6adc8"
     searchingActiveBorderColor:
-      - "#ff9e64"
+      - "#f9e2af"
       - "bold"
     optionsTextColor:
-      - "#7aa2f7"
+      - "#89b4fa"
     selectedLineBgColor:
-      - "#283457"
+      - "#313244"
     cherryPickedCommitFgColor:
-      - "#7aa2f7"
+      - "#89b4fa"
     cherryPickedCommitBgColor:
-      - "#bb9af7"
+      - "#45475a"
     markedBaseCommitFgColor:
-      - "#7aa2f7"
+      - "#89b4fa"
     markedBaseCommitBgColor:
-      - "#e0af68"
+      - "#f9e2af"
     unstagedChangesColor:
-      - "#db4b4b"
+      - "#f38ba8"
     defaultFgColor:
-      - "#c0caf5"
+      - "#cdd6f4"
+    authorColors:
+      "*": "#b4befe"
 git:
   diffRenderers:
     - command: delta --dark --paging=never

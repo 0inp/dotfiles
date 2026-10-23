@@ -53,10 +53,12 @@
   features = decorations
   navigate = true
   light = false
+  # bat's built-in Catppuccin Mocha, like bat itself (bat module).
+  syntax-theme = Catppuccin Mocha
   minus-style                   = bold red
   minus-non-emph-style          = bold red
   minus-emph-style              = bold reverse red
-  minus-empty-line-marker-style = normal "#3f0001"
+  minus-empty-line-marker-style = normal "#4a2e3d"
   plus-style                    = bold green
   plus-non-emph-style           = bold green
   plus-emph-style               = bold reverse green

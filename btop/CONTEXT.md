@@ -16,8 +16,9 @@ subdirectory lands inside the repo if you ever download one.
 - **btop**: `brew install btop`
 
 ## Key Features
-- **Theme**: `gruvbox_dark_v2` with `theme_background = False`, matching the
-  Ghostty `Gruvbox Dark` theme and its transparent background.
+- **Theme**: `catppuccin_mocha`, catppuccin/btop's official file vendored in
+  `themes/` (btop ships no Catppuccin), with `theme_background = False` for
+  Ghostty's transparent background.
 - **Vim keys**: `vim_keys = True` — `hjkl` navigation, consistent with the
   zsh-vi-mode and Neovim setup.
 

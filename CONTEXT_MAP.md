@@ -2,6 +2,14 @@
 
 This repository contains my dotfiles, organized by tool. Each directory represents the configuration for a specific tool and is symlinked into `~/` (home directory) using `stow`.
 
+## Theme
+
+Catppuccin Mocha everywhere: ghostty, nvim, bat and delta, vivid (`LS_COLORS`,
+so eza too), btop, herdr, lazygit, gh-dash, fzf, atuin, leaf and Claude Code.
+Tools without a theme name of their own use ANSI colours and follow ghostty
+(pure, fast-syntax-highlighting, the Claude statusline). Font: Monaspace Neon,
+unpatched, since ghostty embeds the Nerd Font symbols.
+
 ## Platform Support
 
 These dotfiles target **macOS on both Apple Silicon and Intel** Macs.
@@ -30,6 +38,7 @@ symlinks in `~`, not against intent.
 | aerospace    | macOS window manager config          | `~/.config/aerospace/`                          |
 | agents       | Cross-tool agent skills (shared)     | `~/.agents/`                                    |
 | atuin        | Shell history search settings        | `~/.config/atuin/config.toml`                   |
+| bat          | bat theme (Catppuccin Mocha)         | `~/.config/bat/config`                          |
 | brew         | Homebrew packages and taps           | `~/.config/brewfile/`                           |
 | btop         | Resource monitor (replaced htop)     | `~/.config/btop/`                               |
 | claude       | Claude Code settings                 | `~/.claude/`, `~/.claude.json`                  |

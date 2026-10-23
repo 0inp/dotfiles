@@ -25,13 +25,16 @@ export VISUAL="nvim"
 export DOTFILES="$HOME/dotfiles"
 
 # ---------- LS_COLORS with vivid ----------
-_vivid_cache="${XDG_CACHE_HOME}/zsh/ls_colors"
+# The theme is part of the cache name: changing it makes a new cache, where a
+# fixed name kept serving the old theme until the file was deleted by hand.
+_vivid_theme=catppuccin-mocha
+_vivid_cache="${XDG_CACHE_HOME}/zsh/ls_colors.${_vivid_theme}"
 if [[ ! -f "$_vivid_cache" ]] && command -v vivid >/dev/null 2>&1; then
   mkdir -p "${_vivid_cache:h}"
-  vivid generate molokai > "$_vivid_cache"
+  vivid generate "$_vivid_theme" > "$_vivid_cache"
 fi
 [[ -f "$_vivid_cache" ]] && export LS_COLORS="$(< "$_vivid_cache")"
-unset _vivid_cache
+unset _vivid_theme _vivid_cache
 
 # ---------- OTHER SOFTWARES ----------
 # bitwarden

@@ -1,5 +1,11 @@
 # Read by every fzf through $FZF_DEFAULT_OPTS_FILE (set in zsh/.config/zsh/fzf.zsh).
-# One option per line; fzf-tab does not read this file.
+# One option or group per line; fzf-tab does not read this file.
 --height=40%
 --layout=reverse
 --border=rounded
+# Catppuccin Mocha (catppuccin/fzf), minus bg: the terminal's own transparent
+# background shows through.
+--color=bg+:#313244,spinner:#f5e0dc,hl:#f38ba8
+--color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc
+--color=marker:#b4befe,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8
+--color=selected-bg:#45475a,border:#6c7086,label:#cdd6f4
