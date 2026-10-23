@@ -9,9 +9,8 @@ config-version = 2
 # Available commands : https://nikitabobko.github.io/AeroSpace/commands
 after-startup-command = []
 
-# Off: the login item it registers did not start AeroSpace after a reboot. The
-# launchd module's com.oinp.aerospace agent starts it at login instead.
-start-at-login = false
+# Start AeroSpace at login
+start-at-login = true
 
 # Reload this file on save (0.21+): no more `aerospace reload-config` after an edit.
 auto-reload-config = true
