@@ -6,6 +6,8 @@ closed PR cannot be retargeted: the child of a stack disappears from review. The
 must be retargeted onto the parent's base before the parent merges with branch deletion.
 """
 
+from __future__ import annotations
+
 import json
 import subprocess
 import sys

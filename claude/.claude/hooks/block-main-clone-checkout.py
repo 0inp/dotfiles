@@ -12,6 +12,8 @@ A directory the hook cannot read literally (`git -C $V`, `cd $p` in a loop) may 
 checkout, so a branch switch there is refused until the path is written out.
 """
 
+from __future__ import annotations
+
 import json
 import subprocess
 import sys

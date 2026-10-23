@@ -17,23 +17,30 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 ~/.claude/hooks/block-unquoted-heredoc.py"
+            "command": "python3 ~/.claude/hooks/block-unquoted-heredoc.py",
+            "onFailure": "block"
           },
           {
             "type": "command",
-            "command": "python3 ~/.claude/hooks/block-main-clone-checkout.py"
+            "command": "python3 ~/.claude/hooks/block-main-clone-checkout.py",
+            "onFailure": "block"
           },
           {
             "type": "command",
-            "command": "python3 ~/.claude/hooks/block-delete-branch-with-children.py"
+            "command": "python3 ~/.claude/hooks/block-delete-branch-with-children.py",
+            "if": "Bash(gh pr merge *)",
+            "onFailure": "block"
           },
           {
             "type": "command",
-            "command": "python3 ~/.claude/hooks/block-dependency-drift.py"
+            "command": "python3 ~/.claude/hooks/block-dependency-drift.py",
+            "onFailure": "block"
           },
           {
             "type": "command",
-            "command": "python3 ~/.claude/hooks/block-shared-node-modules-install.py"
+            "command": "python3 ~/.claude/hooks/block-shared-node-modules-install.py",
+            "if": "Bash(npm *)",
+            "onFailure": "block"
           }
         ]
       }

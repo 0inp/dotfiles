@@ -5,6 +5,8 @@ Heredoc bodies are dropped first, so text such as a commit message that mentions
 the commands that follow them, which is how agents usually address a nested clone.
 """
 
+from __future__ import annotations
+
 import os
 import re
 import shlex

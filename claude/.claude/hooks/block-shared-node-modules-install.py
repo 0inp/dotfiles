@@ -11,6 +11,8 @@ node_modules but reinstalls that workspace alone: eslint loses `@eslint/js` and 
 workspaces their packages. Installs run from the repository root.
 """
 
+from __future__ import annotations
+
 import json
 import os
 import subprocess

@@ -6,6 +6,8 @@ where new entries are appended: the most recent lessons are the ones silently dr
 The budget below keeps headroom so the next append still fits.
 """
 
+from __future__ import annotations
+
 import json
 import re
 import sys

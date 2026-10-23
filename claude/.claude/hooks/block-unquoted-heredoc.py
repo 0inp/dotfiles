@@ -6,6 +6,8 @@ written through such a heredoc (a commit message, a PR body, a Linear comment) l
 its code spans and runs them instead. `<<'EOF'` keeps the body literal.
 """
 
+from __future__ import annotations
+
 import json
 import re
 import sys

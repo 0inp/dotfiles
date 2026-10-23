@@ -7,6 +7,8 @@ baseline run against main to clear. The comparison lives in the workspace script
 `deps_check.py`; prefix the command with `DEPS_CHECK_SKIP=1` to run it anyway.
 """
 
+from __future__ import annotations
+
 import json
 import os
 import re
