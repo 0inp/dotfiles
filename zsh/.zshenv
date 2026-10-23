@@ -41,9 +41,6 @@ export SSH_AUTH_SOCK=$HOME/.bitwarden-ssh-agent.sock
 # Python startup file
 export PYTHONSTARTUP=$HOME/.pythonrc
 
-# Docker
-export DOCKER_SCAN_SUGGEST=false
-
 # ripgrep — default flags for every `rg` invocation
 export RIPGREP_CONFIG_PATH="${XDG_CONFIG_HOME}/ripgrep/ripgreprc"
 

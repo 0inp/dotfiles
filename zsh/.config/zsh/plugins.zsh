@@ -20,7 +20,6 @@ if [[ -o interactive ]]; then
   }
 
   _zplugin_load Aloxaf fzf-tab
-  _zplugin_load ael-code zsh-colored-man-pages colored-man-pages.plugin.zsh
   _zplugin_load jeffreytse zsh-vi-mode
   _zplugin_load zdharma-continuum fast-syntax-highlighting
   _zplugin_load zsh-users zsh-autosuggestions

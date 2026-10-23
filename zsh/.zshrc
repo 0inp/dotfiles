@@ -29,23 +29,11 @@ setopt NUMERIC_GLOB_SORT  # sort file10 after file9, not after file1
 setopt GLOBDOTS
 
 # =========================================================
-# Smart directory navigation
-# =========================================================
-
-# Initialize zoxide (only in interactive shells as it uses zle)
-if [[ -o interactive ]]; then
-  eval "$(zoxide init zsh)"
-fi
-
-# =========================================================
 # Completion
 # =========================================================
 
 # Homebrew completions
 FPATH="$HOMEBREW_PREFIX/share/zsh/site-functions:$FPATH"
-
-# Docker completions
-FPATH="$HOME/.docker/completions:$FPATH"
 
 # zsh-completions ships ~150 completion functions as plain _* files. They must
 # be on FPATH *before* compinit — plugins.zsh loads at the very end of this
@@ -71,6 +59,22 @@ unset _zcompdump
 # Make completion case-insensitive
 # Example: "doc" can complete to "Documents"
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'  # lowercase input matches upper and lower
+
+# =========================================================
+# Smart directory navigation (zoxide)
+# =========================================================
+# After compinit: zoxide registers its completion only if `compdef` already
+# exists, so the old init above compinit left `cd <TAB>` with none at all.
+# `--cmd cd` makes zoxide the real `cd` (plus `cdi`), instead of an alias to `z`.
+# Not in an agent shell: there `cd typo` would jump to some frecent directory
+# rather than fail, and the agent would carry on in the wrong place.
+if [[ -o interactive ]]; then
+  if [[ -n $CLAUDECODE ]]; then
+    eval "$(zoxide init zsh)"
+  else
+    eval "$(zoxide init zsh --cmd cd)"
+  fi
+fi
 
 # =========================================================
 # Fuzzy finder

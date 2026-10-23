@@ -25,7 +25,6 @@ zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 
 # Minimal completion setup
 zstyle ':completion:*' menu no
-zstyle ':completion:*' hidden yes
 
 # Simple descriptions for options
 zstyle ':completion:*:options' verbose yes

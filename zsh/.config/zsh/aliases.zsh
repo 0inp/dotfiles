@@ -6,16 +6,16 @@ alias c='clear'
 
 # ls -> eza
 
-# Reuse ls completions for eza (avoids defining a separate completion function)
-compdef eza=ls
-
-alias ls="eza --sort=name --group-directories-first --color=always --long --git --icons=always --git-ignore"
-alias la="eza -lah --sort=name --group-directories-first --color=always --long --git --icons=always --git-ignore"
-alias lt="eza -lah --tree --sort=name --group-directories-first --color=always --long --git --icons=always --git-ignore"
+# eza ships its own _eza completion; `compdef eza=ls` used to override it with
+# BSD ls's options. `auto`, not `always`: no ANSI or glyphs into `ls | wc`.
+alias ls="eza --sort=name --group-directories-first --color=auto --long --git --icons=auto --git-ignore"
+alias la="eza -lah --sort=name --group-directories-first --color=auto --long --git --icons=auto --git-ignore"
+alias lt="eza -lah --tree --sort=name --group-directories-first --color=auto --long --git --icons=auto --git-ignore"
 
 # cat -> bat
+# `less` is NOT aliased to bat: `less +F` or `less -S` pasted from a doc would
+# hit bat's flags, the same trap as the grep -> rg alias.
 alias cat='bat -pp'
-alias less='bat --paging=always'
 # override MANPAGER
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
@@ -37,9 +37,7 @@ alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
 # =========================================================
 # Navigation
 # =========================================================
-if [[ -o interactive ]]; then
-  alias cd='z'
-fi
+# `cd` itself is zoxide: see `zoxide init --cmd cd` in .zshrc.
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
@@ -56,7 +54,10 @@ alias vi='nvim'
 # FZF
 # =========================================================
 alias al='alias | fzf'
-alias printenv='printenv | fzf'
+# A function, not an alias: `printenv HOME` must still print one variable.
+printenv() {
+  if (($#)); then command printenv "$@"; else command printenv | fzf; fi
+}
 
 # =========================================================
 # Git

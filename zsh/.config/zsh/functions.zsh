@@ -3,14 +3,19 @@ function colormap() {
   for i in {0..255}; do print -Pn "%K{$i}  %k%F{$i}${(l:3::0:)i}%f " ${${(M)$((i%6)):#3}:+$'\n'}; done
 }
 
-# Mean measurements of zsh loading
+# Interactive latency as felt: first prompt, first command, per-command and
+# per-keystroke lag, through a real pty. `zsh -i -c exit`, the old measure, never
+# draws a prompt, so it skipped zsh-vi-mode's deferred init and every precmd hook
+# (atuin, fnox, mise, pure). zsh-bench is cloned on first use.
 function timezsh() {
-  shell=${1-$SHELL}
-  for i in $(seq 1 10); do /usr/bin/time $shell -i -c exit; done
+  local bench="$XDG_DATA_HOME/zsh-bench"
+  [[ -d $bench ]] || git clone --depth=1 https://github.com/romkatv/zsh-bench "$bench" || return
+  "$bench/zsh-bench" "$@"
 }
 
 function rfv() {
-  rg --color=always --line-number --no-heading --smart-case --hidden --glob "!.git" "${*:-}" |
+  # --smart-case, --hidden and the .git exclusion come from ripgreprc.
+  rg --color=always --line-number --no-heading "${*:-}" |
     fzf --ansi \
         --color "hl:-1:underline,hl+:-1:underline:reverse" \
         --delimiter : \
