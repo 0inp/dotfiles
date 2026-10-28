@@ -193,6 +193,11 @@ run = "move-node-to-workspace T"
 if.app-id = "app.zen-browser.zen"
 run = "move-node-to-workspace B"
 
+# Helium is also the browser Playwright and chrome-devtools MCP drive.
+[[on-window-detected]]
+if.app-id = "net.imput.helium"
+run = "move-node-to-workspace B"
+
 [[on-window-detected]]
 if.app-id = "com.apple.finder"
 run = ["layout floating", "move-node-to-workspace F"]
