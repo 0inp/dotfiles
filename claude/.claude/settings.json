@@ -1,7 +1,8 @@
 {
   "env": {
     "SECURITY_REVIEW_MODEL": "claude-sonnet-5-5",
-    "SG_AGENTIC_MODEL": "sonnet"
+    "SG_AGENTIC_MODEL": "sonnet",
+    "PLAYWRIGHT_MCP_EXECUTABLE_PATH": "/Applications/Helium.app/Contents/MacOS/Helium"
   },
   "permissions": {
     "allow": [
