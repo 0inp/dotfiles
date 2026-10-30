@@ -4,7 +4,7 @@
 // countdowns moving between requests, since the budget grows with time alone.
 
 import type { EngineInterface as Api, On } from 'claude-code'
-import { contextLevel, paceLevel, type WindowKind } from './pace.ts'
+import { contextLevel, paceLevel } from './pace.ts'
 import { composeRow1, composeRow2, formatCountdown, type Limit, type Tone } from './layout.ts'
 import { parseStatus, parseWorktree, REVPARSE_ARGV, STATUS_ARGV, type GitInfo } from './git.ts'
 
@@ -14,7 +14,6 @@ const TONE_COLOR: Record<Tone, string | undefined> = {
   path: 'blue', worktree: 'magenta', branch: 'yellow', model: 'cyan',
   dim: 'gray', staged: 'green', modified: 'red', plain: undefined,
 }
-const LABEL: Record<WindowKind, '5h' | '7d'> = { five_hour: '5h', seven_day: '7d' }
 const GIT_TTL_MS = 5_000
 // git must never hold up a prompt: a stuck lock or a huge repo gives up fast.
 const GIT_TIMEOUT = { timeoutMs: 2_000 }
@@ -100,18 +99,16 @@ export function register(on: On): void {
     const cols = e.props.bodyColumns
     const now = await $.clock.now()
 
-    const shown: Limit[] = limits
-      .filter((l): l is RateLimit & { kind: WindowKind } => l.kind in LABEL)
-      .map((l) => ({
-        label: LABEL[l.kind],
-        percent: l.percentUsed,
-        level: paceLevel(l.kind, l.percentUsed, l.resetsAt, now),
-        countdown: l.resetsAt ? formatCountdown(Date.parse(l.resetsAt) - now) : undefined,
-      }))
+    const w = limits.find((l) => l.kind === 'seven_day')
+    const weekly: Limit | undefined = w && {
+      percent: w.percentUsed,
+      level: paceLevel(w.percentUsed, w.resetsAt, now),
+      countdown: w.resetsAt ? formatCountdown(Date.parse(w.resetsAt) - now) : undefined,
+    }
 
     const rows = [
       composeRow1({ cwd, home, ...git }, cols),
-      composeRow2({ model, effort, contextPct, contextLevel: contextLevel(contextPct), limits: shown }, cols),
+      composeRow2({ model, effort, contextPct, contextLevel: contextLevel(contextPct), weekly }, cols),
     ]
     const ours = rows.map((row) =>
       Text({

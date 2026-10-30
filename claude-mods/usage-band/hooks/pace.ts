@@ -2,16 +2,13 @@
 // under plain node.
 
 export type Level = 'ok' | 'warning' | 'danger' | 'none'
-export type WindowKind = 'five_hour' | 'seven_day'
 
-export const WINDOW_MS: Record<WindowKind, number> = {
-  five_hour: 5 * 3_600_000,
-  seven_day: 7 * 86_400_000,
-}
+// Only the weekly window is shown: Ultra drops the 5h one.
+export const WINDOW_MS = 7 * 86_400_000
 
-// Below this much usage a window is never coloured: early in a window the
+// Below this much usage the window is never coloured: early in the window the
 // budget is tiny, and one request would otherwise turn it red.
-export const FLOOR: Record<WindowKind, number> = { five_hour: 10, seven_day: 5 }
+export const FLOOR = 5
 
 export function contextLevel(percent: number | undefined): Level {
   if (percent === undefined) return 'none'
@@ -21,19 +18,13 @@ export function contextLevel(percent: number | undefined): Level {
 }
 
 // Compares usage with the share of the window that has already elapsed.
-export function paceLevel(
-  kind: WindowKind,
-  used: number,
-  resetsAt: string | undefined,
-  now: number,
-): Level {
+export function paceLevel(used: number, resetsAt: string | undefined, now: number): Level {
   if (resetsAt === undefined) return 'none'
   const reset = Date.parse(resetsAt)
   if (Number.isNaN(reset)) return 'none'
-  if (used < FLOOR[kind]) return 'ok'
-  const windowMs = WINDOW_MS[kind]
-  const elapsed = Math.min(windowMs, Math.max(0, windowMs - (reset - now)))
-  const budget = (elapsed / windowMs) * 100
+  if (used < FLOOR) return 'ok'
+  const elapsed = Math.min(WINDOW_MS, Math.max(0, WINDOW_MS - (reset - now)))
+  const budget = (elapsed / WINDOW_MS) * 100
   if (used >= budget) return 'danger'
   if (used >= 0.8 * budget) return 'warning'
   return 'ok'

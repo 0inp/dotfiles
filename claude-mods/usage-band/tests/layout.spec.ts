@@ -60,21 +60,22 @@ test('formatCountdown', () => {
 
 const ROW2: Row2Input = {
   model: 'Opus 5.5 (1M)', effort: 'high', contextPct: 37, contextLevel: 'ok',
-  limits: [
-    { label: '5h', percent: 24, level: 'ok', countdown: '1h12' },
-    { label: '7d', percent: 41, level: 'warning', countdown: '3j' },
-  ],
+  weekly: { percent: 41, level: 'warning', countdown: '3j' },
 }
-const FULL2 = 'Opus 5.5 (1M) · high  ▓▓▓░░░░░░░ 37%  5h 24% ↻1h12  7d 41% ↻3j'
+const FULL2 = 'Opus 5.5 (1M) · high  ▓▓▓░░░░░░░ 37%  7d 41% ↻3j'
 
 test('row 2: everything fits', () => {
   assert.equal(text(composeRow2(ROW2, 100)), FULL2)
 })
 
-test('row 2: countdowns are shed first', () => {
+test('row 2: the countdown is shed first', () => {
   const t = text(composeRow2(ROW2, [...FULL2].length - 1))
   assert.ok(!t.includes('↻'))
   assert.ok(t.includes('7d 41%'))
+})
+
+test('row 2: no weekly window, no 7d', () => {
+  assert.equal(text(composeRow2({ ...ROW2, weekly: undefined }, 100)), 'Opus 5.5 (1M) · high  ▓▓▓░░░░░░░ 37%')
 })
 
 test('row 2: never wider than the band, at any width', () => {
@@ -83,12 +84,11 @@ test('row 2: never wider than the band, at any width', () => {
   }
 })
 
-test('row 2: shedding order is countdowns, 7d, 5h, effort, bar', () => {
+test('row 2: shedding order is countdown, 7d, effort, bar', () => {
   for (let cols = 1; cols <= 120; cols++) {
     const t = text(composeRow2(ROW2, cols))
     if (t.includes('↻')) assert.ok(t.includes('7d'), `cols=${cols}`)
-    if (t.includes('7d')) assert.ok(t.includes('5h'), `cols=${cols}`)
-    if (t.includes('5h')) assert.ok(t.includes('high'), `cols=${cols}`)
+    if (t.includes('7d')) assert.ok(t.includes('high'), `cols=${cols}`)
     if (t.includes('high')) assert.ok(t.includes('▓'), `cols=${cols}`)
   }
 })

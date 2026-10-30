@@ -6,7 +6,7 @@ as a local plugin marketplace, `dotfiles-mods`. **Not a stow package**:
 
 | Mod | What it does |
 |---|---|
-| `usage-band` | Replaces `statusLine`: two rows above the prompt. Context is coloured at 40/80; 5h/7d by pace (usage vs elapsed share of the window), floors 10/5 |
+| `usage-band` | Replaces `statusLine`: two rows above the prompt. Context is coloured at 40/80; 7d by pace (usage vs elapsed share of the week), floor 5. The 5h window is not shown: Ultra drops it |
 | `subject-todo` | `/todo` toggles a pane: a list per subject (Linear ticket or conversation) that Claude keeps with the `subject_todo` tool |
 
 Spec: `docs/superpowers/specs/2026-10-07-claude-mods-design.md`.

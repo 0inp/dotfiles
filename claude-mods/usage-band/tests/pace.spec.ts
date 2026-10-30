@@ -17,32 +17,29 @@ test('context: fixed thresholds at 40 and 80', () => {
   assert.equal(contextLevel(80), 'danger')
 })
 
-test('5h, 4h elapsed: budget 80, warning from 64', () => {
-  const r = resetIn(1 * H)
-  assert.equal(paceLevel('five_hour', 60, r, NOW), 'ok')
-  assert.equal(paceLevel('five_hour', 64, r, NOW), 'warning')
-  assert.equal(paceLevel('five_hour', 70, r, NOW), 'warning')
-  assert.equal(paceLevel('five_hour', 80, r, NOW), 'danger')
-  assert.equal(paceLevel('five_hour', 85, r, NOW), 'danger')
+test('day 5 of 7: budget 71.4, warning from 57.1', () => {
+  const r = resetIn(2 * D)
+  assert.equal(paceLevel(50, r, NOW), 'ok')
+  assert.equal(paceLevel(58, r, NOW), 'warning')
+  assert.equal(paceLevel(72, r, NOW), 'danger')
 })
 
-test('7d, day 2: budget 28.6, 41 is danger', () => {
-  assert.equal(paceLevel('seven_day', 41, resetIn(5 * D), NOW), 'danger')
-  assert.equal(paceLevel('seven_day', 20, resetIn(5 * D), NOW), 'ok')
+test('day 2: budget 28.6, 41 is danger', () => {
+  assert.equal(paceLevel(41, resetIn(5 * D), NOW), 'danger')
+  assert.equal(paceLevel(20, resetIn(5 * D), NOW), 'ok')
 })
 
-test('floors silence the start of a window', () => {
-  const r = resetIn(5 * H - 10 * MIN) // 10 min into the window, budget 3.3
-  assert.equal(paceLevel('five_hour', 4, r, NOW), 'ok')
-  assert.equal(paceLevel('five_hour', 12, r, NOW), 'danger')
-  assert.equal(paceLevel('seven_day', 4, resetIn(7 * D - H), NOW), 'ok')
+test('the floor silences the start of the window', () => {
+  const r = resetIn(7 * D - H) // 1h into the window, budget 0.6
+  assert.equal(paceLevel(4, r, NOW), 'ok')
+  assert.equal(paceLevel(6, r, NOW), 'danger')
 })
 
 test('no or unreadable resetsAt gives no data', () => {
-  assert.equal(paceLevel('five_hour', 50, undefined, NOW), 'none')
-  assert.equal(paceLevel('five_hour', 50, 'not a date', NOW), 'none')
+  assert.equal(paceLevel(50, undefined, NOW), 'none')
+  assert.equal(paceLevel(50, 'not a date', NOW), 'none')
 })
 
 test('a reset already in the past counts as a full window', () => {
-  assert.equal(paceLevel('five_hour', 85, resetIn(-MIN), NOW), 'warning')
+  assert.equal(paceLevel(85, resetIn(-MIN), NOW), 'warning')
 })

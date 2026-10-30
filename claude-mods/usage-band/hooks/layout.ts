@@ -89,26 +89,25 @@ export function formatCountdown(ms: number): string {
   return `${Math.floor(h / 24)}j`
 }
 
-export type Limit = { label: '5h' | '7d'; percent: number; level: Level; countdown?: string }
+export type Limit = { percent: number; level: Level; countdown?: string }
 
 export type Row2Input = {
   model: string
   effort?: string
   contextPct?: number
   contextLevel: Level
-  limits: Limit[]
+  weekly?: Limit
 }
 
-type Want = { countdown: boolean; d7: boolean; h5: boolean; effort: boolean; bar: boolean }
+type Want = { countdown: boolean; d7: boolean; effort: boolean; bar: boolean }
 
-// Shed right-to-left until it fits: countdowns, 7d, 5h, effort, then the bar.
+// Shed right-to-left until it fits: countdown, 7d, effort, then the bar.
 const SHED: Want[] = [
-  { countdown: true, d7: true, h5: true, effort: true, bar: true },
-  { countdown: false, d7: true, h5: true, effort: true, bar: true },
-  { countdown: false, d7: false, h5: true, effort: true, bar: true },
-  { countdown: false, d7: false, h5: false, effort: true, bar: true },
-  { countdown: false, d7: false, h5: false, effort: false, bar: true },
-  { countdown: false, d7: false, h5: false, effort: false, bar: false },
+  { countdown: true, d7: true, effort: true, bar: true },
+  { countdown: false, d7: true, effort: true, bar: true },
+  { countdown: false, d7: false, effort: true, bar: true },
+  { countdown: false, d7: false, effort: false, bar: true },
+  { countdown: false, d7: false, effort: false, bar: false },
 ]
 
 function compose(i: Row2Input, w: Want): Row {
@@ -120,11 +119,11 @@ function compose(i: Row2Input, w: Want): Row {
     if (w.bar) row.push({ text: bar(pct), tone: i.contextLevel }, { text: ' ', tone: 'plain' })
     row.push({ text: `${pct}%`, tone: i.contextLevel })
   }
-  for (const l of i.limits) {
-    if (!(l.label === '5h' ? w.h5 : w.d7)) continue
+  const l = i.weekly
+  if (w.d7 && l) {
     row.push(
       { text: SEP, tone: 'plain' },
-      { text: `${l.label} `, tone: 'dim' },
+      { text: '7d ', tone: 'dim' },
       { text: `${Math.round(l.percent)}%`, tone: l.level },
     )
     if (w.countdown && l.countdown) row.push({ text: ` ↻${l.countdown}`, tone: 'dim' })
