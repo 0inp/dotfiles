@@ -59,7 +59,9 @@ function airmedia() {
       mount | grep -q " on ${mnt} " && { open "$mnt"; exit; }
       sleep 1
     done ) &!
+  # External ssh validates the host key via ~/.ssh/known_hosts; rclone's own
+  # check never runs, so `none` only silences its "No host key validation" notice.
   rclone nfsmount :sftp:/srv/media "$mnt" --sftp-ssh "ssh air" \
-    --sftp-disable-hashcheck --read-only \
+    --sftp-known-hosts-file none --sftp-disable-hashcheck --read-only \
     --vfs-cache-mode full --vfs-cache-max-size 10G -o locallocks
 }
