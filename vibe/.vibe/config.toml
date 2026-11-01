@@ -150,3 +150,9 @@ name = "mistral-medium-3.5"
 provider = "mistral"
 alias = "mistral-medium"
 thinking = "off"
+
+[[models]]
+name = "mistral-large-4"
+provider = "mistral"
+alias = "mistral-large-4"
+thinking = "low"
