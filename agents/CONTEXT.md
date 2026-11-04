@@ -42,6 +42,12 @@ rather than installed. Upstream's `full`, `ultra` and `wenyan-*` levels are drop
 — they mangle grammar to save tokens the tokenizer does not actually charge for.
 Only `lite` survives, as the single mode.
 
+`herdr` is the output of `herdr --skill`, the copy matched to the installed release.
+It is a snapshot, so regenerate it after a `herdr` upgrade:
+`herdr --skill > agents/.agents/skills/herdr/SKILL.md`. It holds nothing but CLI
+instructions and only activates when Herdr is mentioned. `npx skills add -g` would
+install it outside this module.
+
 ## Notes
 Tool-specific skills do **not** belong here. This directory is only for skills
 meant to be shared across tools. `claude/.claude/skills/` is not a second home for
