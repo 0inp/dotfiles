@@ -1,16 +1,11 @@
 onboarding = false
-[terminal]
-new_cwd = "follow"
-
-[theme]
-name = "catppuccin"
 
 [ui]
 mouse_capture = true
 confirm_close = false
-pane_borders = true
-
-agent_panel_sort = "spaces"
+# Blocked and finished agents first: with a score of agents across a few spaces,
+# grouping by space buries the ones waiting on me.
+agent_panel_sort = "priority"
 [ui.toast]
 # "terminal" asks Ghostty for a desktop notification, so a finished or waiting
 # agent is seen from another app too; "herdr" only toasted inside the TUI.
@@ -31,6 +26,7 @@ prefix = "ctrl+b"
 
 # Tabs (windows in tmux terms)
 new_tab = "prefix+c"
+rename_tab = "prefix+,"  # default prefix+shift+t is taken by workspace_picker
 next_tab = "prefix+n"
 previous_tab = "prefix+p"
 switch_tab = "prefix+1..9"
@@ -45,8 +41,8 @@ next_workspace = "prefix+)"
 previous_workspace = "prefix+("
 goto = "prefix+g"
 
-# Pane splits — new_cwd = "follow" handles the -c "#{pane_current_path}" equivalent
-split_vertical = "prefix+|"  # side-by-side (same as prefix+| in tmux; fallback: "prefix+v")
+# Pane splits — the default new_cwd = "follow" handles the -c "#{pane_current_path}" equivalent
+split_vertical = "prefix+|"  # side-by-side (same as prefix+| in tmux)
 split_horizontal = "prefix+minus"  # top-bottom (was prefix+- in tmux, same)
 close_pane = "prefix+x"
 zoom = "prefix+z"
@@ -63,7 +59,7 @@ swap_pane_right = "prefix+shift+l"
 swap_pane_up = "prefix+shift+k"
 swap_pane_down = "prefix+shift+j"
 
-# Resize mode — press prefix+r, then h/j/k/l to resize, esc to exit
+# Resize mode — press prefix+a, then h/j/k/l to resize, esc to exit
 resize_mode = "prefix+a"
 
 # Copy mode — vi bindings (v to select, y to yank, q/esc to exit)
@@ -80,3 +76,14 @@ focus_agent = "prefix+ctrl+1..9"
 # Misc
 toggle_sidebar = "prefix+b"
 detach = "prefix+q"
+reload_config = "prefix+shift+e"  # default prefix+shift+r is taken by rename_workspace
+last_pane = "prefix+;"
+
+# Lazygit over the focused pane, on that pane's repo. q closes it.
+[[keys.command]]
+key = "prefix+d"
+type = "popup"
+command = "cd \"${HERDR_ACTIVE_PANE_CWD:-.}\" && exec lazygit"
+description = "Git status"
+width = "90%"
+height = "85%"

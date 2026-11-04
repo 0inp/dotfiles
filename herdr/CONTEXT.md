@@ -33,6 +33,12 @@ Prefix is `ctrl+b`. Full list in `config.toml`; these are the ones worth knowing
 | Jump straight to workspace N | `prefix+shift+N` |
 | Workspace picker | `prefix+shift+t` |
 | Next / previous tab | `prefix+n` / `prefix+p` |
+| Go to any agent or pane | `prefix+g` |
+| Jump to the notifying agent | `prefix+o` |
+| Back to the last pane | `prefix+;` |
+| Lazygit popup on this pane's repo | `prefix+d` |
+
+The sidebar sorts agents by priority, so blocked and finished ones come first.
 
 **Alt is aerospace's namespace, not herdr's.** `alt-1..5` and `alt-b/c/f/m/o/t` are
 global hotkeys that switch aerospace workspaces, so they are consumed before the
@@ -52,6 +58,7 @@ is disabled silently.
 | Action | Tmux | Herdr |
 |--------|------|-------|
 | Rename workspace | `prefix+$` | `prefix+shift+r` |
+| Rename tab | `prefix+,` | same |
 | Workspace picker | `prefix+s` | `prefix+shift+t` |
 | Resize panes | `prefix+ctrl+arrow` | `prefix+a` → `h/j/k/l` → `esc` |
 | Copy mode | `prefix+[` | `prefix+v` |
@@ -59,8 +66,19 @@ is disabled silently.
 
 ## Reload Config
 ```bash
-herdr server reload-config
+herdr server reload-config   # or prefix+shift+e
 ```
+
+## Taking a default key disables its action, silently
+Binding an action to a key another action holds by default leaves that other action
+with no key at all. `workspace_picker = "prefix+shift+t"` and
+`rename_workspace = "prefix+shift+r"` did this to `rename_tab` and `reload_config`.
+
+`herdr config check` still prints `config: ok` and nothing reaches the log: when a
+default loses to a user binding, the conflict check returns without a diagnostic
+(`src/config/keybinds.rs`, 0.9.5). Before taking a default key, look it up in the
+config reference, and verify in `prefix+?` by filtering on `unset`. Some actions are
+unset by design, such as `clear_pane` and `move_tab_next`.
 
 ## Mouse buttons cannot be bound — don't retry this
 Investigated against 0.9.0 and settled. Three independent walls:
