@@ -1,0 +1,58 @@
+// Vicinae settings this repo declares. Stowed to ~/.config/vicinae/dotfiles.jsonc
+// and pulled in through the `imports` array of ~/.config/vicinae/settings.json.
+//
+// Why an import rather than a stowed settings.json: Vicinae writes every change
+// made in its GUI back into settings.json, reformatting it and dropping comments,
+// and the write is atomic (tmp + rename), which replaces a symlink with a plain
+// file. Imported files are documented as never touched by Vicinae. Precedence is
+// defaults < imports < settings.json, so a value set in the GUI wins over this
+// file until it is removed from settings.json.
+//
+// Full documented defaults: `vicinae config default`.
+{
+	// The launcher is the job. ⌘Space, which Raycast and then Vorssaint held.
+	// "control" is not a typo: on macOS Qt swaps Ctrl and Meta, so Vicinae's
+	// ControlModifier is the Command key (macos-global-shortcut-backend.cpp).
+	// Spotlight's own ⌘Space must stay disabled in System Settings › Keyboard ›
+	// Keyboard Shortcuts.
+	"global_shortcuts": {
+		"toggle": "control+space"
+	},
+
+	// One Dark, picked in the GUI over the bundled catppuccin-mocha: the one
+	// tool here that does not follow the repo's Catppuccin Mocha, by choice.
+	// Themes ship in the app bundle (Contents/Resources/themes/*.toml).
+	"theme": {
+		"light": { "name": "one-dark" },
+		"dark": { "name": "one-dark" }
+	},
+
+	// Picked in the GUI: no menu bar icon, and a bare search bar that only
+	// expands once a query is typed.
+	"tray": {
+		"enabled": false
+	},
+	"launcher_window": {
+		"compact_mode": { "enabled": true }
+	},
+
+	"telemetry": {
+		"system_info": false
+	},
+
+	// One tool, one job: the launcher. The rest of what Vicinae bundles is off.
+	// - clipboard: it keeps a record of everything copied, the reason Vorssaint's
+	//   clipboard history was off too.
+	// - ai, dictation: chat and speech-to-text are not a launcher's job.
+	// Key shape from ProviderData in src/server/src/config/config.hpp.
+	// `vicinae cmd ls` keeps listing a disabled provider's commands, so it is no
+	// proof either way; check in the launcher itself.
+	"providers": {
+		"clipboard": { "enabled": false },
+		"ai": { "enabled": false },
+		"dictation": { "enabled": false }
+	},
+
+	// The default pins clipboard:history, disabled above.
+	"favorites": []
+}

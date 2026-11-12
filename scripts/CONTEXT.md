@@ -15,7 +15,8 @@ are **not** symlinked — they are run from the repo. Only `.local/bin/` is stow
 | `checks.sh`              | Repo invariants run by lefthook pre-push | *(not stowed; run from repo)*     |
 | `.local/bin/secrets-pull`| Bitwarden vault -> macOS keychain    | `~/.local/bin/secrets-pull`        |
 | `.local/bin/mux-new-window`| Open a window in herdr             | `~/.local/bin/mux-new-window`      |
-| `.local/bin/vorssaint-apply`| Declared Vorssaint settings -> UserDefaults | `~/.local/bin/vorssaint-apply` |
+| `.local/bin/stats-apply`| Declared Stats settings -> UserDefaults | `~/.local/bin/stats-apply` |
+| `.local/bin/airmedia`| Mount the Air's media on ~/AirMedia, open Finder (`-d`: background) | `~/.local/bin/airmedia` |
 | `.local/bin/captures-tidy`| Rename captures, shrink recordings under 20 MB | `~/.local/bin/captures-tidy` |
 
 ## Dependencies
@@ -80,12 +81,12 @@ are **not** symlinked — they are run from the repo. Only `.local/bin/` is stow
     ~95s here. Nothing currently audits full history — see the note in
     `checks.sh`; the GitHub Action scans the last commit only.
 
-- **Vorssaint**: `vorssaint-apply` is this repo's Vorssaint config. The app has
-  no config file — every setting is UserDefaults in `com.vorssaint.utils` — so
-  the settings are *declared* in that script and pushed with `defaults write`.
-  It quits Vorssaint first: cfprefsd would otherwise flush the running app's
-  cached preferences over the writes. Run it **after** the first launch, which
-  is what grants Screen Recording and Accessibility. `-n` dry-runs.
+- **Stats**: `stats-apply` is this repo's Stats config. The app has no config
+  file — every setting is UserDefaults in `eu.exelban.Stats` — so the settings
+  are declared there: quit the app (cfprefsd would otherwise flush its cached
+  preferences over the writes), `defaults write`, restart. It deliberately does not
+  `defaults import` the old `Stats.plist`. That would replace the whole domain
+  and bring back pinned pixel positions and a telemetry id. `-n` dry-runs.
 
 ## AI Notes
 - Focus on `install.sh` for dotfiles setup.

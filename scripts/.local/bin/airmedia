@@ -1,0 +1,70 @@
+#!/bin/bash
+# Mount the Air's media (/srv/media) on ~/AirMedia over SFTP and open it in
+# Finder once the mount is up. IINA then loads Bazarr's sidecar .srt, which it
+# skips when playing from a URL.
+#
+# A script rather than the zsh function it used to be, so that Vicinae's
+# `airmedia` command (vicinae/) runs the very same mount: a function only exists
+# inside an interactive zsh.
+#
+# Usage:
+#   airmedia      stay in the foreground; Ctrl-C unmounts
+#   airmedia -d   mount in the background (rclone --daemon) and return;
+#                 unmount with Finder's eject or `umount ~/AirMedia`
+#
+# --sftp-disable-hashcheck: otherwise rclone runs md5sum on the Air and reads hang.
+# -o locallocks: otherwise any fcntl lock on the mount hangs.
+# Hanging with no Finder window means `ssh air` cannot connect: try it by hand.
+set -euo pipefail
+
+MNT="$HOME/AirMedia"
+
+# Vicinae runs scripts with a minimal PATH, so Homebrew's rclone is resolved
+# explicitly. Branch rather than shelling out to `brew --prefix`, per this
+# repo's convention.
+if [[ -d /opt/homebrew ]]; then
+  RCLONE=/opt/homebrew/bin/rclone
+else
+  RCLONE=/usr/local/bin/rclone
+fi
+
+is_mounted() { mount | grep -q " on ${MNT} "; }
+
+# Open Finder as soon as the mount is up. --daemon-wait on macOS is a fixed
+# sleep, not a readiness check, so poll instead.
+open_when_mounted() {
+  for _ in {1..30}; do
+    is_mounted && {
+      open "$MNT"
+      return 0
+    }
+    sleep 1
+  done
+  return 1
+}
+
+if is_mounted; then
+  open "$MNT"
+  exit 0
+fi
+mkdir -p "$MNT"
+
+# External ssh validates the host key via ~/.ssh/known_hosts; rclone's own
+# check never runs, so `none` only silences its "No host key validation" notice.
+args=(
+  nfsmount :sftp:/srv/media "$MNT" --sftp-ssh "ssh air"
+  --sftp-known-hosts-file none --sftp-disable-hashcheck --read-only
+  --vfs-cache-mode full --vfs-cache-max-size 10G -o locallocks
+)
+
+if [[ ${1:-} == -d ]]; then
+  "$RCLONE" "${args[@]}" --daemon
+  open_when_mounted || {
+    echo "❌ ~/AirMedia did not mount within 30s (is \`ssh air\` reachable?)" >&2
+    exit 1
+  }
+  exit 0
+fi
+
+open_when_mounted &
+exec "$RCLONE" "${args[@]}"

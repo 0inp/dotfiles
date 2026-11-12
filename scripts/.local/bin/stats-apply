@@ -1,0 +1,151 @@
+#!/bin/bash
+# Apply the Stats settings this repo declares.
+#
+# Stats (exelban/stats) has no config file: every setting is UserDefaults in
+# the `eu.exelban.Stats` domain, so this script is the config: a declaration
+# plus an applier, rather than a stowed plist. A whole-plist
+# `defaults import` would also restore machine-specific noise (pixel positions
+# of status items, save-panel frames, a telemetry id) and replace the domain
+# wholesale, wiping anything tuned in the UI since.
+#
+# Why Stats must be quit first: cfprefsd caches a running app's preferences and
+# flushes them on quit, silently overwriting writes made underneath it.
+#
+# Usage:
+#   stats-apply         apply every setting below
+#   stats-apply -n      dry run: report what would change, write nothing
+set -euo pipefail
+
+DOMAIN="eu.exelban.Stats"
+
+# key <tab> type <tab> value        type: bool | int | string
+#
+# Values come from the Stats.plist this repo kept until 182f84b, trimmed to what
+# the menu bar actually showed last: disk, network and battery.
+SETTINGS=(
+  # ---------- modules ----------
+  # Every module is stated, on or off, so the result does not depend on which
+  # ones a given Stats version enables by default.
+  "Disk_state	bool	true"
+  "Network_state	bool	true"
+  "Battery_state	bool	true"
+  "CPU_state	bool	false"
+  "RAM_state	bool	false"
+  "GPU_state	bool	false"
+  "Sensors_state	bool	false"
+  "Bluetooth_state	bool	false"
+  "Clock_state	bool	false"
+
+  # ---------- widgets ----------
+  "Disk_widget	string	pie_chart"
+  "Disk_disk	string	macOS"
+  "Network_widget	string	speed,network_chart"
+  "Network_speed_icon	string	chars"
+  "Network_chartScale	string	logarithmic"
+  "Battery_widget	string	battery,mini"
+  "Battery_battery_additional	string	time"
+  "Battery_timeFormat	string	short"
+
+  # ---------- menu bar ----------
+  # One status item holding every module, instead of one item per module with
+  # its own pinned pixel position.
+  "CombinedModules	bool	true"
+  "CombinedModules_separator	bool	true"
+  "CombinedModules_spacing	string	5"
+
+  "telemetry	bool	false"
+)
+
+DRY_RUN=0
+[[ "${1:-}" == "-n" || "${1:-}" == "--dry-run" ]] && DRY_RUN=1
+
+[[ -d /Applications/Stats.app ]] || {
+  echo "❌ Stats is not installed (brew install --cask stats)" >&2
+  exit 1
+}
+
+# ---------- stop the app so cfprefsd does not overwrite the writes ----------
+WAS_RUNNING=0
+if pgrep -qx Stats; then
+  WAS_RUNNING=1
+  if ((DRY_RUN)); then
+    echo "⚠️  Stats is running — a real run would quit it first."
+  else
+    echo "⏹  Quitting Stats (its cached preferences would overwrite these writes)."
+    osascript -e 'quit app "Stats"' 2>/dev/null || true
+    for _ in {1..20}; do
+      pgrep -qx Stats || break
+      sleep 0.25
+    done
+    pgrep -qx Stats && {
+      echo "❌ Stats would not quit; aborting." >&2
+      exit 1
+    }
+  fi
+fi
+
+# What `defaults read` would print for a value we are about to write, so the
+# comparison is like-for-like and an unchanged key stays quiet.
+normalized() {
+  case "$1" in
+    bool) [[ "$2" == "true" ]] && echo 1 || echo 0 ;;
+    *) printf '%s' "$2" ;;
+  esac
+}
+
+changed=0
+
+apply() {
+  local key="$1" type="$2" value="$3"
+  local current want
+  current="$(defaults read "$DOMAIN" "$key" 2>/dev/null || printf '<unset>')"
+  want="$(normalized "$type" "$value")"
+
+  if [[ "$current" == "$want" ]]; then
+    echo "✓ $key unchanged"
+    return
+  fi
+
+  changed=1
+  if ((DRY_RUN)); then
+    echo "→ $key WOULD change: $current -> $want"
+    return
+  fi
+
+  case "$type" in
+    bool) defaults write "$DOMAIN" "$key" -bool "$value" ;;
+    int) defaults write "$DOMAIN" "$key" -int "$value" ;;
+    string) defaults write "$DOMAIN" "$key" -string "$value" ;;
+    *)
+      echo "❌ unknown type '$type' for $key" >&2
+      exit 1
+      ;;
+  esac
+  echo "✓ $key set to $want"
+}
+
+for entry in "${SETTINGS[@]}"; do
+  key="${entry%%$'\t'*}"
+  rest="${entry#*$'\t'}"
+  type="${rest%%$'\t'*}"
+  value="${rest#*$'\t'}"
+  apply "$key" "$type" "$value"
+done
+
+if ((DRY_RUN)); then
+  echo "🔍 Dry run — nothing written."
+  exit 0
+fi
+
+if ((changed)); then
+  echo "🎉 Settings applied."
+else
+  echo "🎉 Nothing to do — Stats already matches this repo."
+fi
+
+if ((WAS_RUNNING)); then
+  echo "▶️  Starting Stats again."
+  open -ga Stats
+else
+  echo "ℹ️  Stats was not running; start it when you want the new settings live."
+fi

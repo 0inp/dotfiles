@@ -1,0 +1,10 @@
+# Allowlist, not a denylist: same rationale as leaf/.gitignore.
+#
+# On a machine where ~/.config/vicinae or ~/.local/share/vicinae does not exist
+# yet, stow tree-folds it into this directory, and everything Vicinae writes at
+# runtime (settings.json, its sqlite databases, the clipboard store) would land
+# here. Ignore the lot, re-include only what the repo declares.
+.config/vicinae/*
+!.config/vicinae/dotfiles.jsonc
+.local/share/vicinae/*
+!.local/share/vicinae/scripts/

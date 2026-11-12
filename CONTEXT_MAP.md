@@ -4,7 +4,7 @@ This repository contains my dotfiles, organized by tool. Each directory represen
 
 ## Theme
 
-Catppuccin Mocha everywhere: ghostty, nvim, bat and delta, vivid (`LS_COLORS`,
+Catppuccin Mocha everywhere (except Vicinae, on One Dark by choice): ghostty, nvim, bat and delta, vivid (`LS_COLORS`,
 so eza too), btop, herdr, lazygit, gh-dash, fzf, atuin, leaf and Claude Code.
 Tools without a theme name of their own use ANSI colours and follow ghostty
 (pure, fast-syntax-highlighting, the Claude statusline). Font: Monaspace Neon,
@@ -59,6 +59,7 @@ symlinks in `~`, not against intent.
 | ripgrep      | Default flags for `rg`               | `~/.config/ripgrep/`                            |
 | scripts      | Custom scripts                       | `~/.local/bin/`                                 |
 | vibe         | Mistral Vibe CLI config              | `~/.vibe/`                                      |
+| vicinae      | Launcher (⌘Space), imported settings | `~/.config/vicinae/dotfiles.jsonc`, `~/.local/share/vicinae/scripts/` |
 | worktrunk    | Worktrunk configuration              | `~/.config/worktrunk/`                          |
 | zsh          | Zsh shell configuration              | `~/.zshrc`, `~/.zshenv`, `~/.zprofile`, `~/.config/zsh/` |
 
@@ -66,15 +67,28 @@ Not stow packages: `docs/` (agent + domain documentation), `resources/`
 (helper scripts the installer runs) and `claude-mods/` (Claude Code mods,
 loaded from the repo; see its CONTEXT.md), all excluded via `.stow-local-ignore`.
 
-No module for Vorssaint: it has no config file, only UserDefaults. Its settings
-are declared in `scripts/.local/bin/vorssaint-apply` and pushed with `defaults
-write`. It replaced Raycast (launcher, quick links) and Stats (menu bar
-metrics); the old `stats/` module and its plist are in git history.
+One tool, one job. Vorssaint did everything at once and was removed on
+2026-11-12, split into single-purpose tools: the launcher is **Vicinae**
+(`vicinae/`), the menu bar metrics are **Stats**, screenshots are macOS's own
+(⌘⇧3/4/5, saving to `~/Pictures/Screenshots` via `resources/macos_settings.sh`),
+and screen recording with a studio editor is **OpenScreen**. Its mixer, shelf,
+dock click and switcher have no replacement. `vorssaint-apply`, which held its
+settings, is in git history.
 
-Its recorder made the old `launchd/` agent redundant — that one watched for
-`.mov` and converted to `.mp4`, and the editor now saves `.mp4` directly. The
-module came back for two things Vorssaint cannot do itself, both handled by
-`com.oinp.captures-tidy`:
+No module for Stats: it has no config file, only UserDefaults. Its settings
+are declared in `scripts/.local/bin/stats-apply` and pushed with `defaults
+write`. The old `stats/` module and its plist are in git history (`182f84b^`).
+
+OpenScreen exports through a save dialog that remembers the last folder
+(`~/Downloads` until one is picked), so `~/Pictures/Screenshots` has to be
+chosen once for `captures-tidy` to see its files. Its export is named after the
+project title, `Recording_11_12_2026_5_26_35_PM.mp4` under en-US, and the agent
+renames that shape to `SR_…` too (see the `target_stem_for` comment).
+
+History: Vorssaint's recorder made the old `launchd/` agent redundant — that one
+watched for `.mov` and converted to `.mp4`, and Vorssaint's editor saved `.mp4`
+directly. The module came back for two things Vorssaint could not do itself,
+both handled by `com.oinp.captures-tidy`:
 
 - **Size.** Its presets scale resolution, never bitrate, and `recorderFrameRate`
   is ignored outright by the export path (declared 30, reads back 30, every file

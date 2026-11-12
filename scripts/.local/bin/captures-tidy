@@ -1,5 +1,6 @@
 #!/bin/bash
-# Tidy ~/Pictures/Screenshots, the folder Vorssaint saves every capture into.
+# Tidy ~/Pictures/Screenshots, where macOS saves screenshots and OpenScreen
+# exports recordings.
 # Two jobs, in this order:
 #
 #   1. rename  every screenshot to SS_YYYY_MM_DD_-_hh_mm_ss and every recording
@@ -7,6 +8,9 @@
 #              each file is at a glance.
 #   2. shrink  any recording over 20 MB, in place, so it can be dropped
 #              straight into a Discord message.
+#
+# History: until 2026-11-12 Vorssaint made every capture; the two notes below
+# are why this script exists, and still describe what it does.
 #
 # Why the rename lives here rather than in Vorssaint:
 #   Vorssaint can name screenshots — `screenshotFileNamePattern`, the "File
@@ -92,12 +96,19 @@ acquire_lock() {
 }
 
 # -------------------------------------------------------------------- renaming
-# Both Vorssaint and macOS name a capture "<something> YYYY-MM-DD at HH.MM.SS",
+# Both Vorssaint and macOS named a capture "<something> YYYY-MM-DD at HH.MM.SS",
 # and that <something> is localized — matching the literal "Recording" would
 # break the day this Mac switches language. So the timestamp's shape is the
 # whole test, and the extension alone decides which prefix the file gets. The
 # shape is distinctive enough that a file dropped into the folder by hand does
 # not match by accident.
+#
+# OpenScreen names an export after its project title, `Recording
+# ${new Date().toLocaleString()}` with every non-alphanumeric run turned into
+# `_` (ExportDialog.tsx). Under en-US that is
+# `Recording_11_12_2026_5_26_35_PM`: month and day first, unpadded, 12-hour
+# clock. It follows Electron's locale, so a locale change moves the fields; the
+# match is again on the shape, anchored on the AM/PM suffix.
 #
 # Prints the new stem, or fails if the file is not one of ours.
 target_stem_for() {
@@ -107,10 +118,19 @@ target_stem_for() {
     mp4 | mov | m4v) prefix=SR ;;
     *) return 1 ;;
   esac
-  [[ $stem =~ ([0-9]{4})-([0-9]{2})-([0-9]{2})\ at\ ([0-9]{2})\.([0-9]{2})\.([0-9]{2})$ ]] || return 1
-  printf '%s_%s_%s_%s_-_%s_%s_%s' "$prefix" \
-    "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}" "${BASH_REMATCH[3]}" \
-    "${BASH_REMATCH[4]}" "${BASH_REMATCH[5]}" "${BASH_REMATCH[6]}"
+  local y mo d h mi s
+  if [[ $stem =~ ([0-9]{4})-([0-9]{2})-([0-9]{2})\ at\ ([0-9]{2})\.([0-9]{2})\.([0-9]{2})$ ]]; then
+    y=${BASH_REMATCH[1]} mo=${BASH_REMATCH[2]} d=${BASH_REMATCH[3]}
+    h=${BASH_REMATCH[4]} mi=${BASH_REMATCH[5]} s=${BASH_REMATCH[6]}
+  elif [[ $stem =~ _([0-9]{1,2})_([0-9]{1,2})_([0-9]{4})_([0-9]{1,2})_([0-9]{2})_([0-9]{2})_(AM|PM)$ ]]; then
+    mo=${BASH_REMATCH[1]} d=${BASH_REMATCH[2]} y=${BASH_REMATCH[3]}
+    h=$((10#${BASH_REMATCH[4]} % 12)) mi=${BASH_REMATCH[5]} s=${BASH_REMATCH[6]}
+    [[ ${BASH_REMATCH[7]} == PM ]] && h=$((h + 12))
+    mo=$(printf '%02d' "$((10#$mo))") d=$(printf '%02d' "$((10#$d))") h=$(printf '%02d' "$h")
+  else
+    return 1
+  fi
+  printf '%s_%s_%s_%s_-_%s_%s_%s' "$prefix" "$y" "$mo" "$d" "$h" "$mi" "$s"
 }
 
 # The timestamp comes from the NAME, never from the mtime. Compression rewrites
@@ -127,7 +147,7 @@ rename_capture() {
   stem=${base%.*}
   target=$(target_stem_for "$stem" "$ext") || return 0
 
-  # The Vorssaint editor holds the file open while it writes on Save. Renaming
+  # A recorder's editor holds the file open while it writes on Save. Renaming
   # under it would not corrupt anything — rename(2) leaves an open fd alone —
   # but the app resolves the capture by path afterwards, so leave it be. The
   # next fire picks it up.
@@ -182,7 +202,7 @@ should_compress() {
 }
 
 # ------------------------------------------------------- wait for the writer
-# The Vorssaint editor writes the .mp4 on Save; encoding a half-written file
+# A recorder's editor writes the .mp4 on Save; encoding a half-written file
 # produces garbage. Require BOTH that no process holds it open and that its size
 # stopped moving — lsof alone races on the gap between close() and the next write.
 wait_until_settled() {

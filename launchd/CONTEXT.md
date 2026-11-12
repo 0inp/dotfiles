@@ -18,10 +18,14 @@ does two things to `~/Pictures/Screenshots` whenever it changes:
 ## Dependencies
 - `scripts/.local/bin/captures-tidy` — the work; the agent only triggers it
 - `ffmpeg` (with `libx265`) via Homebrew — already in the Brewfile
-- **Vorssaint** writes the captures. Its `recorderSaveFolder` and
-  `screenshotSaveFolder` must match `WatchPaths` in the plist
-  (`~/Pictures/Screenshots`); the folder is declared in
-  `scripts/.local/bin/vorssaint-apply`. Change one, change the other.
+- **macOS** writes the screenshots (`com.apple.screencapture location`, set in
+  `resources/macos_settings.sh`) and **OpenScreen** the recordings (its export
+  dialog remembers the last folder picked). Both must save into `WatchPaths` in
+  the plist (`~/Pictures/Screenshots`). Change one, change the other.
+  Everything below about Vorssaint is history: it was removed on 2026-11-12.
+  OpenScreen's export name (`Recording_11_12_2026_5_26_35_PM.mp4`, en-US) is
+  renamed too, checked on a real export. At 1080p60 it lands around 14 Mbps,
+  so anything past ~11 s crosses the 20 MB line and gets shrunk.
 
 ## Why this exists at all
 
