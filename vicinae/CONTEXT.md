@@ -48,9 +48,17 @@ Launch Vicinae once first: it creates `settings.json`.
 - `telemetry.system_info = false`. It is on by default and posts system info at
   startup.
 - `providers.{clipboard,ai,dictation}.enabled = false`, and `favorites = []` (the
-  default pins `clipboard:history`). The key shape comes from `ProviderData` in
+  default pins `clipboard:history`). Disabling the clipboard provider only hides
+  its commands: the clipboard server still starts and records. Recording is
+  stopped by `providers.clipboard.preferences.monitoring = false`
+  (`ClipboardPreferences` in the source), and `eraseOnStartup = true` empties
+  what was captured before. The key shape comes from `ProviderData` in
   `src/server/src/config/config.hpp`. `vicinae cmd ls` keeps listing a disabled
   provider's commands, so it proves nothing. Check in the launcher itself.
+- `providers.applications.entrypoints."com.etiennelescot.openscreen".shortcut =
+  "control+shift+O"`: ⌘⇧O opens OpenScreen. The app registers that binding
+  itself, but an Electron global shortcut only exists while the app runs, so it
+  did nothing from a cold start.
 
 ## Script commands
 Vicinae loads script commands from `~/.local/share/vicinae/scripts/`. This was

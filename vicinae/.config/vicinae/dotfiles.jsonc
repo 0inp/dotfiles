@@ -48,7 +48,25 @@
 	// `vicinae cmd ls` keeps listing a disabled provider's commands, so it is no
 	// proof either way; check in the launcher itself.
 	"providers": {
-		"clipboard": { "enabled": false },
+		// ⌘⇧O opens OpenScreen. The app registers the same binding itself, but
+		// an Electron global shortcut only exists while the app is running, so
+		// from a cold start nothing answered. Vicinae is always running.
+		// Entrypoint key: the bundle id, as `vicinae cmd ls` prints it after
+		// `applications:`. Same `control` = ⌘ rule as the toggle above.
+		"applications": {
+			"entrypoints": {
+				"com.etiennelescot.openscreen": { "shortcut": "control+shift+O" }
+			}
+		},
+		// `enabled: false` only hides the commands: the clipboard server still
+		// starts ("Clipboard server macos started" in `vicinae logs`) and keeps
+		// recording into clipboard.db. Recording is the `monitoring` preference
+		// (ClipboardPreferences, builtins/clipboard/clipboard-preferences.hpp);
+		// eraseOnStartup empties whatever was recorded before it was off.
+		"clipboard": {
+			"enabled": false,
+			"preferences": { "monitoring": false, "eraseOnStartup": true }
+		},
 		"ai": { "enabled": false },
 		"dictation": { "enabled": false }
 	},
