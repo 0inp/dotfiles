@@ -60,6 +60,21 @@ killall SystemUIServer
 echo "Group windows by application in Mission Control (fixes tiny window previews with AeroSpace, see nikitabobko/AeroSpace#315)"
 defaults write com.apple.dock expose-group-apps -bool true
 
+# Undocumented keys. Apps pick them up at launch, system items (Control Center,
+# clock) only after a logout. Revert with `defaults -currentHost delete -globalDomain <key>`.
+echo "Tighten menu bar item spacing (fits more items beside the notch)"
+defaults -currentHost write -globalDomain NSStatusItemSpacing -int 8
+defaults -currentHost write -globalDomain NSStatusItemSelectionPadding -int 6
+
+# macOS pins its clock to the far right; Itsycal's can be ⌘-dragged anywhere.
+echo "Show the time in Itsycal, shrink the system clock to analog"
+defaults write com.mowglii.ItsycalApp ClockFormat -string "HH:mm:ss"
+defaults write com.apple.menuextra.clock IsAnalog -bool true
+killall ControlCenter >/dev/null 2>&1
+
+echo "Appearance: switch light/dark automatically at sunrise/sunset"
+defaults delete -g AppleInterfaceStyle >/dev/null 2>&1
+defaults write -g AppleInterfaceStyleSwitchesAutomatically -bool true
 
 echo "Kill affected applications"
 for app in Safari Finder Dock Mail SystemUIServer; do killall "$app" >/dev/null 2>&1; done
