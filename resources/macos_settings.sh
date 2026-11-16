@@ -72,6 +72,13 @@ defaults write com.mowglii.ItsycalApp ClockFormat -string "HH:mm:ss"
 defaults write com.apple.menuextra.clock IsAnalog -bool true
 killall ControlCenter >/dev/null 2>&1
 
+# Stats rewrites its prefs on quit, so this only sticks while it is not running.
+# The separator adds the spacing on both sides of it: 1 gives 9pt between modules.
+echo "Stats: combine modules in one menu bar item, tight spacing, with separators"
+defaults write eu.exelban.Stats CombinedModules -bool true
+defaults write eu.exelban.Stats CombinedModules_spacing -string 1
+defaults write eu.exelban.Stats CombinedModules_separator -bool true
+
 echo "Appearance: switch light/dark automatically at sunrise/sunset"
 defaults delete -g AppleInterfaceStyle >/dev/null 2>&1
 defaults write -g AppleInterfaceStyleSwitchesAutomatically -bool true
