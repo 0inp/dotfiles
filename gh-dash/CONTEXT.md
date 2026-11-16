@@ -28,8 +28,14 @@ means "all PRs of the current repo" there, and only widens to `org:Sillant`
 when gh dash is launched outside a clone. Kept on deliberately — repo focus is
 the common case. Read the query box at the top before trusting a count.
 
+**Custom keys shadow built-ins, silently.** gh-dash matches user keybindings
+before its own, and `?` lists both, so a taken letter looks like two actions on
+one key. `C` hid checkout (`Space` still worked), `R` hid refresh all and the
+universal `g` hid first item. Pick from the letters no built-in uses: `F`, `I`
+and `E` are free in 4.26.2 (`internal/tui/keys/prKeys.go` and `keys.go`).
+
 **`wt switch -x` takes a program, not a shell string** (worktrunk >= 0.76). The
-`C` and `R` keybindings launch Claude in a PR worktree; the prompt must be a
+`F` (fix comments) and `I` (review) keybindings launch Claude in a PR worktree; the prompt must be a
 separate argument after `--`:
 
 ```
@@ -47,7 +53,7 @@ re-parses it with `bash -c`. So the prompt is wrapped in **plain** double quotes
 literal `"` character and let the prompt split into one argument per word. `$BRANCH`
 and `$BASE` expand at that second parse, which is where they are assigned.
 
-**Never clean up the `C` worktree with `--force`.** `/pr-comments` is gated: it
+**Never clean up the `F` worktree with `--force`.** `/pr-comments` is gated: it
 applies the review fixes locally and then *stops*, waiting for an explicit GO
 before committing. Quitting Claude at that gate leaves real work uncommitted in
 the worktree — and `wt remove --force` deletes a dirty worktree, "including

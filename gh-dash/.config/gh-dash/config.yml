@@ -47,9 +47,9 @@ defaults:
   layout:
     prs:
       updatedAt:
-        width: 5
+        hidden: true
       createdAt:
-        width: 5
+        hidden: true
       repo:
         width: 20
         hidden: true
@@ -81,24 +81,23 @@ defaults:
         width: 20
         hidden: true
   refetchIntervalMinutes: 30
+# Custom keys are matched before built-ins, so a taken letter silently shadows
+# one: C was checkout, R refresh all, g first item. Lazygit lives in herdr
+# (prefix+g) instead.
 keybindings:
-  universal:
-    - key: g
-      name: lazygit
-      command: >
-        cd {{.RepoPath}} && lazygit
   prs:
-    - key: C
-      name: address my pr comments
+    - key: F
+      name: claude fix my pr comments
       command: >
         mux-new-window "PR-{{.PrNumber}}-comments"
         'BRANCH=$(cd "{{.RepoPath}}" && gh pr view {{.PrNumber}} --json headRefName --jq ".headRefName") && PRE=$(git -C "{{.RepoPath}}" worktree list | grep -c "\[$BRANCH\]") ; wt -C "{{.RepoPath}}" switch pr:{{.PrNumber}} -x claude -- "Traite les commentaires de la PR #{{.PrNumber}} en utilisant la commande pr-comments de sillant-context." ; if [ "${PRE:-0}" -gt 0 ] ; then echo "ℹ️  Worktree pre-existing, left untouched" ; elif wt -C "{{.RepoPath}}" remove "$BRANCH" --no-delete-branch ; then echo "✅ Worktree removed, branch kept" ; else echo "⚠️  Worktree kept: uncommitted work above" ; fi ; printf "Press Enter to close...\n" ; read'
-    - key: R
-      name: pr-review + cleanup
+    - key: I
+      name: claude review this pr
       command: >
         mux-new-window "PR-{{.PrNumber}}"
         'PR=$(cd "{{.RepoPath}}" && gh pr view {{.PrNumber}} --json headRefName,baseRefName) && BRANCH=$(echo "$PR" | jq -r .headRefName) && BASE=$(echo "$PR" | jq -r .baseRefName) && wt -C "{{.RepoPath}}" switch pr:{{.PrNumber}} -x claude -- "Fais la review de la PR #{{.PrNumber}} ($BRANCH vers $BASE) en utilisant la commande pr-review de sillant-context." ; wt -C "{{.RepoPath}}" remove "$BRANCH" --force-delete --force 2>/dev/null ; echo "✅ Worktree for $BRANCH removed" ; printf "Press Enter to close...\n" ; read'
     - key: E
+      name: ci runs (gh enhance)
       command: gh enhance -R {{.RepoName}} {{.PrNumber}}
 
 theme:
