@@ -110,6 +110,9 @@ bash ./resources/macos_settings.sh || echo "⚠️  Some macOS defaults failed t
 echo "Installation complete..."
 
 echo "Stowing dotfiles..."
+# Colima's state dir must exist as a real directory, or stow folds it into a
+# link to this repo and the VM disks land in the repo. See colima/CONTEXT.md.
+mkdir -p ~/.config/colima/_lima/_config
 # One package per module directory. NOT `stow -t ~ .` — that names the repo
 # root itself as the package, which would symlink aerospace/, brew/, CLAUDE.md
 # and .github/ directly into $HOME, and would ignore every .stow-local-ignore.

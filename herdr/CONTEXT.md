@@ -37,6 +37,7 @@ Prefix is `ctrl+b`. Full list in `config.toml`; these are the ones worth knowing
 | Jump to the notifying agent | `prefix+o` |
 | Back to the last pane | `prefix+;` |
 | Lazygit popup on this pane's repo | `prefix+g` |
+| Lazydocker popup (starts Colima if stopped) | `prefix+d` |
 
 The sidebar sorts agents by priority, so blocked and finished ones come first.
 

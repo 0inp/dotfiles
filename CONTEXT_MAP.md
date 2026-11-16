@@ -41,6 +41,7 @@ symlinks in `~`, not against intent.
 | bat          | bat theme (Catppuccin Mocha)         | `~/.config/bat/config`                          |
 | brew         | Homebrew packages and taps           | `~/.config/brewfile/`                           |
 | btop         | Resource monitor (replaced htop)     | `~/.config/btop/`                               |
+| colima       | Docker VM: Lima port-forward override | `~/.config/colima/_lima/_config/override.yaml` |
 | claude       | Claude Code settings                 | `~/.claude/`, `~/.claude.json`, `~/.config/cd4a/` |
 | fnox         | Secret refs (values in the keychain) | `~/.config/fnox/`                               |
 | fzf          | fzf default options (`fzfrc`)        | `~/.config/fzf/`                                |

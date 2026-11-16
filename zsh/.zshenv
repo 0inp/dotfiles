@@ -60,3 +60,12 @@ export HOMEBREW_BUNDLE_FILE_GLOBAL="${XDG_CONFIG_HOME}/brewfile/Brewfile"
 # prefers. Pinning COLIMA_HOME makes them all agree; the scripts in
 # scripts/.local/bin pin it too, since launchd never reads this file.
 export COLIMA_HOME="${XDG_CONFIG_HOME}/colima"
+
+# Testcontainers (vicat's pytest suites) doesn't read docker contexts: it wants
+# /var/run/docker.sock on the Mac, which OrbStack created and Colima doesn't.
+# Its Ryuk reaper then bind-mounts the DOCKER_HOST path into a container, which
+# fails because that path is the Mac's, not the VM's ("mkdir ...docker.sock:
+# operation not supported"); the override hands it the VM-side socket. A
+# stopped VM is not started by this: run `docker ps` or `colima start` first.
+export DOCKER_HOST="unix://${COLIMA_HOME}/default/docker.sock"
+export TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE=/var/run/docker.sock

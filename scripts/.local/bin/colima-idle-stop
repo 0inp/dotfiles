@@ -9,14 +9,51 @@
 # Run every 15 min by com.oinp.colima-idle-stop. Two strikes, not one,
 # so a VM started a minute before a check is not stopped under the user, and
 # a short gap between `compose down` and `compose up` survives.
+#
+# Right before stopping, at most once a day, it also prunes. The VM is up and
+# idle at that moment, so nothing in use can be removed and nothing has to boot
+# just to clean. A separate daily agent would mostly find the VM stopped.
 set -euo pipefail
 
 # launchd's PATH is /usr/bin:/bin:/usr/sbin:/sbin.
 export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
 export COLIMA_HOME="${COLIMA_HOME:-$HOME/.config/colima}" # see .zshenv
 
-marker="${XDG_CACHE_HOME:-$HOME/.cache}/colima-idle-stop/idle"
-mkdir -p "$(dirname "$marker")"
+state="${XDG_CACHE_HOME:-$HOME/.cache}/colima-idle-stop"
+marker="$state/idle"
+pruned="$state/last-prune"
+mkdir -p "$state"
+
+# Pull unused images back past this many GB of reclaimable space. Images are
+# the bulk: OrbStack had piled up 25 GB of them. Below the cap, tagged images
+# stay, so Testcontainers' postgres isn't re-pulled every day.
+IMAGE_CAP_GB="${IMAGE_CAP_GB:-15}"
+
+prune() {
+  [[ -n "$(find "$pruned" -mtime -1 2>/dev/null)" ]] && return 0
+  echo "$(date '+%F %T') daily prune"
+  docker container prune -f --filter until=24h
+  docker image prune -f
+  # Anonymous volumes only: Docker >= 23 spares named ones without -a
+  # (checked: a named volume survived). Testcontainers leaves one per run.
+  docker volume prune -f
+  docker builder prune -f --filter until=168h
+  local reclaimable
+  reclaimable=$(docker system df --format '{{.Type}} {{.Reclaimable}}' \
+    | awk '$1 == "Images" {
+      v = $2; u = v; sub(/[0-9.]+/, "", u); sub(/[A-Za-z]+/, "", v)
+      m = (u == "kB") ? 1e-6 : (u == "MB") ? 1e-3 : (u == "GB") ? 1 : (u == "TB") ? 1e3 : 0
+      printf "%d", v * m
+    }')
+  if ((reclaimable >= IMAGE_CAP_GB)); then
+    echo "$(date '+%F %T') ${reclaimable} GB of unused images, pruning them all"
+    docker image prune -a -f
+  fi
+  # Hand the freed blocks back to the sparse disk file on the Mac. The VM's
+  # weekly fstrim.timer only fires while the VM happens to be up.
+  colima ssh -- sudo fstrim /var/lib/docker
+  touch "$pruned"
+}
 
 # The socket exists only while the VM runs; `colima status` costs ~0.7s.
 if [[ ! -S "$COLIMA_HOME/default/docker.sock" ]]; then
@@ -33,8 +70,9 @@ if [[ -n "$(docker --context colima ps -q)" ]] \
 fi
 
 if [[ -e "$marker" ]]; then
-  echo "$(date '+%F %T') idle twice in a row, stopping colima"
   rm -f "$marker"
+  prune || echo "$(date '+%F %T') prune failed, stopping anyway" >&2
+  echo "$(date '+%F %T') idle twice in a row, stopping colima"
   colima stop
 else
   touch "$marker"

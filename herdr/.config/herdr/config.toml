@@ -87,3 +87,14 @@ command = "cd \"${HERDR_ACTIVE_PANE_CWD:-.}\" && exec lazygit"
 description = "Git status"
 width = "90%"
 height = "85%"
+
+# Lazydocker in a popup. It opens the Docker socket itself, so the `docker`
+# shim (scripts/.local/bin/colima-autostart) runs first to start Colima if the
+# idle agent stopped it (~12s). prefix+shift+d stays close_workspace.
+[[keys.command]]
+key = "prefix+d"
+type = "popup"
+command = "docker context show >/dev/null && exec lazydocker"
+description = "Docker"
+width = "90%"
+height = "85%"

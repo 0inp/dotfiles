@@ -1,0 +1,27 @@
+# Lima's global override for every Colima VM (LIMA_HOME is ~/.config/colima/_lima).
+# Its portForwards are tried BEFORE the rules Colima writes into lima.yaml, and
+# the first matching rule wins. See colima/CONTEXT.md.
+portForwards:
+  # The VM's dnsmasq (192.168.5.1:53) only serves the guest. Without this,
+  # the hostagent forwards it to *:53 on the Mac, reachable from the LAN.
+  - guestPort: 53
+    proto: tcp
+    ignore: true
+  - guestPort: 53
+    proto: udp
+    ignore: true
+  # `docker run -p 8080:80` binds 0.0.0.0 in the guest, and Colima forwards
+  # that to 0.0.0.0 on the Mac (unlike lima's 127.0.0.1 default), so every
+  # published port answered on the LAN, with the macOS firewall off. Pin them
+  # to loopback. `-p 127.0.0.1:...` was already loopback; there is no Colima
+  # flag for this.
+  - guestIPMustBeZero: true
+    guestIP: 0.0.0.0
+    guestPortRange: [1, 65535]
+    hostIP: 127.0.0.1
+    proto: tcp
+  - guestIPMustBeZero: true
+    guestIP: 0.0.0.0
+    guestPortRange: [1, 65535]
+    hostIP: 127.0.0.1
+    proto: udp
