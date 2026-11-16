@@ -33,10 +33,10 @@ Prefix is `ctrl+b`. Full list in `config.toml`; these are the ones worth knowing
 | Jump straight to workspace N | `prefix+shift+N` |
 | Workspace picker | `prefix+shift+t` |
 | Next / previous tab | `prefix+n` / `prefix+p` |
-| Go to any agent or pane | `prefix+g` |
+| Go to any agent or pane | `prefix+space` |
 | Jump to the notifying agent | `prefix+o` |
 | Back to the last pane | `prefix+;` |
-| Lazygit popup on this pane's repo | `prefix+d` |
+| Lazygit popup on this pane's repo | `prefix+g` |
 
 The sidebar sorts agents by priority, so blocked and finished ones come first.
 

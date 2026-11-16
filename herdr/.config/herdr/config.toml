@@ -39,7 +39,7 @@ close_workspace = "prefix+shift+d"
 switch_workspace = "prefix+shift+1..9"
 next_workspace = "prefix+)"
 previous_workspace = "prefix+("
-goto = "prefix+g"
+goto = "prefix+space"  # default prefix+g goes to the lazygit popup
 
 # Pane splits — the default new_cwd = "follow" handles the -c "#{pane_current_path}" equivalent
 split_vertical = "prefix+|"  # side-by-side (same as prefix+| in tmux)
@@ -81,7 +81,7 @@ last_pane = "prefix+;"
 
 # Lazygit over the focused pane, on that pane's repo. q closes it.
 [[keys.command]]
-key = "prefix+d"
+key = "prefix+g"
 type = "popup"
 command = "cd \"${HERDR_ACTIVE_PANE_CWD:-.}\" && exec lazygit"
 description = "Git status"
