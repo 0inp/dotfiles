@@ -76,5 +76,13 @@ echo "Appearance: switch light/dark automatically at sunrise/sunset"
 defaults delete -g AppleInterfaceStyle >/dev/null 2>&1
 defaults write -g AppleInterfaceStyleSwitchesAutomatically -bool true
 
+# Root-owned and cached by corebrightnessd, hence sudo and the restart. The keys
+# only exist once the setting has been touched in System Settings > Keyboard.
+echo "Keyboard backlight: turn off after 10s idle"
+plist=/var/root/Library/Preferences/com.apple.CoreBrightness.plist
+sudo /usr/libexec/PlistBuddy -c "Set :KeyboardBacklight:KeyboardBacklightIdleDimTime 10" \
+  -c "Set ':Keyboard Dim Time' 10" "$plist" && sudo killall corebrightnessd \
+  || echo "⚠️  Keyboard dim time not set: change it once in System Settings > Keyboard, then rerun" >&2
+
 echo "Kill affected applications"
 for app in Safari Finder Dock Mail SystemUIServer; do killall "$app" >/dev/null 2>&1; done
