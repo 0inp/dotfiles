@@ -3,3 +3,8 @@
 
 [post-start]
 copy = "wt step copy-ignored"
+
+# Sillant clones keep their worktrees inside the clone, where `.worktrees/sillant-context`
+# links the shared rules their CLAUDE.md imports.
+[projects."github.com/Sillant/*"]
+worktree-path = ".worktrees/{{ branch | sanitize }}"
