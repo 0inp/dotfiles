@@ -1,0 +1,41 @@
+#!/bin/bash
+# Stop the Colima VM once Docker has sat idle for two checks in a row.
+#
+# OrbStack handed RAM back to macOS as containers stopped; a Colima VM keeps
+# whatever Linux touched (page cache included) until it is stopped. Docker use
+# here is sporadic, so the VM should only exist while something runs in it.
+# scripts/.local/bin/colima-autostart (the `docker` shim) starts it on demand.
+#
+# Run every 15 min by com.oinp.colima-idle-stop. Two strikes, not one,
+# so a VM started a minute before a check is not stopped under the user, and
+# a short gap between `compose down` and `compose up` survives.
+set -euo pipefail
+
+# launchd's PATH is /usr/bin:/bin:/usr/sbin:/sbin.
+export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+export COLIMA_HOME="${COLIMA_HOME:-$HOME/.config/colima}" # see .zshenv
+
+marker="${XDG_CACHE_HOME:-$HOME/.cache}/colima-idle-stop/idle"
+mkdir -p "$(dirname "$marker")"
+
+# The socket exists only while the VM runs; `colima status` costs ~0.7s.
+if [[ ! -S "$COLIMA_HOME/default/docker.sock" ]]; then
+  rm -f "$marker"
+  exit 0
+fi
+
+# Busy: a container is running, or a docker client is still at work on the Mac
+# side. The second covers builds and pulls, which `docker ps` never lists.
+if [[ -n "$(docker --context colima ps -q)" ]] \
+  || pgrep -x -q 'docker|docker-compose|docker-buildx|lazydocker'; then
+  rm -f "$marker"
+  exit 0
+fi
+
+if [[ -e "$marker" ]]; then
+  echo "$(date '+%F %T') idle twice in a row, stopping colima"
+  rm -f "$marker"
+  colima stop
+else
+  touch "$marker"
+fi

@@ -18,6 +18,8 @@ are **not** symlinked — they are run from the repo. Only `.local/bin/` is stow
 | `.local/bin/stats-apply`| Declared Stats settings -> UserDefaults | `~/.local/bin/stats-apply` |
 | `.local/bin/airmedia`| Mount the Air's media on ~/AirMedia, open Finder (`-d`: background) | `~/.local/bin/airmedia` |
 | `.local/bin/captures-tidy`| Rename captures, shrink recordings under 20 MB | `~/.local/bin/captures-tidy` |
+| `.local/bin/colima-autostart`| Start Colima if its socket is missing, then exec the real brew binary; `docker` and `docker-compose` here link to it | `~/.local/bin/{docker,docker-compose}` |
+| `.local/bin/colima-idle-stop`| Stop Colima after two idle checks (run by `com.oinp.colima-idle-stop`) | `~/.local/bin/colima-idle-stop` |
 
 ## Dependencies
 - **Shell**: Requires `zsh` or `bash`.

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Stops the Colima VM after two idle checks in a row (15 to 30 min of nothing
+  running). See scripts/.local/bin/colima-idle-stop.
+
+  The two absolute /Users/oinp paths below are unavoidable: launchd performs no
+  tilde or variable expansion in StandardOutPath. ProgramArguments goes through
+  bash so that one at least can use $HOME.
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.oinp.colima-idle-stop</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>-c</string>
+        <string>exec "$HOME/.local/bin/colima-idle-stop"</string>
+    </array>
+
+    <!-- Seconds between checks. Two idle checks stop the VM. -->
+    <key>StartInterval</key>
+    <integer>900</integer>
+
+    <!-- A check is two docker calls; it can stay on the efficiency cores. -->
+    <key>ProcessType</key>
+    <string>Background</string>
+
+    <key>StandardOutPath</key>
+    <string>/tmp/colima-idle-stop.log</string>
+    <key>StandardErrorPath</key>
+    <string>/tmp/colima-idle-stop.error.log</string>
+</dict>
+</plist>

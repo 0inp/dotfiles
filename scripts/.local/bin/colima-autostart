@@ -1,0 +1,29 @@
+#!/bin/bash
+# Start Colima on demand, then run the real Homebrew binary this was called as.
+#
+# `docker` and `docker-compose` in this directory are links to this script, and
+# ~/.local/bin sits ahead of Homebrew in PATH (lib/path.zsh). A shim, not a zsh
+# function, so scripts and agents get it too: vicat-py reads its DOCKER_HOST
+# from `docker context inspect` in plain bash, then Testcontainers hits the
+# socket. Without this, every run after com.oinp.colima-idle-stop fired would
+# fail on a missing socket.
+#
+# The socket test, not `colima status` (~0.7s), keeps every call instant while
+# the VM is up: Colima removes the socket on stop. A cold start takes ~20s.
+set -euo pipefail
+
+if [[ -z ${HOMEBREW_PREFIX:-} ]]; then
+  if [[ -d /opt/homebrew ]]; then HOMEBREW_PREFIX=/opt/homebrew; else HOMEBREW_PREFIX=/usr/local; fi
+fi
+real="$HOMEBREW_PREFIX/bin/$(basename "$0")"
+# colima finds limactl through PATH, which a bare launchd or IDE env lacks.
+export PATH="$HOMEBREW_PREFIX/bin:$PATH"
+export COLIMA_HOME="${COLIMA_HOME:-$HOME/.config/colima}" # see .zshenv
+
+# The guard stops recursion if `colima start` itself shells out to `docker`.
+if [[ -z ${COLIMA_AUTOSTART:-} && ! -S $COLIMA_HOME/default/docker.sock ]]; then
+  echo "colima-autostart: starting the Colima VM (~20s)..." >&2
+  COLIMA_AUTOSTART=1 "$HOMEBREW_PREFIX/bin/colima" start >&2
+fi
+
+exec "$real" "$@"

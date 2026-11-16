@@ -14,6 +14,7 @@ does two things to `~/Pictures/Screenshots` whenever it changes:
 | File | Description | Symlink Target |
 |------|-------------|----------------|
 | `Library/LaunchAgents/com.oinp.captures-tidy.plist` | Fires `captures-tidy` when `~/Pictures/Screenshots` changes | `~/Library/LaunchAgents/` |
+| `Library/LaunchAgents/com.oinp.colima-idle-stop.plist` | Runs `colima-idle-stop` every 15 min, so the Colima VM stops 15-30 min after the last container | `~/Library/LaunchAgents/` |
 
 ## Dependencies
 - `scripts/.local/bin/captures-tidy` — the work; the agent only triggers it

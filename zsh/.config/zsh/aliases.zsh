@@ -72,7 +72,8 @@ alias agl='bash ~/dotfiles/scripts/agent-loop.sh'
 # =========================================================
 # Docker
 # =========================================================
-alias lzd=lazydocker
+# lazydocker talks to the socket directly; the docker shim starts Colima first.
+alias lzd='docker context show >/dev/null && lazydocker'
 
 # =========================================================
 # LazySql

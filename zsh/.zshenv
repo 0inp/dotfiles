@@ -53,3 +53,10 @@ export HOMEBREW_NO_ENV_HINTS=1
 # _GLOBAL variant: plain HOMEBREW_BUNDLE_FILE would override a project's own
 # ./Brewfile, whereas this one only applies when --global is passed.
 export HOMEBREW_BUNDLE_FILE_GLOBAL="${XDG_CONFIG_HOME}/brewfile/Brewfile"
+
+# Colima picks its home from ~/.colima if that exists, else $XDG_CONFIG_HOME,
+# else ~/.colima. One caller without XDG (launchd, an IDE, `env -i`) therefore
+# creates a second, default-sized VM in ~/.colima, which every caller then
+# prefers. Pinning COLIMA_HOME makes them all agree; the scripts in
+# scripts/.local/bin pin it too, since launchd never reads this file.
+export COLIMA_HOME="${XDG_CONFIG_HOME}/colima"

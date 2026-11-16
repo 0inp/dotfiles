@@ -67,6 +67,19 @@ if command -v bw &>/dev/null; then
   bw config server https://vault.bitwarden.eu >/dev/null || true
 fi
 
+# The brew docker CLI looks for plugins in ~/.docker/cli-plugins only, so
+# `docker compose` and `docker buildx` don't exist until it is told about
+# Homebrew's plugin dir. This lives in ~/.docker/config.json, which also holds
+# registry auths, so it is patched rather than stowed.
+if command -v docker &>/dev/null && command -v jq &>/dev/null; then
+  echo "Pointing the docker CLI at Homebrew's plugins..."
+  mkdir -p ~/.docker
+  [[ -s ~/.docker/config.json ]] || echo '{}' >~/.docker/config.json
+  plugins_dir="$(brew --prefix)/lib/docker/cli-plugins"
+  jq --arg d "$plugins_dir" '.cliPluginsExtraDirs = ((.cliPluginsExtraDirs // []) + [$d] | unique)' \
+    ~/.docker/config.json >~/.docker/config.json.tmp && mv ~/.docker/config.json.tmp ~/.docker/config.json
+fi
+
 # Install Mistral vibe CLI
 if ! command -v vibe &>/dev/null; then
   echo "Installing Mistral vibe cli"
