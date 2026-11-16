@@ -8,6 +8,10 @@
     "allow": [
       "mcp__subject-todo__subject_todo",
       "Bash(gh api repos/*/pulls/*/reviews *)"
+    ],
+    "deny": [
+      "Read(**/.env)",
+      "Read(~/.aws/**)"
     ]
   },
   "model": "opus[1m]",
@@ -42,6 +46,12 @@
             "command": "python3 ~/.claude/hooks/block-shared-node-modules-install.py",
             "if": "Bash(npm *)",
             "onFailure": "block"
+          },
+          {
+            "type": "command",
+            "command": "python3 ~/.claude/hooks/check-before-push.py",
+            "timeout": 900,
+            "onFailure": "block"
           }
         ]
       }
@@ -74,13 +84,13 @@
     "aws-core@claude-plugins-official": false,
     "chrome-devtools-mcp@claude-plugins-official": true,
     "claude-code-setup@claude-plugins-official": true,
-    "claude-md-management@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": false,
     "context7@claude-plugins-official": true,
     "github@claude-plugins-official": true,
     "linear@claude-plugins-official": true,
     "playground@claude-plugins-official": true,
     "playwright@claude-plugins-official": true,
-    "pr-review-toolkit@claude-plugins-official": true,
+    "pr-review-toolkit@claude-plugins-official": false,
     "pyright-lsp@claude-plugins-official": true,
     "remember@claude-plugins-official": true,
     "security-guidance@claude-plugins-official": true,
