@@ -44,6 +44,9 @@ vim.pack.add({
 }, { confirm = false })
 
 require("gitsigns").setup()
+-- Whole-repo review: file tree + diff windows of HEAD vs the working tree, with
+-- staging from the panel. `:Gitsigns diff <rev>` / `A..B` for other ranges.
+vim.keymap.set("n", "<leader>gd", "<cmd>Gitsigns diff<cr>", { desc = "Git diff panel (repo)" })
 --:
 
 --: window navigation
