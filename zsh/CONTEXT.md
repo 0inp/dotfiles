@@ -26,6 +26,14 @@ Supports **Apple Silicon** (`/opt/homebrew`) and **Intel** (`/usr/local`).
 - PATH is built in `lib/path.zsh`, which sets `HOMEBREW_PREFIX` by branching on
   `[[ -d /opt/homebrew ]]` rather than forking `brew --prefix` on every shell.
   Entries use the `(N-/)` glob qualifier so non-existent dirs are dropped.
+- `lib/path.zsh` is sourced twice, from `.zshenv` (so non-login,
+  non-interactive shells get a usable PATH) and again from `.zprofile`. The
+  second pass is not redundant: macOS's `/etc/zprofile` runs `path_helper`,
+  which rebuilds PATH with the system directories first and would demote
+  Homebrew below `/usr/local/bin`. `typeset -U path` keeps it idempotent.
+  It lives in `lib/` so the `~/.config/zsh/*.zsh` glob skips it: `.zshrc`
+  runs that glob *after* `mise activate`, and re-running path.zsh there would
+  hoist Homebrew above the mise shims.
 - Any new references to Homebrew-installed tools must use `$(brew --prefix <pkg>)` or the same `[[ -d /opt/homebrew ]]` pattern — never hardcode `/opt/homebrew` alone.
 
 ## Key Features

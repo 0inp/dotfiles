@@ -94,92 +94,24 @@ pre-push runs the whole-repo invariants in `scripts/checks.sh`.
 
 ## Architecture
 
-### Stow layout
+Each module directory mirrors the target filesystem relative to `~`
+(`zsh/.zshrc` → `~/.zshrc`). Files listed in a module's `.stow-local-ignore`
+are not linked. Where to look:
 
-Each module directory mirrors the target filesystem structure relative to `~`. For example, `zsh/.zshrc` symlinks to `~/.zshrc` and `zsh/.config/zsh/aliases.zsh` symlinks to `~/.config/zsh/aliases.zsh`. Files listed in `.stow-local-ignore` inside a module are excluded from symlinking.
-
-### Zsh configuration
-
-`.zshenv` (all shells) → `.zprofile` (login shells) → `.zshrc` (interactive shells).
-`.zshrc` sources all `~/.config/zsh/*.zsh` files at startup. Modules:
-
-- `aliases.zsh` — shell aliases (tools: eza, bat, zoxide). Note: `grep` is **not**
-  aliased to `rg`; rg's defaults live in the `ripgrep` module instead.
-- `plugins.zsh` — self-managed plugins (auto-cloned with `_zplugin_load` on first run)
-- `functions.zsh` — reusable shell functions (`rfv`, `lf`, `timezsh`, `colormap`); `airmedia` is a script in
-  `scripts/.local/bin/` so Vicinae can call it too
-- `bindings.zsh` — vi-mode key bindings, plus the `zvm_after_init_commands`
-  entries that re-apply bindings zsh-vi-mode would otherwise wipe
-- `fzf.zsh` — fzf configuration and keybindings
-- `prompt.zsh` — prompt via `pure`
-- `lib/path.zsh` — PATH construction; in `lib/` so the `*.zsh` glob above skips it
-
-Environment variables are set in `.zshenv` (loaded for all shells, including non-interactive).
-
-### Secrets (fnox + Bitwarden)
-
-Secrets are **not** stored in the repo. Two tiers:
-
-- **Bitwarden vault** — source of truth. Where you add and rotate secrets.
-- **macOS login keychain** — local cache, read by every shell via
-  [fnox](https://fnox.jdx.dev/) (activated from `.zshrc`).
-
-`scripts/.local/bin/secrets-pull` moves vault → keychain.
-`fnox/.config/fnox/config.toml` is committed on purpose: it holds only
-*references* (`{ provider = "keychain", value = "KEY_NAME" }`), never values.
-
-```bash
-secrets-pull               # refresh keychain from the vault (-n for dry run)
-fnox list                  # what is defined
-fnox get <KEY>             # print one value
-fnox doctor                # diagnose resolution
-```
-
-Bitwarden is deliberately **not** wired into shell startup: `bw` costs ~1.2s per
-call, and per `bw unlock --help` *"after unlocking, any previous session keys
-will no longer be valid"* — so one agent unlocking would break every other tab.
-Unattended agents also cannot answer a master-password prompt. See
-`fnox/CONTEXT.md` for the full reasoning.
-
-Three gotchas:
-
-- The `value` field is the **provider-side key name**. Omit it and lookups fail
-  *silently* (a warning, not an error). Prefer `fnox set` over hand-editing.
-- `activate` registers a `precmd` hook rather than exporting eagerly, so
-  `zsh -i -c '...'` (which never draws a prompt) will not see the secrets.
-  Real interactive shells are unaffected.
-- `fnox sync` cannot target the keychain (encryption providers only), which is
-  why `secrets-pull` exists instead.
-
-**PATH is built in `zsh/.config/zsh/lib/path.zsh`**, which is sourced twice: from
-`.zshenv` (so non-login, non-interactive shells get a usable PATH) and again from
-`.zprofile`. The second pass is not redundant — macOS's `/etc/zprofile` runs
-`path_helper`, which rebuilds PATH with the system directories first and would
-otherwise demote Homebrew below `/usr/local/bin`. `typeset -U path` keeps the
-re-assertion idempotent. Do not move this file to `~/.config/zsh/*.zsh`: `.zshrc`
-globs that directory *after* `mise activate`, and re-running it there would hoist
-Homebrew above the mise shims.
-
-### Runtime versions (mise)
-
-`mise/.config/mise/config.toml` pins global versions: Node 26, Python 3.15,
-Go 1.27. Mise is activated only in interactive shells.
-
-It also carries `"npm:typescript" = "7"`. That is not a runtime pin — Neovim's
-`tsc` language server needs a TypeScript 7 binary on `$PATH` as a fallback for
-repos still on TS 5/6, and Mason has no `typescript` package. See
-`nvim/CONTEXT.md`.
-
-### Shell history (atuin)
-
-`atuin` replaces Ctrl-R with fuzzy search over a SQLite history that records
-cwd, exit code and duration. Initialised interactive-only in `.zshrc` with
-`--disable-up-arrow` (Up/Down stay on zsh-history-substring-search). Its bindings are
-re-applied from `zvm_after_init_commands` — see the constraint below.
-
-### Git signing
-
-All commits and tags are GPG-signed using an SSH key (`gpg.format = ssh`). The `gpg "ssh"` section points to `~/.ssh/allowed_signers`.
+- **Zsh**: `.zshenv` (all shells) → `.zprofile` (login) → `.zshrc`
+  (interactive), which sources `~/.config/zsh/*.zsh`. File roles, atuin and
+  the fzf/vi-mode binding order: `zsh/CONTEXT.md`.
+- **PATH** is built in `zsh/.config/zsh/lib/path.zsh`, sourced from both
+  `.zshenv` and `.zprofile` on purpose. Do not move it into
+  `~/.config/zsh/*.zsh`: why is in `zsh/CONTEXT.md`.
+- **Secrets**: never in the repo. Bitwarden is the source of truth,
+  `secrets-pull` copies it to the macOS keychain, and fnox reads the keychain
+  in every shell. `fnox/.config/fnox/config.toml` holds only references.
+  Gotchas (silent lookups without `value`, lazy `activate`, no keychain
+  `sync`) and why `bw` is not in shell startup: `fnox/CONTEXT.md`.
+- **Runtimes**: mise pins Node, Python and Go, plus a global TypeScript 7 for
+  Neovim's `tsc` LSP: `mise/CONTEXT.md`.
+- **Git**: every commit and tag is signed with an SSH key: `git/CONTEXT.md`.
 
 ## Constraints
 
@@ -190,15 +122,11 @@ it. Verify with `test -x .git/hooks/pre-commit`, not by reading `lefthook.yml`.
 Same class of trap as a stow module that is committed, documented and never
 stowed.
 
-**The gitleaks Action's push job scans the pushed commits, not history.**
-gitleaks-action passes the push range (`-1` for a single commit), so it stayed
-green in ~10s for months while 47 findings, including real credentials from
-2020 and 2022, sat in older history. The separate weekly `full-history` job
-exists because of that, and runs the gitleaks binary directly rather than the
-action, whose scan scope varies by event type and is undocumented. Both jobs
-use the workflow-level `GITLEAKS_VERSION`; without it the action downloads its
-own older gitleaks. `checks.sh ci` warns when that pin and the local binary
-differ; Dependabot bumps the action tags.
+**The gitleaks Action's push job scans the pushed commits, not history.** It
+stayed green for months while 47 findings sat in older commits; the weekly
+`full-history` job is the audit. Both jobs share the workflow-level
+`GITLEAKS_VERSION`, which `checks.sh ci` compares with the local binary.
+Details in `.github/workflows/gitleaks.yml`.
 
 **`.gitleaks.toml` is triage, not suppression.** Every allowlist entry records
 a finding that was looked at and accepted — GPG signing-key fingerprints are
