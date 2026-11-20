@@ -23,6 +23,10 @@
 #             passing warning on screen.
 #   ci        gitleaks-action silently downloads its own older gitleaks unless
 #             told otherwise, so CI and the hooks disagreed on what a finding is.
+#   context   CLAUDE.md promises a CONTEXT.md per module; claude/ and vibe/
+#             had none, and domain.md listed a module deleted weeks before.
+#   brewpath  a bare /opt/homebrew path works on this Mac and breaks on an
+#             Intel one, and nothing on this Mac would ever show it.
 #
 # No `set -e`: every check runs and reports, so one failure never hides the
 # rest. Exit status is the number of failed checks.
@@ -309,6 +313,66 @@ check_ci() {
   fi
 }
 
+# ---------- context ----------
+# CONTEXT_MAP.md's module table and the top-level directories must agree, and
+# every mapped module needs its CONTEXT.md. A directory whose
+# .stow-local-ignore is `^.*$` is not a package (docs/, resources/, ...) and
+# may stay off the map.
+check_context() {
+  echo "🗺️  context — CONTEXT_MAP.md matches the modules"
+  local mapped d problems=""
+  mapped=$(awk -F'|' '/^\| [a-z][a-z0-9-]* +\|/ {gsub(/ /, "", $2); print $2}' CONTEXT_MAP.md)
+  if [ -z "$mapped" ]; then
+    _bad "no module rows parsed from CONTEXT_MAP.md"
+    return
+  fi
+  for d in $mapped; do
+    if [ ! -d "$d" ]; then
+      problems="$problems\n     mapped but missing: $d/"
+    elif [ ! -f "$d/CONTEXT.md" ]; then
+      problems="$problems\n     no CONTEXT.md: $d/"
+    fi
+  done
+  for d in */; do
+    d="${d%/}"
+    case "$d" in .*) continue ;; esac
+    printf '%s\n' "$mapped" | grep -qx "$d" && continue
+    [ "$(cat "$d/.stow-local-ignore" 2>/dev/null)" = '^.*$' ] && continue
+    problems="$problems\n     not in CONTEXT_MAP.md: $d/"
+  done
+  if [ -n "$problems" ]; then
+    _bad "CONTEXT_MAP.md and the modules disagree"
+    printf '%b\n' "${problems#\\n}"
+  else
+    _ok "$(printf '%s\n' "$mapped" | wc -l | tr -d ' ') modules mapped, each with a CONTEXT.md"
+  fi
+}
+
+# ---------- brewpath ----------
+# A literal /opt/homebrew is fine only as part of the branch pattern from
+# CLAUDE.md: the `-d /opt/homebrew` test itself, an assignment within three
+# lines after it, or a line naming both prefixes (a PATH covering both).
+# Comments are skipped. Shell sources only; docs may name the path freely.
+check_brewpath() {
+  echo "🍺 brewpath — no bare /opt/homebrew in shell code"
+  local hits
+  hits=$(git ls-files -z -- '*.sh' '*.zsh' '*.zshrc' '*.zshenv' '*.zprofile' \
+    'scripts/.local/bin/*' ':!agents/.agents/skills/**' ':!scripts/checks.sh' \
+    | xargs -0 awk '
+      FNR == 1 { last = -10 }
+      /-d \/opt\/homebrew/ { last = FNR; next }
+      /^[[:space:]]*#/ { next }
+      /\/opt\/homebrew/ && !/\/usr\/local/ && FNR - last > 3 {
+        printf "     %s:%d: %s\n", FILENAME, FNR, $0
+      }')
+  if [ -n "$hits" ]; then
+    _bad "hardcoded /opt/homebrew outside the Apple Silicon / Intel branch"
+    printf '%s\n' "$hits"
+  else
+    _ok "every /opt/homebrew sits in the branch pattern"
+  fi
+}
+
 usage() {
   cat <<'EOF'
 usage: checks.sh <check>...
@@ -321,6 +385,8 @@ usage: checks.sh <check>...
   brewfile   Brewfile packages are installed (outdated only warns)
   aerospace  aerospace.toml parses without warnings
   ci         CI gitleaks pin matches the local binary (mismatch only warns)
+  context    CONTEXT_MAP.md rows match the modules, each with a CONTEXT.md
+  brewpath   no /opt/homebrew outside the Apple Silicon / Intel branch
   all        run all of the above
 
 Exit status is the number of failed checks.
@@ -342,6 +408,8 @@ for arg in "$@"; do
     aerospace) check_aerospace ;;
     brewfile) check_brewfile ;;
     ci) check_ci ;;
+    context) check_context ;;
+    brewpath) check_brewpath ;;
     all)
       check_secrets
       check_stow
@@ -351,6 +419,8 @@ for arg in "$@"; do
       check_brewfile
       check_aerospace
       check_ci
+      check_context
+      check_brewpath
       ;;
     -h | --help)
       usage

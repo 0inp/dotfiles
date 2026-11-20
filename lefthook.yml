@@ -170,6 +170,10 @@ pre-push:
       run: bash scripts/checks.sh aerospace
     - name: ci
       run: bash scripts/checks.sh ci
+    - name: context
+      run: bash scripts/checks.sh context
+    - name: brewpath
+      run: bash scripts/checks.sh brewpath
 
     # Pure-logic specs and a type-check of the mods. Runs only when the push
     # touches claude-mods/, and needs no Claude Code, so it works on any version.

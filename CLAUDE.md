@@ -89,8 +89,9 @@ LEFTHOOK=0 git commit ...       # bypass for one command
 ```
 
 `lefthook.yml` at the repo root is the config. pre-commit sees only staged
-files (gitleaks, syntax, shellcheck, then shfmt/stylua which auto-restage);
-pre-push runs the whole-repo invariants in `scripts/checks.sh`.
+files (gitleaks, fnox secret values, syntax, shellcheck, actionlint, then
+shfmt/stylua which auto-restage); pre-push runs the whole-repo invariants in
+`scripts/checks.sh`.
 
 ## Architecture
 
