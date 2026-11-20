@@ -48,3 +48,6 @@
 **/.pi-lens
 
 **/.claude/settings.local.json
+
+# Playwright MCP drops its snapshots and traces in the cwd
+.playwright-mcp/
