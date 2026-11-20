@@ -1,5 +1,7 @@
 theme = "catppuccin-mocha"
 default_agent = "ask"
+# Vim Normal/Insert modes in the prompt, like zsh-vi-mode in the shell (3.1.1).
+vim_keybindings = true
 skill_paths = [
     "/Users/oinp/.claude/skills",
 ]
