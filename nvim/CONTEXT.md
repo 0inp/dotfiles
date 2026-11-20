@@ -94,6 +94,11 @@ with `vim.lsp.enable`. That second part matters — **mason-lspconfig's
 `automatic_enable` only fires for servers Mason itself installed**, so a
 non-Mason server that is merely configured will never attach.
 
+`mise` (`mise lsp`, built into the mise binary) is the other non-Mason
+server. tombi also attaches to every TOML buffer, so mise runs with hover,
+completion and formatting off and contributes only its diagnostics and task
+navigation.
+
 Corollary: removing a server from `lsp_servers` does not disable it if Mason
 still has the package installed. `ts_ls` kept attaching until
 `:MasonUninstall typescript-language-server` was run.

@@ -68,6 +68,12 @@ local lsp_servers = {
 	-- binary comes from mise (`"npm:typescript" = "7"`) instead. See
 	-- `non_mason_servers` below.
 	tsc = {},
+	-- mise config files (mise.toml, mise/config.toml), from `mise lsp`
+	-- (mise >= 2026.10.18). Not a Mason package either. tombi already attaches
+	-- to every TOML buffer, so hover, completion and formatting would show up
+	-- twice: mise keeps only what tombi lacks, its diagnostics and task
+	-- navigation (lspconfig's own advice in lsp/mise.lua).
+	mise = { init_options = { formatting = false, hover = false, completion = false } },
 	-- CSS
 	tailwindcss = {},
 	-- Markdown
@@ -100,6 +106,7 @@ local lsp_servers = {
 -- for servers Mason itself installed.
 local non_mason_servers = {
 	tsc = true, -- from mise: "npm:typescript" = "7"
+	mise = true, -- built into the mise binary
 }
 
 local mason_servers = vim.tbl_filter(function(name)
