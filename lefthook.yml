@@ -4,9 +4,9 @@
 # these hooks are the only gate between a mistake and the internet.
 #
 # The gitleaks GitHub Action is not that gate. It fires AFTER the push, so it
-# can only detect what is already published — and it scans the last commit
-# only (`--log-opts=-1`), which is why it stays green in 10s while real
-# credentials sit in older history. That is the gap this file closes.
+# can only detect what is already published — and it scans the pushed
+# commits only, never history, which is why it stayed green in 10s while real
+# credentials sat in older commits. That is the gap this file closes.
 #
 # Split by cost. pre-commit sees only the staged files and must stay fast
 # enough that committing never feels gated. pre-push does the whole-repo work.
@@ -135,7 +135,7 @@ pre-push:
     #
     # Scoped to the push range so a failure always names something you are
     # about to publish. History is audited weekly in CI instead — the
-    # per-push Action scans the LAST COMMIT only (`--log-opts=-1`).
+    # per-push Action scans the pushed commits only.
     - name: secrets
       run: bash scripts/checks.sh secrets
       fail_text: secret in the commits being pushed — rewrite before pushing
@@ -155,6 +155,8 @@ pre-push:
     - name: aerospace
       glob: "aerospace/**"
       run: bash scripts/checks.sh aerospace
+    - name: ci
+      run: bash scripts/checks.sh ci
 
     # Pure-logic specs and a type-check of the mods. Runs only when the push
     # touches claude-mods/, and needs no Claude Code, so it works on any version.

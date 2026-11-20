@@ -1,0 +1,10 @@
+# Keeps the `uses:` tags in .github/workflows current: Node runtimes get
+# retired on the runners, and gitleaks-action@v2 was still on Node 20 when
+# that happened. The gitleaks binary version is a plain string in
+# gitleaks.yml, invisible to Dependabot; `scripts/checks.sh ci` covers it.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly

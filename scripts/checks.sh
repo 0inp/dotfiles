@@ -21,6 +21,8 @@
 #             a version behind, or installed outside the manifest, only warns.
 #   aerospace the config reloads on save, and an unknown key only shows as a
 #             passing warning on screen.
+#   ci        gitleaks-action silently downloads its own older gitleaks unless
+#             told otherwise, so CI and the hooks disagreed on what a finding is.
 #
 # No `set -e`: every check runs and reports, so one failure never hides the
 # rest. Exit status is the number of failed checks.
@@ -143,9 +145,9 @@ check_fnox() {
 # every push until someone triages history, which is how hooks get disabled.
 #
 # History is audited weekly instead — see .github/workflows/gitleaks.yml.
-# That job exists because the per-push Action does NOT audit history: it runs
-# gitleaks with `--log-opts=-1`, the last commit only, and stayed green in 10s
-# while 47 findings sat in history untouched.
+# That job exists because the per-push Action does NOT audit history: it scans
+# only the pushed commits, and stayed green in 10s while 47 findings sat in
+# history untouched.
 #
 # With no upstream (a brand-new branch) there is no range to diff against, so
 # everything reachable is scanned — correct, since none of it has been seen.
@@ -280,6 +282,33 @@ check_aerospace() {
   fi
 }
 
+# ---------- ci ----------
+# The workflow pins one gitleaks version for both CI jobs. The local binary
+# comes from Homebrew and moves with `brew upgrade`, so a mismatch is ambient
+# machine state (or a pin to bump): it warns, never blocks. A pin that cannot
+# be read is repo drift and blocks — otherwise this check passes forever.
+check_ci() {
+  echo "🤖 CI — gitleaks pin matches the local binary"
+  local wf=.github/workflows/gitleaks.yml pin installed
+  pin=$(awk -F'"' '/^[[:space:]]*GITLEAKS_VERSION:/ {print $2; exit}' "$wf" 2>/dev/null)
+  if [ -z "$pin" ]; then
+    _bad "no GITLEAKS_VERSION pin in $wf"
+    return
+  fi
+  if ! command -v gitleaks >/dev/null 2>&1; then
+    _skip "gitleaks not installed (CI pins $pin)"
+    return
+  fi
+  installed=$(gitleaks version 2>/dev/null)
+  installed=${installed#v}
+  if [ "$installed" = "$pin" ]; then
+    _ok "local gitleaks and CI both on $pin"
+  else
+    _warn "local gitleaks $installed, CI pins $pin (not blocking)"
+    printf '     fix: brew upgrade gitleaks, then set GITLEAKS_VERSION in %s to the newer one\n' "$wf"
+  fi
+}
+
 usage() {
   cat <<'EOF'
 usage: checks.sh <check>...
@@ -291,6 +320,7 @@ usage: checks.sh <check>...
   fnox       [secrets] holds references, never literals
   brewfile   Brewfile packages are installed (outdated only warns)
   aerospace  aerospace.toml parses without warnings
+  ci         CI gitleaks pin matches the local binary (mismatch only warns)
   all        run all of the above
 
 Exit status is the number of failed checks.
@@ -311,6 +341,7 @@ for arg in "$@"; do
     fnox) check_fnox ;;
     aerospace) check_aerospace ;;
     brewfile) check_brewfile ;;
+    ci) check_ci ;;
     all)
       check_secrets
       check_stow
@@ -319,6 +350,7 @@ for arg in "$@"; do
       check_fnox
       check_brewfile
       check_aerospace
+      check_ci
       ;;
     -h | --help)
       usage

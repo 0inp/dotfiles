@@ -187,13 +187,15 @@ it. Verify with `test -x .git/hooks/pre-commit`, not by reading `lefthook.yml`.
 Same class of trap as a stow module that is committed, documented and never
 stowed.
 
-**The gitleaks Action's push job scans one commit, not history.**
-gitleaks-action invokes gitleaks with `--log-opts=-1` — the last commit only —
-so `fetch-depth: 0` buys nothing there. It stayed green in ~10s for months
-while 47 findings, including real credentials from 2020 and 2022, sat in
-older history. The separate weekly `full-history` job exists because of that,
-and runs the gitleaks binary directly rather than the action, whose scan
-scope varies by event type and is undocumented.
+**The gitleaks Action's push job scans the pushed commits, not history.**
+gitleaks-action passes the push range (`-1` for a single commit), so it stayed
+green in ~10s for months while 47 findings, including real credentials from
+2020 and 2022, sat in older history. The separate weekly `full-history` job
+exists because of that, and runs the gitleaks binary directly rather than the
+action, whose scan scope varies by event type and is undocumented. Both jobs
+use the workflow-level `GITLEAKS_VERSION`; without it the action downloads its
+own older gitleaks. `checks.sh ci` warns when that pin and the local binary
+differ; Dependabot bumps the action tags.
 
 **`.gitleaks.toml` is triage, not suppression.** Every allowlist entry records
 a finding that was looked at and accepted — GPG signing-key fingerprints are

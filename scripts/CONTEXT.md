@@ -79,9 +79,11 @@ are **not** symlinked — they are run from the repo. Only `.local/bin/` is stow
     link relative to its path *in the repo*, which is where the kernel
     resolves it once stow tree-folds the parent. Fixing a link in the working
     tree without staging it leaves the check red, correctly.
-  - **`secrets` scans the push range, not history.** A full-history scan is
-    ~95s here. Nothing currently audits full history — see the note in
-    `checks.sh`; the GitHub Action scans the last commit only.
+  - **`secrets` scans the push range, not history.** History is audited by
+    the weekly `full-history` job in `.github/workflows/gitleaks.yml`; the
+    per-push Action scans only the pushed commits.
+  - **`ci` only warns.** It compares the workflow's `GITLEAKS_VERSION` with
+    the local `gitleaks`; a mismatch is a pin to bump, not broken repo state.
 
 - **Stats**: `stats-apply` is this repo's Stats config. The app has no config
   file — every setting is UserDefaults in `eu.exelban.Stats` — so the settings
