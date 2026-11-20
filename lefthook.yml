@@ -33,6 +33,14 @@ pre-commit:
       run: gitleaks git --staged --redact --no-banner
       fail_text: secret detected in staged changes — this repo is PUBLIC
 
+    # gitleaks matches secret *shapes*; a token with no recognisable prefix
+    # slips past it. fnox resolves this machine's own secrets from the
+    # keychain and looks for their actual VALUES in the index (~60ms, no
+    # keychain prompt). Values are never printed, only the secret's name.
+    - name: fnox-values
+      run: command -v fnox >/dev/null || exit 0; fnox scan --values --staged
+      fail_text: one of your own fnox secrets is in the staged changes
+
     # gitleaks matches secret *content*. This matches whole files whose mere
     # presence is the mistake, which entropy rules can miss. A job whose glob
     # matches no staged file is skipped, so this only fires when it should.
