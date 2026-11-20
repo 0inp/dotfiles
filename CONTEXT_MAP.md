@@ -69,41 +69,14 @@ Not stow packages: `docs/` (agent + domain documentation), `resources/`
 loaded from the repo; see its CONTEXT.md), all excluded via `.stow-local-ignore`.
 
 One tool, one job. Vorssaint did everything at once and was removed on
-2026-11-12, split into single-purpose tools: the launcher is **Vicinae**
-(`vicinae/`), the menu bar metrics are **Stats**, screenshots are macOS's own
-(⌘⇧3/4/5, saving to `~/Pictures/Screenshots` via `resources/macos_settings.sh`),
-and screen recording with a studio editor is **OpenScreen**. Its mixer, shelf,
-dock click and switcher have no replacement. `vorssaint-apply`, which held its
-settings, is in git history.
+2026-11-12: the launcher is now **Vicinae** (`vicinae/`), menu bar metrics
+**Stats**, screenshots macOS's own (⌘⇧3/4/5, to `~/Pictures/Screenshots` via
+`resources/macos_settings.sh`), and screen recording **OpenScreen**. Captures
+are renamed and shrunk by `launchd/` (history in its CONTEXT.md).
 
 No module for Stats: it has no config file, only UserDefaults. Its settings
 are declared in `scripts/.local/bin/stats-apply` and pushed with `defaults
-write`. The old `stats/` module and its plist are in git history (`182f84b^`).
-
-OpenScreen exports through a save dialog that remembers the last folder
-(`~/Downloads` until one is picked), so `~/Pictures/Screenshots` has to be
-chosen once for `captures-tidy` to see its files. Its export is named after the
-project title, `Recording_11_12_2026_5_26_35_PM.mp4` under en-US, and the agent
-renames that shape to `SR_…` too (see the `target_stem_for` comment).
-
-History: Vorssaint's recorder made the old `launchd/` agent redundant — that one
-watched for `.mov` and converted to `.mp4`, and Vorssaint's editor saved `.mp4`
-directly. The module came back for two things Vorssaint could not do itself,
-both handled by `com.oinp.captures-tidy`:
-
-- **Size.** Its presets scale resolution, never bitrate, and `recorderFrameRate`
-  is ignored outright by the export path (declared 30, reads back 30, every file
-  is 60fps — verify with `ffprobe`, not `defaults read`). The agent re-encodes
-  anything over 20 MB for Discord, replacing the file in place.
-- **Naming.** Vorssaint names *screenshots* from a pattern
-  (`screenshotFileNamePattern`) but has no equivalent for recordings:
-  `ScreenRecorderService.saveDestination` reads only `recorderSaveFolder` and
-  `Date()`, so `Recording 2026-09-03 at 17.04.01` is built in code. The agent
-  renames both kinds to `SS_`/`SR_YYYY_MM_DD_-_hh_mm_ss` so one rule covers both
-  instead of two that drift.
-
-The original `.mov`-to-`.mp4` agent and `scripts/screenshots-to-mp4.sh` are still
-in history at `46fb86e^`.
+write`.
 
 ## Key Files
 - **`CONTEXT.md`**: Tool-specific context (purpose, key files, dependencies) in each module.
