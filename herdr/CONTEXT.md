@@ -79,7 +79,8 @@ with no key at all. `workspace_picker = "prefix+shift+t"` and
 default loses to a user binding, the conflict check returns without a diagnostic
 (`src/config/keybinds.rs`, 0.9.5). Before taking a default key, look it up in the
 config reference, and verify in `prefix+?` by filtering on `unset`. Some actions are
-unset by design, such as `clear_pane` and `move_tab_next`.
+unset by design, such as `move_tab_next`; `clear_pane` was too, and is bound here
+to `prefix+ctrl+l`.
 
 ## Mouse buttons cannot be bound — don't retry this
 Investigated against 0.9.0 and settled. Three independent walls:
