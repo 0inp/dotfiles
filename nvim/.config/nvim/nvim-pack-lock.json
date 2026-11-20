@@ -9,11 +9,11 @@
       "src": "https://github.com/stevearc/conform.nvim"
     },
     "friendly-snippets": {
-      "rev": "b4d01b0fdf3c9a549961c2f9ffe8dc09be166219",
+      "rev": "7a1c9f7897a4eb078b157a04c7af81e5869215b1",
       "src": "https://github.com/rafamadriz/friendly-snippets"
     },
     "gitsigns.nvim": {
-      "rev": "683137003522aebd6948358334164a6ba2ca7cd5",
+      "rev": "dc7698f932792a764d3db95fedee26c38e728355",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
     "live-server.nvim": {
@@ -25,7 +25,7 @@
       "src": "https://github.com/nvim-lualine/lualine.nvim"
     },
     "markdown-plus.nvim": {
-      "rev": "09de3f1af476636eb6b31c5528edfb6ec6558624",
+      "rev": "ac14838e1bb02b31a565a0e1b4e7dc772f0afbf4",
       "src": "https://github.com/yousefhadder/markdown-plus.nvim"
     },
     "markdown-preview.nvim": {
@@ -33,7 +33,7 @@
       "src": "https://github.com/selimacerbas/markdown-preview.nvim"
     },
     "mason-lspconfig.nvim": {
-      "rev": "c302d3fcaf4727ee7d48b20e7c293668ed1f6d98",
+      "rev": "97ccf96bb2e7adb5f82975068bd4c7307d2afa8a",
       "src": "https://github.com/mason-org/mason-lspconfig.nvim"
     },
     "mason-tool-installer.nvim": {
@@ -45,19 +45,19 @@
       "src": "https://github.com/mason-org/mason.nvim"
     },
     "mini.nvim": {
-      "rev": "acfc3b2702126209201ca8b38a105294fa2c1ddd",
+      "rev": "174eb9b9d5d66254966b9d52ea51b996317e51f6",
       "src": "https://github.com/nvim-mini/mini.nvim"
     },
     "nvim-lspconfig": {
-      "rev": "77b7432d4770d23b277d37923e5a08a442d8bb07",
+      "rev": "6a3ddecf60e19f164390308f502e67f3199f58e8",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-treesitter": {
-      "rev": "29212d826054bb2948fa9d3a99eca9bf6a050eb2",
+      "rev": "b706d642dd20d0922e7e92365dc73617f0fdb4ea",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "render-markdown.nvim": {
-      "rev": "8e8795368391036643b622875a6da6a51bcd33f4",
+      "rev": "8801162e041e34c64d0d1397cd1f353a14b01950",
       "src": "https://github.com/MeanderingProgrammer/render-markdown.nvim"
     },
     "vim-fugitive": {
