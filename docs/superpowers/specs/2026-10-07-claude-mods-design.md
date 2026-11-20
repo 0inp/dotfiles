@@ -1,5 +1,8 @@
 # Claude Code mods: usage band + subject todo
 
+> **Historical.** `subject-todo` was removed on 2026-11-20 (commit `bad843d`);
+> only `usage-band` remains. Current state: `claude-mods/CONTEXT.md`.
+
 Date: 2026-10-07
 Status: design approved, awaiting Claude Code ≥ 2.1.287 (stable cask is 2.1.285)
 

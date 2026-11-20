@@ -1,5 +1,8 @@
 # Claude Code mods (usage-band + subject-todo) Implementation Plan
 
+> **Historical.** `subject-todo` was removed on 2026-11-20 (commit `bad843d`);
+> only `usage-band` remains. Current state: `claude-mods/CONTEXT.md`.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Build two Claude Code mods in `claude-mods/`. `usage-band` draws the
