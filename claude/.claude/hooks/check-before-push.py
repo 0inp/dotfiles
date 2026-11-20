@@ -12,6 +12,7 @@ anyway.
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -22,6 +23,11 @@ from shell_commands import find_git_subcommand, resolve_git_directory, split_sim
 SCRIPTS = Path("/Users/oinp/dev/sillant/.claude/scripts")
 VICAT = "/Users/oinp/dev/sillant/vicat"
 TABLE = "/Users/oinp/dev/sillant/Table"
+# Colima serves Docker from a socket under the home directory. Testcontainers reaches it
+# through DOCKER_HOST, but mounts its reaper on the socket path seen from inside the VM,
+# which only TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE gives; without it the reaper fails to
+# start and every database check fails.
+COLIMA_SOCKET = Path.home() / ".config/colima/default/docker.sock"
 CHECK_TIMEOUT_SECONDS = 840
 OUTPUT_TAIL_LINES = 40
 
@@ -54,6 +60,16 @@ def collect_checks(toplevel: str) -> list[tuple[list[str], str]]:
     return []
 
 
+def build_check_environment() -> dict[str, str]:
+    """The environment of this process, plus what testcontainers needs to use Colima when
+    its socket exists and nothing else was chosen."""
+    environment = dict(os.environ)
+    if COLIMA_SOCKET.is_socket() and "DOCKER_HOST" not in environment:
+        environment["DOCKER_HOST"] = f"unix://{COLIMA_SOCKET}"
+        environment.setdefault("TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE", "/var/run/docker.sock")
+    return environment
+
+
 def main() -> None:
     payload = json.load(sys.stdin)
     command = payload.get("tool_input", {}).get("command", "")
@@ -73,7 +89,8 @@ def main() -> None:
         for check, directory in collect_checks(toplevel):
             try:
                 result = subprocess.run(check, cwd=directory, capture_output=True, text=True,
-                                        timeout=CHECK_TIMEOUT_SECONDS)
+                                        timeout=CHECK_TIMEOUT_SECONDS,
+                                        env=build_check_environment())
             except subprocess.TimeoutExpired:
                 print(f"{' '.join(check)} timed out after {CHECK_TIMEOUT_SECONDS}s in "
                       f"{directory}. Run it by hand, or prefix PUSH_CHECK_SKIP=1.",
