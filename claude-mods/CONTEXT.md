@@ -7,7 +7,6 @@ as a local plugin marketplace, `dotfiles-mods`. **Not a stow package**:
 | Mod | What it does |
 |---|---|
 | `usage-band` | Replaces `statusLine`: two rows above the prompt. Context is coloured at 40/80; 7d by pace (usage vs elapsed share of the week), floor 5. The 5h window is not shown: Ultra drops it |
-| `subject-todo` | `/todo` toggles a pane: a list per subject (Linear ticket or conversation) that Claude keeps with the `subject_todo` tool |
 
 Spec: `docs/superpowers/specs/2026-10-07-claude-mods-design.md`.
 
@@ -18,7 +17,7 @@ Claude Code ≥ 2.1.287 (mods GA). Check with `claude --version`.
 ## Layout
 
 Each mod: `hooks/register.ts` is thin glue over pure modules (`pace`, `layout`,
-`git`, `binding`, `subject`, `store`, `pane`). Hooks modules run with **no
+`git`). Hooks modules run with **no
 Node and no DOM**, so files under `hooks/` must never import `node:*`.
 
 ## Checks
@@ -33,10 +32,10 @@ it with `/plugin-types` and re-run the checks.
 ## Dev loop
 
 ```bash
-claude --plugin-dir claude-mods/usage-band --plugin-dir claude-mods/subject-todo
+claude --plugin-dir claude-mods/usage-band
 ```
 
-This loads both mods for **that one session only**, and reloads them on save.
+This loads the mod for **that one session only**, and reloads them on save.
 Other sessions are untouched.
 
 ## Rollback

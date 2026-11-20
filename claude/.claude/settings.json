@@ -6,7 +6,6 @@
   },
   "permissions": {
     "allow": [
-      "mcp__subject-todo__subject_todo",
       "Bash(gh api repos/*/pulls/*/reviews *)"
     ],
     "deny": [
@@ -98,8 +97,7 @@
     "superpowers@claude-plugins-official": false,
     "typescript-lsp@claude-plugins-official": true,
     "worktrunk@worktrunk": true,
-    "usage-band@dotfiles-mods": true,
-    "subject-todo@dotfiles-mods": true
+    "usage-band@dotfiles-mods": true
   },
   "extraKnownMarketplaces": {
     "worktrunk": {
