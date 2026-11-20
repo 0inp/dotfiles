@@ -57,7 +57,7 @@ pre-commit:
       fail_text: remove these from the index, then re-commit
 
     # Everything in scripts/.local/bin is bash and none of it carries an
-    # extension, so "*.sh" alone skipped all five -- the same trap as the zsh
+    # extension, so "*.sh" alone skipped every one -- the same trap as the zsh
     # dotfiles below. Note what this catches and does not: bash -n is a parse
     # check, and /bin/bash 3.2 accepts things here that it refuses to run.
     - name: syntax-bash
@@ -84,9 +84,8 @@ pre-commit:
         - "scripts/.local/bin/*"
       exclude:
         # Vendored, not ours to restyle: skill packs ship *.template.sh files
-        # full of placeholders, and chtfzf.sh is an upstream cheat.sh wrapper.
+        # full of placeholders.
         - "agents/.agents/skills/**"
-        - "resources/chtfzf.sh"
       run: shellcheck --severity=warning {staged_files}
 
     - name: json
@@ -96,8 +95,8 @@ pre-commit:
     # ---- formatters last: everything above reads the index, these write it ----
 
     # These flags are not a preference, they are this repo's existing style:
-    # with them shfmt reports zero changes across install.sh, update.sh,
-    # agent-loop.sh, checks.sh and the five scripts in scripts/.local/bin.
+    # with them shfmt reports zero changes across scripts/*.sh and the
+    # scripts in scripts/.local/bin.
     # shfmt's own defaults (tabs) rewrite every one. -bn additionally permits
     # `|` and `&&` at the start of a continuation line, which is how the
     # pipelines here are already written.
@@ -107,7 +106,6 @@ pre-commit:
         - "scripts/.local/bin/*"
       exclude:
         - "agents/.agents/skills/**"
-        - "resources/chtfzf.sh"
         # Deliberately column-aligned colour assignments that shfmt would
         # explode onto one line each. The alignment is the point.
         - "claude/.claude/statusline-command.sh"
@@ -117,7 +115,7 @@ pre-commit:
       run: shfmt -i 2 -ci -bn -w {staged_files}
       stage_fixed: true
 
-    # stylua's defaults leave all 17 nvim lua files unchanged, so no commit
+    # stylua's defaults leave every nvim lua file unchanged, so no commit
     # gets an unrelated reformat. This drifts silently -- re-check it with:
     #   for f in $(find nvim -name '*.lua'); do stylua --check "$f"; done
     - name: stylua

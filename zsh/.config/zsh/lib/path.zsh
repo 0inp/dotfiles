@@ -32,7 +32,6 @@ path=(
   $HOMEBREW_PREFIX/bin(N-/)
   $HOMEBREW_PREFIX/sbin(N-/)
   $HOME/go/bin(N-/)
-  /usr/local/go/bin(N-/)
   $path
 )
 
