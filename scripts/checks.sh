@@ -41,7 +41,7 @@ _skip() { printf '  ⏭️  %s\n' "$1"; }
 _warn() { printf '  ⚠️  %s\n' "$1"; }
 
 # ---------- stow ----------
-# Mirrors install.sh's `stow -t ~ */` exactly: one package per non-dot
+# Mirrors install.sh's `stow -t ~ [^.]*/` exactly: one package per non-dot
 # top-level directory. Dot-directories (.git, .github, .claude) are NOT
 # packages — `stow -t ~ .git` would try to link COMMIT_EDITMSG into $HOME.
 check_stow() {

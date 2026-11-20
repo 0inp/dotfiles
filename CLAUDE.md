@@ -13,11 +13,15 @@ Each module has a `CONTEXT.md` with tool-specific details. `CONTEXT_MAP.md` at t
 **Stow (apply/remove symlinks):**
 
 ```bash
-stow -t ~ */          # symlink all packages (one package per module directory)
+stow -t ~ [^.]*/      # symlink all packages (one package per module directory)
 stow -t ~ <module>    # symlink a single module
 stow -R -t ~ <module> # restow a module after adding/removing files in it
-stow -D -t ~ */       # remove all symlinks
+stow -D -t ~ [^.]*/   # remove all symlinks
 ```
+
+Write `[^.]*/`, never `*/`: `.zshrc` sets `GLOBDOTS`, so in an interactive
+shell `*/` also matches `.git/`, `.github/` and `.claude/`, and stow would
+link the contents of `.git/` into `$HOME`.
 
 Never use `stow -t ~ .`. That names the repo root itself as a single package,
 which symlinks `aerospace/`, `brew/`, `CLAUDE.md`, `.github/` and friends

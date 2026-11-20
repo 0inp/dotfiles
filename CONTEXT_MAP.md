@@ -110,7 +110,7 @@ in history at `46fb86e^`.
 - **`CONTEXT_MAP.md`**: This file. High-level overview of the repository.
 
 ## Usage
-1. **Symlinking**: Run `stow -t ~ */` from the repo root — one package per module
+1. **Symlinking**: Run `stow -t ~ [^.]*/` from the repo root — one package per module
    directory. Never `stow -t ~ .`, which would treat the repo root as a single
    package and symlink module directories straight into `$HOME`.
 2. **AI Agents**: Refer to `CONTEXT.md` in each module for tool-specific details.

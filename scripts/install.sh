@@ -116,6 +116,8 @@ mkdir -p ~/.config/colima/_lima/_config
 # One package per module directory. NOT `stow -t ~ .` — that names the repo
 # root itself as the package, which would symlink aerospace/, brew/, CLAUDE.md
 # and .github/ directly into $HOME, and would ignore every .stow-local-ignore.
-stow -t ~ */
+# `[^.]*/` rather than `*/` so dot-directories (.git, .github) never become
+# packages, even if this runs under a shell with dotglob set.
+stow -t ~ [^.]*/
 
 echo "Dotfiles setup complete!"

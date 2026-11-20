@@ -21,7 +21,7 @@ ever need to run the pieces by hand:
 
 ```bash
 brew bundle --global   # HOMEBREW_BUNDLE_FILE_GLOBAL points at this repo
-stow -t ~ */           # one package per module directory
+stow -t ~ [^.]*/       # one package per module directory (never */: GLOBDOTS)
 ```
 
 > **Never run `stow -t ~ .`** — that names the repo root as a single package and
