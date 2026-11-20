@@ -10,4 +10,4 @@ Default triage labels are used: `needs-triage`, `needs-info`, `ready-for-agent`,
 
 ### Domain docs
 
-Single-context layout: one `CONTEXT.md` + `docs/adr/` at the repo root. See `docs/agents/domain.md`.
+One `CONTEXT.md` per stow module, indexed by `CONTEXT_MAP.md` at the repo root. See `docs/agents/domain.md`.

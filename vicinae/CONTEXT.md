@@ -14,9 +14,11 @@ requires arm64 and macOS 14 or newer.
 
 ## Why an import, not a stowed settings.json
 Vicinae writes every change made in its GUI back into
-`~/.config/vicinae/settings.json`: it reformats the file, drops comments, and
-writes it atomically (tmp + rename), which replaces a symlink with a plain file.
-So `settings.json` stays a real, machine-local file, and the repo's settings live
+`~/.config/vicinae/settings.json`: it reformats the file and drops comments.
+Before 0.30.1 the atomic write (tmp + rename) also replaced a symlink with a
+plain file; vicinae#2173 now writes through the link, but a stowed file would
+still be rewritten inside the repo on every GUI change. So `settings.json`
+stays a real, machine-local file, and the repo's settings live
 in `dotfiles.jsonc`, pulled in by its `imports` array. Vicinae never writes
 imported files.
 

@@ -23,11 +23,8 @@ This repo is multi-context by stow module — one `CONTEXT.md` per top-level pac
 ├── git/
 │   ├── CONTEXT.md
 │   └── .gitconfig
-└── ...                     ← one CONTEXT.md per module (aerospace, agents,
-                                brew, btop, claude, fnox, gh-dash, ghostty,
-                                gnupg, herdr, launchd, mise, nvim, pgcli,
-                                python, ripgrep, scripts, stats, vibe,
-                                worktrunk)
+└── ...                     ← one CONTEXT.md per module; CONTEXT_MAP.md is
+                                the list (scripts/checks.sh context enforces it)
 ```
 
 ## Use the glossary's vocabulary

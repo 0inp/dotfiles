@@ -53,9 +53,9 @@ it disappears when you start from `docs/` and the result does not change. Its
 cause is that leaf reads no `.gitignore`, so it descends into `node_modules` —
 66k directories under `~/dev/sillant`, 55k of them in one nested clone.
 
-Neither is configurable. `LeafConfig` carries exactly nine keys (`theme`,
-`editor`, `watch`, `width`, `extras`, `code-line-numbers`, `tab-title-length`,
-`file-picker-width`, `file-history-length`): no limit, no exclusion, no depth.
+Neither is configurable. As of 1.29.3 the README documents fifteen config
+keys (theme, editor, widths, line numbers, history, scrolling, link prefix):
+none is a limit, an exclusion or a depth.
 The binary holds no trace of the `ignore` crate.
 
 `lf` in `zsh/.config/zsh/functions.zsh` replaces it — `fd` honours `.gitignore`

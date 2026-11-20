@@ -38,5 +38,8 @@ The Brewfile itself is architecture-agnostic — Homebrew resolves the correct p
 
 ## AI Notes
 - Focus on `Brewfile` for package management.
-- Update lockfile with `brew bundle dump --force`.
-- Test changes with `brew bundle check`.
+- `brew bundle dump --force --global` regenerates the Brewfile and drops
+  anything hand-written, so the Brewfile carries no comments; notes go here.
+- Test changes with `brew bundle check --global`.
+- `pre-commit` is not used by this repo (lefthook is), but the Sillant repos
+  (vicat, Table, sillant-context) run it. Keep it.
