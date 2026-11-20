@@ -30,7 +30,7 @@ vim.keymap.set(
 	{ desc = "Replace word cursor is on globally" }
 )
 
-vim.keymap.set("n", "<leader>re", "<cmd>restart<cr>", { desc = "Restart config (:restart)" })
+vim.keymap.set("n", "<leader>re", "<cmd>restart!<cr>", { desc = "Restart config, no session (:restart!)" })
 vim.keymap.set("n", "<Leader>w", "<cmd>w!<CR>", { silent = true, desc = "Save" }) -- Save the current file
 vim.keymap.set("n", "<Leader>q", "<cmd>q<CR>", { silent = true, desc = "Quit Neovim" }) -- Quit Neovim
 
