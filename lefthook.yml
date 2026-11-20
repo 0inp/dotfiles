@@ -92,6 +92,13 @@ pre-commit:
       glob: "*.json"
       run: jq empty {staged_files}
 
+    # Workflows only run after a push, so a typo in one (a bad `uses:` ref,
+    # an unknown key, a broken `${{ }}` expression) would otherwise surface as
+    # a red run on GitHub. actionlint also shellchecks every `run:` block.
+    - name: actionlint
+      glob: ".github/workflows/*.{yml,yaml}"
+      run: actionlint {staged_files}
+
     # ---- formatters last: everything above reads the index, these write it ----
 
     # These flags are not a preference, they are this repo's existing style:
