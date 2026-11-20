@@ -41,8 +41,7 @@ Supports **Apple Silicon** (`/opt/homebrew`) and **Intel** (`/usr/local`).
 - **Plugins**: Extensions for productivity.
 - **Prompt**: Custom shell prompt (`pure`).
 - **History**: `atuin` provides SQLite-backed history and fuzzy Ctrl-R.
-  Up/Down stay on `zsh-history-substring-search` (`--disable-up-arrow`), and
-  atuin's `?` AI binding is off (`--disable-ai`) because `?` is a vi motion.
+  Up/Down stay on `zsh-history-substring-search` (`--disable-up-arrow`).
 - **Secrets**: resolved from the macOS keychain by `fnox` (see the `fnox` module); there is no `secrets.zsh` any more.
 
 ## Keybinding gotcha

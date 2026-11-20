@@ -110,13 +110,10 @@ fi
 # Interactive-only: `init` registers precmd/preexec/zshaddhistory hooks and zle
 # widgets, neither of which exist in a non-interactive shell.
 #
-# Flags, all deliberate:
-#   --disable-up-arrow  Up/Down stay on zsh-history-substring-search (prefix
-#                       matching), which is bound in bindings.zsh and is a
-#                       different, complementary interaction to fuzzy search.
-#   --disable-ai        Stops atuin binding `?` to its AI prompt. `?` is a
-#                       motion in vi normal mode and hijacking it breaks
-#                       zsh-vi-mode.
+# --disable-up-arrow: Up/Down stay on zsh-history-substring-search (prefix
+# matching), which is bound in bindings.zsh and is a different, complementary
+# interaction to fuzzy search. (--disable-ai is gone: atuin 18.25 removed the
+# AI agent and its `?` binding, so the flag no longer changes the init.)
 #
 # NOTE: the keybindings atuin sets here do NOT survive zsh-vi-mode's keymap
 # reset, so they are re-applied from zvm_after_init_commands in bindings.zsh.
@@ -126,7 +123,7 @@ fi
 ZSH_AUTOSUGGEST_STRATEGY=(completion)
 ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
 if [[ -o interactive ]] && command -v atuin >/dev/null 2>&1; then
-  eval "$(command atuin init zsh --disable-up-arrow --disable-ai)"
+  eval "$(command atuin init zsh --disable-up-arrow)"
 fi
 
 # =========================================================

@@ -174,8 +174,7 @@ repos still on TS 5/6, and Mason has no `typescript` package. See
 
 `atuin` replaces Ctrl-R with fuzzy search over a SQLite history that records
 cwd, exit code and duration. Initialised interactive-only in `.zshrc` with
-`--disable-up-arrow` (Up/Down stay on zsh-history-substring-search) and
-`--disable-ai` (it would otherwise bind `?`, a vi motion). Its bindings are
+`--disable-up-arrow` (Up/Down stay on zsh-history-substring-search). Its bindings are
 re-applied from `zvm_after_init_commands` — see the constraint below.
 
 ### Git signing
